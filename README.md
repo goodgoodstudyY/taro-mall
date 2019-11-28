@@ -1,13 +1,10 @@
-<<<<<<< HEAD
 # taro-mall
-=======
-# taro-yanxuan
 
 ![overview](https://qit-team.github.io/public/images/taro-yanxuan/overview.png)
 
 首个 [Taro](https://github.com/NervJS/taro) 多端统一实例 - 网易严选（小程序 + H5 + React Native）。
 
-本项目基于**趣店 FED** 在 Taro 多端统一开发方面的实践经验，以网易严选小程序为载体，旨在探讨如何以正确的方式使用 Taro 进行多端开发，具体可查看文章 [Taro 多端开发的正确姿势：打造三端统一的网易严选（小程序、H5、React Native）](https://juejin.im/post/5c6a151f518825625e4ac830)。
+本项目以网易严选小程序为载体，旨在探讨如何以正确的方式使用 Taro 进行多端开发，具体可查看文章 [Taro 多端开发的正确姿势：打造三端统一的网易严选（小程序、H5、React Native）](https://juejin.im/post/5c6a151f518825625e4ac830)。
 
 ## 效果预览
 
@@ -51,8 +48,3 @@ npm run dev:rn
 本项目不会去实现一个完整的网易严选，但也实现了足够多的功能、细节进行踩坑，具体涉及的踩坑点、注意事项都在代码中以注释 `// TODO`（Taro 还未支持的）、`// NOTE`（开发技巧、注意事项）注明了。
 
 最后，有一点很遗憾，就是一开始没有保留一份 mock 数据，后面网易严选改动挺大，主要是登录逻辑也变了，导致不少功能现在没法运行，后续有空会完善 mock 功能。
-
-## License
-
-MIT
->>>>>>> first commit
