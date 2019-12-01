@@ -27,7 +27,8 @@ class App extends Component {
       'pages/user-login/user-login',
       'pages/user-login-email/user-login-email',
       'pages/item/item',
-      'pages/webview/webview'
+      'pages/webview/webview',
+      'pages/order/order'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -49,7 +50,12 @@ class App extends Component {
         pagePath: "pages/cate/cate",
         iconPath: "./assets/tab-bar/cate.png",
         selectedIconPath: "./assets/tab-bar/cate-active.png",
-        text: "分类"
+        text: "商品"
+      }, {
+        pagePath: "pages/order/order",
+        iconPath: "./assets/tab-bar/order.png",
+        selectedIconPath: "./assets/tab-bar/order-active.png",
+        text: "订单"
       }, {
         pagePath: "pages/cart/cart",
         iconPath: "./assets/tab-bar/cart.png",
