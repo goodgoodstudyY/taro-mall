@@ -23,9 +23,10 @@ class Cate extends Component {
 
   componentDidMount() {
     this.props.dispatchMenu().then((res) => {
+      console.log(res)
       this.setState({
         loaded: true,
-        current: res.categoryList[0].id
+        current: res[0].id
       })
     })
   }

@@ -1,9 +1,6 @@
 import Taro from '@tarojs/taro'
 import { API_USER, API_USER_LOGIN } from '@constants/api'
 
-const CODE_SUCCESS = '200'
-const CODE_AUTH_EXPIRED = '600'
-
 function getStorage(key) {
   return Taro.getStorage({ key }).then(res => res.data).catch(() => '')
 }
@@ -35,12 +32,15 @@ export default async function fetch(options) {
     header
   }).then(async (res) => {
     const { code, data } = res.data
-    if (code !== CODE_SUCCESS) {
-      if (code === CODE_AUTH_EXPIRED) {
-        await updateStorage({})
-      }
-      return Promise.reject(res.data)
+    if (res.statusCode == 200) {
+      return data
     }
+    // if (code !== CODE_SUCCESS) {
+    //   if (code === CODE_AUTH_EXPIRED) {
+    //     await updateStorage({})
+    //   }
+    //   return Promise.reject(res.data)
+    // }
 
     if (url === API_USER_LOGIN) {
       await updateStorage(data)
