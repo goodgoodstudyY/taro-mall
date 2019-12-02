@@ -1,0 +1,73 @@
+.page {
+  &.covered {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+}
+
+.buttonForGettingFormId {
+  border: 0 !important;
+  padding: 0;
+  margin: 0;
+  line-height: 100%;
+  background-color: transparent;
+  border-radius: 0;
+  min-height: 100vh;
+  text-align: left;
+  overflow: visible;
+}
+.fs19 {
+  font-size: 19px;
+}
+.fixed {
+  position: fixed;
+  right: 60px;
+  bottom: 20%;
+  z-index: 101;
+}
+
+.home-button {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 50%;
+  width: 96px;
+  height: 96px;
+  background: rgba(0, 0, 0, 0.6);
+}
+.home-icon {
+  height: 45px;
+  width: 45px;
+}
+.lh21 {
+  line-height: 21px;
+}
+.img {
+  width: 263px;
+  height: 231px;
+  // background: url('../../imgs/load_fail.png');
+  // background-size: 100% 100%;
+}
+.btn {
+  width: 264px;
+  height: 74px;
+  background-image: linear-gradient(0deg, #ee373f 0%, #f17942 100%);
+  box-shadow: 0px 4px 8px 0px rgba(178, 39, 18, 0.3);
+  border-radius: 37px;
+  text-align: center;
+  line-height: 72px;
+  color: #fff;
+}
+.mt160 {
+  margin-top: 160px;
+}
+.mt80 {
+  margin-top: 80px;
+}
+.mt100 {
+  margin-top: 100px;
+}
+.covered {
+  z-index: 10001;
+}
