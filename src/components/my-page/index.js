@@ -28,6 +28,7 @@ export default class MyPage extends Component {
   }
 
   componentWillMount(){
+    console.log(11111)
   }
   componentDidMount () {
   }
