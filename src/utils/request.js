@@ -31,16 +31,24 @@ export default async function fetch(options) {
     data: payload,
     header
   }).then(async (res) => {
-    const { code, data } = res.data
+    const { data } = res.data
     if (res.statusCode == 200) {
       return data
+    } else if (res.statusCode == 500) {
+      return {showPageError: true}
+    } else if (res.statusCode == 403 || res.statusCode == 404) {
+      Taro.showToast({
+        title: '请求异常',
+        icon: 'none',
+        duration: 1000
+      })
+      setTimeout(() => {
+        Taro.reLaunch({
+          url: '/pages/home/home'
+        })
+      }, 1000)
+      return Promise.reject()
     }
-    // if (code !== CODE_SUCCESS) {
-    //   if (code === CODE_AUTH_EXPIRED) {
-    //     await updateStorage({})
-    //   }
-    //   return Promise.reject(res.data)
-    // }
 
     if (url === API_USER_LOGIN) {
       await updateStorage(data)
@@ -54,7 +62,7 @@ export default async function fetch(options) {
 
     return data
   }).catch((err) => {
-    const defaultMsg = err.code === CODE_AUTH_EXPIRED ? '登录失效' : '请求异常'
+    const defaultMsg = err.code && err.code === 'CODE_AUTH_EXPIRED' ? '登录失效' : '请求异常'
     if (showToast) {
       Taro.showToast({
         title: err && err.errorMsg || defaultMsg,
@@ -62,7 +70,7 @@ export default async function fetch(options) {
       })
     }
 
-    if (err.code === CODE_AUTH_EXPIRED && autoLogin) {
+    if (err.code && err.code === 'CODE_AUTH_EXPIRED' && autoLogin) {
       Taro.navigateTo({
         url: '/pages/user-login/user-login'
       })

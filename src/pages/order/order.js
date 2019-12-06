@@ -4,9 +4,7 @@ import { connect } from '@tarojs/redux'
 import * as actions from '@actions/user'
 import { dispatchCartNum } from '@actions/cart'
 import { getWindowHeight } from '@utils/style'
-// import Profile from './profile'
-// import Menu from './menu'
-// import Activity from './activity'
+import MyPage from '../../components/my-page/index'
 import './order.scss'
 
 @connect(state => state.user, { ...actions, dispatchCartNum })
@@ -16,6 +14,10 @@ class Order extends Component {
   }
 
   componentDidShow() {
+    this.onInit()
+  }
+  
+  onInit() {
     this.props.dispatchUser()
     this.props.dispatchCartNum()
   }
@@ -27,28 +29,30 @@ class Order extends Component {
   }
 
   render () {
-    const { userInfo } = this.props
+    const { userInfo, showPageError } = this.props
 
     return (
-      <View className='user'>
-        <ScrollView
-          scrollY
-          className='user__wrap'
-          style={{ height: getWindowHeight() }}
-        >
-          {/* <Profile userInfo={userInfo} /> */}
-          {/* <Menu /> */}
-          {userInfo.login &&
-            <View className='user__logout' onClick={this.handleLogin}>
-              <Text className='user__logout-txt'>切换账号</Text>
-            </View>
-          }
-          <View className='user__empty' />
-        </ScrollView>
-        {/* <View className='user__activity'>
-          <Activity />
-        </View> */}
-      </View>
+      <MyPage showPageError={showPageError} onReload={this.onInit.bind(this)}>
+        <View className='user'>
+          <ScrollView
+            scrollY
+            className='user__wrap'
+            style={{ height: getWindowHeight() }}
+          >
+            {/* <Profile userInfo={userInfo} /> */}
+            {/* <Menu /> */}
+            {userInfo.login &&
+              <View className='user__logout' onClick={this.handleLogin}>
+                <Text className='user__logout-txt'>切换账号</Text>
+              </View>
+            }
+            <View className='user__empty' />
+          </ScrollView>
+          {/* <View className='user__activity'>
+            <Activity />
+          </View> */}
+        </View>
+      </MyPage>
     )
   }
 }

@@ -8,6 +8,7 @@ import { getWindowHeight } from '@utils/style'
 import Banner from './banner'
 import Policy from './policy'
 import Pin from './pin'
+import MyPage from '../../components/my-page/index'
 import Operation from './operation'
 import Manufactory from './manufactory'
 import FlashSale from './flash-sale'
@@ -33,13 +34,10 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    // NOTE 暂时去掉不适配的内容
-    Taro.showToast({
-      title: '注意，由于严选小程序首页界面、接口大幅变动，暂时去掉不相符的部分，后续再跟进改动',
-      icon: 'none',
-      duration: 6000
-    })
+    this.onInit()
+  }
 
+  onInit() {
     this.props.dispatchHome().then(() => {
       this.setState({ loaded: true })
     })
@@ -84,70 +82,72 @@ class Home extends Component {
       return <Loading />
     }
 
-    const { homeInfo, searchCount, recommend, pin } = this.props
+    const { homeInfo, searchCount, recommend, pin, showPageError } = this.props
     return (
-      <View className='home'>
-        <View className='home__search'>
-          <View className='home__search-wrap' onClick={this.handlePrevent}>
-            <Image className='home__search-img' src={searchIcon} />
-            <Text className='home__search-txt'>
-              {`搜索商品，共${searchCount}款好物`}
-            </Text>
+      <MyPage showPageError={showPageError} onReload={this.onInit.bind(this)}>
+        <View className='home'>
+          <View className='home__search'>
+            <View className='home__search-wrap' onClick={this.handlePrevent}>
+              <Image className='home__search-img' src={searchIcon} />
+              <Text className='home__search-txt'>
+                {`搜索商品，共${searchCount}款好物`}
+              </Text>
+            </View>
           </View>
+          <ScrollView
+            scrollY
+            className='home__wrap'
+            onScrollToLower={this.loadRecommend}
+            style={{ height: getWindowHeight() }}
+          >
+            <View onClick={this.handlePrevent}>
+              <Banner list={homeInfo.focus} />
+              <Policy list={homeInfo.policyDesc} />
+
+              {/* 免费拼团 */}
+              <Pin
+                banner={homeInfo.newUserExclusive}
+                list={pin}
+              />
+
+              {/* 不知道叫啥 */}
+              {/* <Operation
+                list={homeInfo.operationCfg}
+                sale={homeInfo.saleCenter}
+              /> */}
+
+              {/* 品牌制造 */}
+              {/* <Manufactory
+                data={homeInfo.manufactory}
+                boss={homeInfo.dingBossRcmd}
+              /> */}
+
+              {/* 限时购 */}
+              {/* <FlashSale data={homeInfo.flashSale} /> */}
+
+              {/* 人气推荐 */}
+              {/* <Popular data={homeInfo.popularItems} /> */}
+
+              {/* 类目热销榜 */}
+              {/* <Category data={homeInfo.hotCategory} /> */}
+            </View>
+
+            {/* 为你推荐 */}
+            <Recommend list={recommend} />
+
+            {this.state.loading &&
+              <View className='home__loading'>
+                <Text className='home__loading-txt'>正在加载中...</Text>
+              </View>
+            }
+            {!this.state.hasMore &&
+              <View className='home__loading home__loading--not-more'>
+                <Text className='home__loading-txt'>更多内容，敬请期待</Text>
+              </View>
+            }
+          </ScrollView>
         </View>
-        <ScrollView
-          scrollY
-          className='home__wrap'
-          onScrollToLower={this.loadRecommend}
-          style={{ height: getWindowHeight() }}
-        >
-          <View onClick={this.handlePrevent}>
-            <Banner list={homeInfo.focus} />
-            <Policy list={homeInfo.policyDesc} />
-
-            {/* 免费拼团 */}
-            <Pin
-              banner={homeInfo.newUserExclusive}
-              list={pin}
-            />
-
-            {/* 不知道叫啥 */}
-            {/* <Operation
-              list={homeInfo.operationCfg}
-              sale={homeInfo.saleCenter}
-            /> */}
-
-            {/* 品牌制造 */}
-            {/* <Manufactory
-              data={homeInfo.manufactory}
-              boss={homeInfo.dingBossRcmd}
-            /> */}
-
-            {/* 限时购 */}
-            {/* <FlashSale data={homeInfo.flashSale} /> */}
-
-            {/* 人气推荐 */}
-            {/* <Popular data={homeInfo.popularItems} /> */}
-
-            {/* 类目热销榜 */}
-            {/* <Category data={homeInfo.hotCategory} /> */}
-          </View>
-
-          {/* 为你推荐 */}
-          <Recommend list={recommend} />
-
-          {this.state.loading &&
-            <View className='home__loading'>
-              <Text className='home__loading-txt'>正在加载中...</Text>
-            </View>
-          }
-          {!this.state.hasMore &&
-            <View className='home__loading home__loading--not-more'>
-              <Text className='home__loading-txt'>更多内容，敬请期待</Text>
-            </View>
-          }
-        </ScrollView>
-      </View>
+      </MyPage>
     )
   }
 }

@@ -33,8 +33,14 @@ class App extends Component {
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: '网易严选',
+      navigationBarTitleText: '餐饮包装',
       navigationBarTextStyle: 'black'
+    },
+    networkTimeout: {
+      request: 5000,
+      connectSocket: 5000,
+      uploadFile: 5000,
+      downloadFile: 5000
     },
     tabBar: {
       color: "#666",

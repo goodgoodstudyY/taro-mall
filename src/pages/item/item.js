@@ -5,6 +5,7 @@ import { connect } from '@tarojs/redux'
 import * as actions from '@actions/item'
 import { dispatchAdd } from '@actions/cart'
 import { getWindowHeight } from '@utils/style'
+import MyPage from '../../components/my-page/index'
 import Gallery from './gallery'
 import InfoBase from './info-base'
 import InfoParam from './info-param'
@@ -29,6 +30,10 @@ class Item extends Component {
   }
 
   componentDidMount() {
+    this.onInit()
+  }
+
+  onInit() {
     this.props.dispatchItem({ itemId: this.itemId }).then(() => {
       this.setState({ loaded: true })
     })
@@ -87,7 +92,7 @@ class Item extends Component {
   }
 
   render () {
-    const { itemInfo } = this.props
+    const { itemInfo, showPageError } = this.props
     const { itemDetail = {} } = itemInfo
     const gallery = [
       itemInfo.listPicUrl,
@@ -104,35 +109,37 @@ class Item extends Component {
     }
 
     return (
-      <View className='item'>
-        <ScrollView
-          scrollY
-          className='item__wrap'
-          style={{ height }}
-        >
-          <Gallery list={gallery} />
-          <InfoBase data={itemInfo} />
-          <InfoParam list={itemInfo.attrList} />
-          <Detail html={itemDetail.detailHtml} />
-        </ScrollView>
+      <MyPage showPageError={showPageError} onReload={this.onInit.bind(this)}>
+        <View className='item'>
+          <ScrollView
+            scrollY
+            className='item__wrap'
+            style={{ height }}
+          >
+            <Gallery list={gallery} />
+            <InfoBase data={itemInfo} />
+            <InfoParam list={itemInfo.attrList} />
+            <Detail html={itemDetail.detailHtml} />
+          </ScrollView>
 
-        {/* NOTE Popup 一般的实现是 fixed 定位，但 RN 不支持，只能用 absolute，要注意引入位置 */}
-        <Popup
-          visible={this.state.visible}
-          onClose={this.toggleVisible}
-          compStyle={popupStyle}
-        >
-          <Spec
-            data={itemInfo}
-            selected={this.state.selected}
-            onSelect={this.handleSelect}
-          />
-        </Popup>
+          {/* NOTE Popup 一般的实现是 fixed 定位，但 RN 不支持，只能用 absolute，要注意引入位置 */}
+          <Popup
+            visible={this.state.visible}
+            onClose={this.toggleVisible}
+            compStyle={popupStyle}
+          >
+            <Spec
+              data={itemInfo}
+              selected={this.state.selected}
+              onSelect={this.handleSelect}
+            />
+          </Popup>
 
-        <View className='item__footer'>
-          <Footer onAdd={this.handleAdd} />
+          <View className='item__footer'>
+            <Footer onAdd={this.handleAdd} />
+          </View>
         </View>
-      </View>
+      </MyPage>
     )
   }
 }

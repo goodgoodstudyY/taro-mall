@@ -6,7 +6,8 @@ import {
 
 const INITIAL_STATE = {
   cartInfo: {},
-  recommend: {}
+  recommend: {},
+  showPageErr: false
 }
 
 // TODO H5、RN 还不支持 setTabBarBadge
@@ -24,6 +25,10 @@ const updateTabBar = (count) => {
 }
 
 export default function cart(state = INITIAL_STATE, action) {
+  if (action && action.payload && action.payload.showPageError) {
+    state.showPageError = true
+    return state
+  }
   switch(action.type) {
     case CART_INFO:
     case CART_ADD:

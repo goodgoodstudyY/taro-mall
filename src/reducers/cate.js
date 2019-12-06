@@ -4,10 +4,15 @@ const INITIAL_STATE = {
   menu: [],
   category: [],
   subMenu: [],
-  subCategory: {}
+  subCategory: {},
+  showPageErr: false
 }
 
 export default function cate(state = INITIAL_STATE, action) {
+  if (action && action.payload && action.payload.showPageError) {
+    state.showPageError = true
+    return state
+  }
   switch(action.type) {
     case CATE_MENU: {
       const categoryList = action.payload

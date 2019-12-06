@@ -1,10 +1,15 @@
 import { USER_INFO, USER_LOGIN, USER_LOGOUT } from '@constants/user'
 
 const INITIAL_STATE = {
-  userInfo: {}
+  userInfo: {},
+  showPageErr: false
 }
 
 export default function user(state = INITIAL_STATE, action) {
+  if (action && action.payload && action.payload.showPageError) {
+    state.showPageError = true
+    return state
+  }
   switch(action.type) {
     case USER_INFO: {
       return {

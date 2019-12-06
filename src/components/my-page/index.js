@@ -8,45 +8,33 @@ export default class MyPage extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      showPageError: false
-    }
   }
   static options = {
     addGlobalClass: true
   }
   static defaultProps = {
-  }
-
-  store = {
-    setIsGetRenderDataError (isError) {
-      Taro.$globalData.tabBarHidden = !!isError
-      this.setState({
-        showPageError: !!isError
-      })
-    }
+    homeback: false,
+    showPageError: false
   }
 
   componentWillMount(){
-    console.log(11111)
   }
   componentDidMount () {
   }
   componentWillReceiveProps () {
   }
-  setSubs () {
-  }
-  clearSubs () {
-  }
 
+  goBack() {
+    Taro.reLaunch({
+      url: '/pages/home/home'
+    })
+  }
   render () {
-    const { showPageError } = this.state
-    const { homeback } = this.props
+    const { homeback, showPageError } = this.props
 
     return (
       <Block>
         <View className='buttonForGettingFormId'>
-          {this.props.children}
           {
             homeback == true ? (
               <View className='fixed home-button mt14' onClick={this.goBack}>
@@ -64,7 +52,7 @@ export default class MyPage extends Component {
         {/** 请求关键数据接口报错时, 页面需要重新加载 */}
         {
           showPageError ? (
-            <View className='page covered'>
+            <View className='page covered fsc-c'>
               <View className='mt160'>
                 <Image src={loadFail} className='img' />
               </View>
@@ -82,20 +70,13 @@ export default class MyPage extends Component {
                 </View>
               }
             </View>
-          ) : null
+          ) : this.props.children
         }
       </Block>
     )
   }
 
   reload () {
-
-    /* 兼容老的写法 */
-    let { oninit } = this.props
-    oninit()
-
-    Taro.$globalData.isGetRenderDataError = false
-
     this.props.onReload && this.props.onReload()
   }
 

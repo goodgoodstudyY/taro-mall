@@ -6,10 +6,15 @@ const INITIAL_STATE = {
   homeInfo: {},
   searchCount: 0,
   pin: [],
-  recommend: []
+  recommend: [],
+  showPageError: false
 }
 
 export default function home(state = INITIAL_STATE, action) {
+  if (action && action.payload && action.payload.showPageError) {
+    state.showPageError = true
+    return state
+  }
   switch(action.type) {
     case HOME_INFO: {
       return {
