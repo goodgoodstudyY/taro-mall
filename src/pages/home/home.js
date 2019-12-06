@@ -102,13 +102,13 @@ class Home extends Component {
           >
             <View onClick={this.handlePrevent}>
               <Banner list={homeInfo.focus} />
-              <Policy list={homeInfo.policyDesc} />
+              {/* <Policy list={homeInfo.policyDesc} /> */}
 
               {/* 免费拼团 */}
-              <Pin
+              {/* <Pin
                 banner={homeInfo.newUserExclusive}
                 list={pin}
-              />
+              /> */}
 
               {/* 不知道叫啥 */}
               {/* <Operation
