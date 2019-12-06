@@ -27,7 +27,8 @@ class Cate extends Component {
   }
 
   onInit() {
-    this.props.dispatchMenu().then((res) => {
+    this.props.dispatchMenu()
+    this.props.dispatchTagMenu().then((res) => {
       this.setState({
         loaded: true,
         current: res[0].id

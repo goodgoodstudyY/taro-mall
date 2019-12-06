@@ -1,4 +1,4 @@
-import { CATE_TAG_MENU, CATE_SUB, CATE_SUB_LIST } from '@constants/cate'
+import { CATE_TAG_MENU, CATE_SUB, CATE_SUB_LIST, CATE_MENU } from '@constants/cate'
 
 const INITIAL_STATE = {
   menu: [],
@@ -18,6 +18,12 @@ export default function cate(state = INITIAL_STATE, action) {
       const categoryList = action.payload
       const menu = categoryList.map(({ id, name }) => ({ id, name }))
       return { ...state, menu, category: categoryList }
+    }
+    case CATE_MENU: {
+      console.log(action.payload)
+      return {
+        ...state
+      }
     }
     case CATE_SUB: {
       return {

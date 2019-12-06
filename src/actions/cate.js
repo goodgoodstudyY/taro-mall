@@ -1,14 +1,20 @@
-import { CATE_TAG_MENU, CATE_SUB, CATE_SUB_LIST } from '@constants/cate'
-import { API_GOODS_TAG_LIST, API_CATE_SUB, API_CATE_SUB_LIST } from '@constants/api'
+import { CATE_TAG_MENU, CATE_SUB, CATE_SUB_LIST, CATE_MENU } from '@constants/cate'
+import { API_GOODS_TAG_LIST, API_CATE_SUB, API_CATE_SUB_LIST, API_CATE } from '@constants/api'
 import { createAction } from '@utils/redux'
 
 /**
  * 分类菜单、列表
  * @param {*} payload
  */
-export const dispatchMenu = payload => createAction({
+export const dispatchTagMenu = payload => createAction({
   url: API_GOODS_TAG_LIST,
   type: CATE_TAG_MENU,
+  payload
+})
+
+export const dispatchMenu = payload => createAction({
+  url: API_CATE,
+  type: CATE_MENU,
   payload
 })
 
