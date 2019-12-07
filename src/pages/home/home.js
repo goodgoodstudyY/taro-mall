@@ -15,7 +15,7 @@ import FlashSale from './flash-sale'
 import Popular from './popular'
 import Category from './category'
 import Recommend from './recommend'
-import searchIcon from './assets/search.png'
+import searchIcon from '../../assets/search.png'
 import './home.scss'
 
 const RECOMMEND_SIZE = 20

@@ -16,13 +16,13 @@ export default class Menu extends Component {
     const { current, list } = this.props
     return (
       <View className='cate-menu'>
-        {list.map((item) => {
-          const active = item.id === current
+        {list.map((item, index) => {
+          const active = index === current
           return (
             <View
               key={item.id}
               className={classNames('cate-menu__item', active && 'cate-menu__item--active')}
-              onClick={this.handleClick.bind(this, item.id)}
+              onClick={this.handleClick.bind(this, index)}
             >
               <Text
                 className={classNames('cate-menu__item-name', active && 'cate-menu__item-name--active')}

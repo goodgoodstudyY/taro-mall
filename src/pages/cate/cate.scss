@@ -9,15 +9,49 @@
 
 .cate__menu {
   width: 162px;
+  margin-top: 67px;
   @include border(right, 1px, solid, rgba(0, 0, 0, .15));
 }
 
 .cate__list {
   // TODO 此处不能能用 flex: 1 (flex-basis: 0)，RN 上会无法滚动，跟 ScrollView 的处理有关
   flex-grow: 1;
+  margin-top: 67px;
   @include eject(flex, 1);
 
   &-wrap {
     padding: 30px 30px 20px;
+  }
+}
+.home__search {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 0 30px 20px;
+  width: 100%;
+  background: #ffffff;
+  z-index: 9;
+
+  &-wrap {
+    height: 56px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #333333;
+    @include hairline(border-width);
+    border-radius: 28px;
+  }
+
+  &-img {
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+  }
+
+  &-txt {
+    color: $text-color-light;
+    font-size: 28px;
   }
 }
