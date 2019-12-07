@@ -1,11 +1,10 @@
-import { CATE_TAG_MENU, CATE_SUB, CATE_SUB_LIST, CATE_MENU } from '@constants/cate'
+import { CATE_TAG_MENU, GOOGS_DETAIL, CATE_SUB_LIST, CATE_MENU } from '@constants/cate'
 
 const INITIAL_STATE = {
   tagMenu: [],
   menu: [],
-  category: [],
-  subMenu: [],
-  subCategory: {},
+  goodsDetail: {},
+  goodsList: [],
   showPageErr: false
 }
 
@@ -26,17 +25,18 @@ export default function cate(state = INITIAL_STATE, action) {
         menu
       }
     }
-    case CATE_SUB: {
+    case GOOGS_DETAIL: {
       return {
         ...state,
-        subMenu: action.payload.category.subCategoryList
+        goodsDetail: action.payload
+        // subMenu: action.payload.category.subCategoryList
       }
     }
     case CATE_SUB_LIST: {
-      const { id, itemList } = action.payload
+      const { list } = action.payload
       return {
         ...state,
-        subCategory: { ...state.subCategory, [id]: itemList }
+        goodsList: list
       }
     }
     default:

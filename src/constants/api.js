@@ -21,8 +21,8 @@ export const API_HOME_RECOMMEND = `${yanxuan}/xhr/rcmd/index.json`
 // cate
 export const API_GOODS_TAG_LIST = `${host}/common/goods/tags/list`
 export const API_CATE = `${host}/common/goods/type/list`
-export const API_CATE_SUB = `${yanxuan}/xhr/list/subCate.json`
-export const API_CATE_SUB_LIST = `${yanxuan}/xhr/list/l2Items2.json`
+export const API_GOODS_Detail = `${host}/wx/goods/info`
+export const API_CATE_SUB_LIST = `${host}/wx/goods/list`
 
 // order
 

@@ -1,5 +1,5 @@
-import { CATE_TAG_MENU, CATE_SUB, CATE_SUB_LIST, CATE_MENU } from '@constants/cate'
-import { API_GOODS_TAG_LIST, API_CATE_SUB, API_CATE_SUB_LIST, API_CATE } from '@constants/api'
+import { CATE_TAG_MENU, GOOGS_DETAIL, CATE_SUB_LIST, CATE_MENU } from '@constants/cate'
+import { API_GOODS_TAG_LIST, API_GOODS_Detail, API_CATE_SUB_LIST, API_CATE } from '@constants/api'
 import { createAction } from '@utils/redux'
 
 /**
@@ -19,22 +19,21 @@ export const dispatchMenu = payload => createAction({
 })
 
 /**
- * 子级菜单
+ * 商品详情
  * @param {*} payload
  */
-export const dispatchSubMenu = payload => createAction({
-  url: API_CATE_SUB,
-  type: CATE_SUB,
-  payload
+export const dispatchGoodsDetail = payload => createAction({
+  url: API_GOODS_Detail + '/' + payload,
+  type: GOOGS_DETAIL
 })
 
 /**
- * 子级列表
+ * 商品列表
  * @param {*} payload
  */
 export const dispatchSubList = payload => createAction({
   url: API_CATE_SUB_LIST,
   type: CATE_SUB_LIST,
-  cb: res => ({ ...res, id: payload.categoryL2Id }),
+  method: 'POST',
   payload
 })

@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, ScrollView } from '@tarojs/components'
+import { View, ScrollView, Image, Text } from '@tarojs/components'
 import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/cate'
@@ -14,7 +14,7 @@ import './cate.scss'
 @connect(state => state.cate, { ...actions })
 class Cate extends Component {
   config = {
-    navigationBarTitleText: '分类'
+    navigationBarTitleText: '商品列表'
   }
 
   state = {
@@ -34,6 +34,18 @@ class Cate extends Component {
         loaded: true
       })
     })
+    this.props.dispatchSubList({listQueryModel:{
+      "pageNumber": 1,
+      "pageSize": 20,
+      "q_order": "desc",
+    }
+    // "q_orderBy": "string",
+    // "query": {
+    //   "additionalProp1": {},
+    //   "additionalProp2": {},
+    //   "additionalProp3": {}
+    // }
+    })
   }
 
   handleMenu = (index) => {
@@ -43,11 +55,8 @@ class Cate extends Component {
   }
 
   render () {
-    const { menu, category, showPageError, tagMenu } = this.props
+    const { menu, showPageError, tagMenu, goodsList } = this.props
     const { current, loading } = this.state
-    const currentCategory = category.find(item => item.id === current) || {}
-    const banner = currentCategory.focusBannerList || []
-    const list = currentCategory.categoryGroupList || []
     const height = getWindowHeight()
     const allMenu = tagMenu.concat(menu)
 
@@ -62,7 +71,7 @@ class Cate extends Component {
             <View className='home__search-wrap' onClick={this.handlePrevent}>
               <Image className='home__search-img' src={searchIcon} />
               <Text className='home__search-txt'>
-                {`搜索商品`}
+                搜索商品
               </Text>
             </View>
           </View>
@@ -83,11 +92,11 @@ class Cate extends Component {
             <ScrollView
               scrollY
               className='cate__list'
-              style={{ height }}
+              style={{ height: `calc(${height} - ${Taro.pxTransform(76)})` }}
             >
               <View className='cate__list-wrap'>
-                <Banner banner={banner} />
-                <List list={list} />
+                {/* <Banner banner={banner} /> */}
+                <List list={goodsList} />
               </View>
             </ScrollView>
           }

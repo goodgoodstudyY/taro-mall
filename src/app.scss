@@ -26,6 +26,9 @@
   background: rgba(0,0,0,.3);
 }
 
+.w100 {
+  width: 100%;
+}
 .f {
   display: flex !important;
 }
@@ -281,12 +284,6 @@
 .mt26 {
   margin-top: 26px;
 }
-.mt20 {
-  margin-top: 20px;
-}
-.mt26 {
-  margin-top: 26px;
-}
 .mt28 {
   margin-top: 28px;
 }
@@ -385,6 +382,12 @@
 }
 .c999 {
   color: #999;
+}
+.c000 {
+  color: #000;
+}
+.c1a {
+  color: #1a1a1a;
 }
 
 @font-face {
