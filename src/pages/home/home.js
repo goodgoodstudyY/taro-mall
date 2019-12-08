@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Image, ScrollView } from '@tarojs/components'
+import { View, Text, Image, ScrollView, Button } from '@tarojs/components'
 import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/home'
@@ -34,6 +34,9 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    Taro.login().then(res => {
+      console.log(res, 1111)
+    })
     this.onInit()
   }
 
@@ -69,12 +72,13 @@ class Home extends Component {
     })
   }
 
-  handlePrevent = () => {
+  handlePrevent = (res) => {
+    console.log(res)
     // XXX 时间关系，首页只实现底部推荐商品的点击
-    Taro.showToast({
-      title: '目前只可点击底部推荐商品',
-      icon: 'none'
-    })
+    // Taro.showToast({
+    //   title: '目前只可点击底部推荐商品',
+    //   icon: 'none'
+    // })
   }
 
   render () {
@@ -87,12 +91,15 @@ class Home extends Component {
       <MyPage showPageError={showPageError} onReload={this.onInit.bind(this)}>
         <View className='home'>
           <View className='home__search'>
-            <View className='home__search-wrap' onClick={this.handlePrevent}>
+            <Button className='home__search-wrap'
+              onGetUserInfo={this.handlePrevent}
+              open-type='getUserInfo'
+            >
               <Image className='home__search-img' src={searchIcon} />
               <Text className='home__search-txt'>
                 {`搜索商品，共${searchCount}款好物`}
               </Text>
-            </View>
+            </Button>
           </View>
           <ScrollView
             scrollY

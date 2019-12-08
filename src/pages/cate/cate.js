@@ -23,6 +23,27 @@ class Cate extends Component {
     loading: false
   }
 
+  store = {
+    screen: [
+      {
+        name: '综合',
+        orderBy: ''
+      },
+      {
+        name: '价格',
+        orderBy: 'price'
+      },
+      {
+        name: '商品编码',
+        orderBy: 'code'
+      },
+      {
+        name: '筛选',
+        orderBy: ''
+      }
+    ]
+  }
+
   componentDidMount() {
     this.onInit()
   }
@@ -37,7 +58,10 @@ class Cate extends Component {
     this.props.dispatchSubList({listQueryModel:{
       "pageNumber": 1,
       "pageSize": 20,
-      "q_order": "desc",
+      "query": {
+        'tagId': '4'
+      }
+      // "q_order": "desc",
     }
     // "q_orderBy": "string",
     // "query": {
@@ -89,16 +113,31 @@ class Cate extends Component {
           {/* 通过切换元素实现重置 ScrollView 的 scrollTop */}
           {loading ?
             <View /> :
-            <ScrollView
-              scrollY
-              className='cate__list'
-              style={{ height: `calc(${height} - ${Taro.pxTransform(76)})` }}
-            >
-              <View className='cate__list-wrap'>
-                {/* <Banner banner={banner} /> */}
-                <List list={goodsList} />
+            <View className='fss-c'>
+              <View className='goods-screen fsac fs28'>
+                {
+                  this.store.screen.map((x, i) => {
+                    return (
+                      <View className='' key={x.name}>
+                        <Text>{x.name}</Text>
+                        <View className=''></View>
+                      </View>
+                    )
+                  })
+                }
+                <View className=''>综合</View>
               </View>
-            </ScrollView>
+              <ScrollView
+                scrollY
+                className='cate__list'
+                style={{ height: `calc(${height} - ${Taro.pxTransform(76)})` }}
+              >
+                <View className='cate__list-wrap'>
+                  {/* <Banner banner={banner} /> */}
+                  <List list={goodsList} />
+                </View>
+              </ScrollView>
+            </View>
           }
         </View>
       </MyPage>

@@ -16,6 +16,7 @@ export default function cate(state = INITIAL_STATE, action) {
   switch(action.type) {
     case CATE_TAG_MENU: {
       const tagMenu = action.payload
+      tagMenu.unshift({name: '全部'})
       return { ...state, tagMenu }
     }
     case CATE_MENU: {

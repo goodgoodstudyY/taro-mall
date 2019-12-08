@@ -1,0 +1,237 @@
+.f22, .f24, .f28, .f32, .f36 {
+  line-height: 100%;
+}
+
+.spec-cover {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, .3);
+  z-index: 120;
+}
+
+.spec-form {
+  width: 100vw;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  position: fixed;
+  padding-bottom: 106px;
+  bottom: 0;
+  left: 0;
+  z-index: 180;
+  transition: .3s;
+}
+
+.bottom-space-no {
+  padding-bottom: 0 !important;
+}
+
+.spec-form-hidden {
+  transform: translateY(110%);
+}
+
+.spec-goods-item {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  padding: 40px 30px;
+  border-bottom: 1px solid #ebecf0;
+  position: relative;
+}
+
+.spec-goods-thumb {
+  height: 140px;
+  width: 140px;
+  border-radius: 8px;
+  background-color: #ccc
+}
+
+.spec-goods-info {
+  height: 140px;
+  box-sizing: border-box;
+  padding-left: 30px;
+  padding-right: 40px;
+  position: relative;
+}
+
+.spec-goods-title {
+  line-height: 42px;
+  width: 440px;
+  position: relative;
+  margin-top: -6px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.spec-goods-salesVolume {
+  margin-top: 14px;
+}
+
+.spec-goods-price {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  bottom: 0;
+  left: 30px;
+}
+
+.spec-form-close {
+  position: absolute;
+  right: 30px;
+  top: 45px;
+  height: 40px;
+  width: 40px;
+  font-size: 40px;
+  line-height: 100%;
+  color: #adafb2;
+}
+
+.spec-label {
+  height: 160px;
+  padding-left: 30px;
+}
+
+.spec-spec-goods-spec {
+  flex-wrap: wrap;
+  max-height: 300px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.spec {
+  padding: 0 32px;
+  height: 60px;
+  max-width: 690px;
+  border-radius: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 26px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  margin-left: 30px;
+  margin-bottom: 30px
+}
+
+.spec-selected {
+  color: #ee373f;
+  background-color: #fef8d1;
+  border: 1px solid #f9de1a;
+  @extend .spec
+}
+
+.spec-normal {
+  color: #000;
+  background-color: #f0f1f5;
+   @extend.spec
+}
+
+.spec-disabled {
+  color: #b3b3b3;
+  background-color: #f0f1f5;
+  @extend .spec
+}
+
+.spec-num {
+  height: 140px;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 30px;
+}
+
+.spec-circle {
+  width: 45px;
+  height: 45px;
+  font-size: 26px;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.spec-increment-layout {
+  margin-left: 25px;
+  padding: 30px
+}
+
+.spec-increment-bg {
+  background-image: linear-gradient( #ff5353, #ff8f58);
+  @extend .spec-circle;
+}
+
+.spec-increment {
+  @extend .spec-circle;
+}
+
+.spec-increment-disabled {
+  background-color: #e6e6e6;
+  @extend .spec-circle;
+}
+
+.spec-discrement-layout {
+  margin-right: 25px;
+  padding: 30px
+}
+
+.spec-discrement-bg {
+  background-color: #f7f8fa;
+  border: solid 1px #c8c9cc;
+  @extend .spec-circle;
+  width: 47px;
+  height: 47px;
+}
+
+.spec-discrement {
+  @extend .spec-circle;
+}
+
+.spec-button-layout {
+  width: 750px;
+  height: 140px;
+  border-top: 1px solid #ebecf0;
+}
+
+.spec-button-common {
+  width: 690px;
+  height: 80px;
+  border-radius: 6px;
+}
+
+.spec-button {
+  background-image: linear-gradient(#ff5353, #ff8f58);
+  @extend .spec-button-common
+}
+
+.spec-button-disabled {
+  background-color: #ccc;
+  @extend .spec-button-common
+}
+
+.spec-buttonGroup-layout {
+  width: 690px;
+}
+
+.spec-button-slim {
+  width: 330px;
+  height: 80px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spec-button-cart-slim {
+  color: #ee373f;
+  border: 1px solid #ee373f;
+  @extend .spec-button-slim
+}
+
+.spec-button-create-slim {
+  color: #fff;
+  background-image: linear-gradient(#ff5353, #ff8f58);
+  @extend .spec-button-slim
+}

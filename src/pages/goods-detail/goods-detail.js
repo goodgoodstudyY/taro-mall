@@ -1,11 +1,12 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Swiper, SwiperItem, Image, Button, Text } from '@tarojs/components'
+import { View, Swiper, SwiperItem, Image, Text, ScrollView } from '@tarojs/components'
 import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/cate'
 import MyPage from '../../components/my-page/index'
+import SpecComponent from './spec'
 import { crop } from '../../utils/util'
-import './cate.scss'
+import './goods-detail.scss'
 
 @connect(state => state.cate, { ...actions })
 class Cate extends Component {
@@ -16,7 +17,10 @@ class Cate extends Component {
   state = {
     goodsId: 0,
     loaded: false,
-    loading: false
+    loading: false,
+    showParams: false,
+    addToCart: {},
+    showSpec: false
   }
 
   componentDidMount() {
@@ -44,9 +48,23 @@ class Cate extends Component {
     })
   }
 
+  handleOpenParams(e) {
+    e.stopPropagation()
+    this.setState({
+      showParams: !this.state.showParams
+    })
+  }
+
+  handleSubmit(mode = '') {
+    this.setState({
+      addToCart: mode,
+      showSpec: true
+    });
+  }
+
   render () {
     const { showPageError } = this.props
-    const { loading, goodsDetail } = this.state
+    const { loading, goodsDetail, showParams, showSpec, addToCart } = this.state
 
     if (!this.state.loaded) {
       return <Loading />
@@ -54,45 +72,92 @@ class Cate extends Component {
 
     return (
       <MyPage showPageError={showPageError} onReload={this.onInit.bind(this)}>
-        <View className='goods-swiper-layout'>
-          <Swiper className='goods-swiper' interval={2600} circular autoplay>
-              {
-                  goodsDetail.smallPic.map((i, n) => {
-                      return (
-                          <SwiperItem key={n}>
-                              <View className='goods-swiper-item fcc'>
-                                  <Image className='goods-swiper-item-image' mode='aspectFill' src={crop(i, 702, 690)} onClick={this.handlePreviewImage.bind(this, n)}></Image>
-                              </View>
-                          </SwiperItem>
-                      )
-                  })
-              }
-          </Swiper>
-        </View>
-        <View className='goods-info-layout fcc-c'>
-            <View className='goods-info flex r'>
-                <View className='goods-title flex fs42 c1a bold ellipsis2'>{goodsDetail.name}</View>
-                <Button openType='share' className='goods-share iconfont' hoverClass='none'>&#xe657;</Button>
-            </View>
-            {/* {
-                data.goods_detail_decode[0].data && data.goods_detail_decode[0].type == 'text'
-                && (
-                    <View className='goods-info flex r mt30'>
-                        <Text className='flex c9 f24 w506'>{data.goods_detail_decode[0].data}</Text>
-                    </View>
-                )
-            } */}
-            <View className='goods-info flex r mt22'>
-                <View className='flex c999 fs24'>销量{goodsDetail.sales}</View>
-            </View>
-            <View className='goods-info flex r spb mt26'>
-                <View className='flex c-r base l44'>
-                    <Text className='fs24'>¥</Text>
-                    <Text className='fs44'>{goodsDetail.price}</Text>
+        <View className='fsc-c bgc-f5'>
+          <View className='goods-swiper-layout'>
+            <Swiper className='goods-swiper' interval={2600} circular autoplay>
+                {
+                    goodsDetail.smallPic.map((i, n) => {
+                        return (
+                            <SwiperItem key={i}>
+                                <View className='goods-swiper-item fcc'>
+                                    <Image className='goods-swiper-item-image' mode='aspectFill' src={crop(i, 702, 690)} onClick={this.handlePreviewImage.bind(this, n)}></Image>
+                                </View>
+                            </SwiperItem>
+                        )
+                    })
+                }
+            </Swiper>
+          </View>
+          <View className='goods-info-layout fsbs'>
+            <View>
+                <View className='goods-info flex c-r base l44'>
+                    <Text className='fs40'>¥</Text>
+                    <Text className='fs54'>{goodsDetail.price}</Text>
                 </View>
-                <View className='flex cf fs28 btn mr30' onClick={this.handleSubmit.bind(this, 'cart')}><View className='iconfont cf f28'>&#xe604;加入购物车</View></View>
+              <View className='goods-info flex r mt26'>
+                <View className='goods-title flex fs42 c1a bold ellipsis2'>{goodsDetail.name}</View>
+              </View>
             </View>
+            <View className='goods-info flex r mt22'>
+              <View className='flex c999 fs24'>销量{goodsDetail.sales || 0}</View>
+            </View>
+          </View>
+          <View className='goods-detail bgc-w goods-params fsbc' onClick={this.handleOpenParams}>
+            <Text className='fs32 c1a'>产品参数</Text>
+            <View className='iconfont fs28'>&#xe662;</View>
+          </View>
+          {
+            goodsDetail.descPic.length > 0 && (
+              <View className='goods-detail bgc-w'>
+                  <View className='goods-detail-title fs32 c1a'>商品详情</View>
+                  {
+                    goodsDetail.descPic.map((i, n) => {
+                        return (
+                          <Image key={i} src={'http://122.51.167.221:8001' + i} mode='widthFix' className='goods-detail-image' />
+                        )
+                    })
+                  }
+              </View>
+            )
+          }
         </View>
+        {
+          showParams
+          ? (
+            <View className='mark fce' onClick={this.handleOpenParams}>
+              <View className='params'>
+                <View className='fs36 fcc c1a bold params-title'>产品参数</View>
+                <ScrollView className='params-content' scrollY>
+                  <View className='fsbc params-item'>
+                    <Text className='fs30 c1a'>商品体积（立方）</Text>
+                    <Text className='c999 fs30'>{goodsDetail.size}</Text>
+                  </View>
+                  <View className='fsbc params-item'>
+                    <Text className='fs30 c1a'>规格说明</Text>
+                    <Text className='c999 fs30'>{goodsDetail.standard}</Text>
+                  </View>
+                  <View className='fsbc params-item'>
+                    <Text className='fs30 c1a'>单位</Text>
+                    <Text className='c999 fs30'>{goodsDetail.unit}</Text>
+                  </View>
+                  <View className='fsbc params-item'>
+                    <Text className='fs30 c1a'>商品质量（千克）</Text>
+                    <Text className='c999 fs30'>{goodsDetail.weight}</Text>
+                  </View>
+                </ScrollView>
+                <View className='params-button fcc cfff fs34' onClick={this.handleOpenParams}>完成</View>
+              </View>
+            </View>
+          )
+          : <View></View>
+        }
+        <View className='goods-buttons-layout fsc'>
+          <View className='fsc'>
+            <View className='goods-button-1 c-red fcc fs32' onClick={this.handleSubmit.bind(this, 'cart')}>加入购物车</View>
+            <View className='goods-button-2 cfff fcc fs32' onClick={this.handleSubmit.bind(this)}>立即购买</View>
+          </View>
+        </View>
+        <SpecComponent data={goodsDetail} mode={addToCart} showSpec={showSpec} />
       </MyPage>
     )
   }
