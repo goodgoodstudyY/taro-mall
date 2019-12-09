@@ -16,11 +16,10 @@
 .cate__list {
   // TODO 此处不能能用 flex: 1 (flex-basis: 0)，RN 上会无法滚动，跟 ScrollView 的处理有关
   flex-grow: 1;
-  margin-top: 67px;
   @include eject(flex, 1);
 
   &-wrap {
-    padding: 30px 30px 20px;
+    padding: 0 30px 20px;
   }
 }
 .home__search {
@@ -58,4 +57,98 @@
 .goods-screen {
   width: 100%;
   height: 100px;
+}
+.goods-list-right {
+  margin-top: 67px;
+}
+.mt6 {
+  margin-top: 6px;
+}
+.ml6 {
+  margin-left: 6px;
+}
+.cab {
+  color: #ab2b2b;
+}
+
+.filter-mask {
+  position: fixed;
+  bottom: 0;
+  right: -100vw;
+  width: 100vw;
+  // background: rgba(0,0,0,.8);
+  opacity: 0;
+  transition: .25s;
+  z-index: 1000;
+  &.active {
+    right: 0;
+    opacity: 1;
+    transition: .3s;
+  }
+}
+
+.filter-con {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding-bottom: 25px;
+  width: 600px;
+  height: 100%;
+  box-shadow: 0 0 0 rgba(0,0,0,.8);
+  transition: .25s;
+}
+.filter-con-active {
+  box-shadow: -10px 0 20px rgba(0, 0, 0, 0.1);
+  transition: .25s;
+}
+.filter-item-blocks {
+  width: 100%;
+  overflow-y: scroll;
+  overscroll-behavior: none;
+}
+.filter-item-block {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.filter-buttons-area {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 98px;
+}
+.block-title {
+  margin-top: 35px;
+  margin-bottom: 10px;
+}
+.block-item {
+  margin-top: 25px;
+  margin-left: 7px;
+  margin-right: 7px;
+  width: 150px;
+  height: 67px;
+  border-radius: 6px;
+  line-height: 57px;
+  text-align: center;
+  border: solid 1px #f2f3f7;
+  background-color: #f2f3f7;
+}
+.order {
+  width: 230px !important;
+}
+.block-item-active {
+  background-color: #fff1ed;
+  border: solid 1px #ab2b2b;
+}
+
+
+.filter-button {
+  width: 302px;
+  height: 97px;
+}
+.reset-button {
+  background-color: #fff1ed !important;
+}
+.confirm-button {
+  background-color: #ab2b2b !important;
 }

@@ -15,12 +15,18 @@ export default function cate(state = INITIAL_STATE, action) {
   }
   switch(action.type) {
     case CATE_TAG_MENU: {
-      const tagMenu = action.payload
+      const tagMenu = action.payload.map(x => {
+        x.tagId = x.id
+        return x
+      })
       tagMenu.unshift({name: '全部'})
       return { ...state, tagMenu }
     }
     case CATE_MENU: {
-      const menu =  action.payload
+      const menu =  action.payload.map(x => {
+        x.typeId = x.id
+        return x
+      })
       return {
         ...state,
         menu
