@@ -7,7 +7,7 @@ import {
 const INITIAL_STATE = {
   cartInfo: {},
   recommend: {},
-  showPageErr: false
+  showPageError: false
 }
 
 // TODO H5、RN 还不支持 setTabBarBadge

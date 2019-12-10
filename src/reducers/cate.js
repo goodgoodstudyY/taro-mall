@@ -5,13 +5,15 @@ const INITIAL_STATE = {
   menu: [],
   goodsDetail: {},
   goodsList: [],
-  showPageErr: false
+  showPageError: false
 }
 
 export default function cate(state = INITIAL_STATE, action) {
   if (action && action.payload && action.payload.showPageError) {
     state.showPageError = true
     return state
+  } else {
+    state.showPageError = false
   }
   switch(action.type) {
     case CATE_TAG_MENU: {

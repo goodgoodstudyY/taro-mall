@@ -2,7 +2,7 @@ import { USER_INFO, USER_LOGIN, USER_LOGOUT } from '@constants/user'
 
 const INITIAL_STATE = {
   userInfo: {},
-  showPageErr: false
+  showPageError: false
 }
 
 export default function user(state = INITIAL_STATE, action) {

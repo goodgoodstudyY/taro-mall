@@ -30,7 +30,7 @@ export default class List extends Component {
             </View>
             <View className='f1 ml20 fsbs-c item-h100'>
               <View className='fs30 bold dish-info-detail ellipsis2'>{val.name}</View>
-              <View className='fs24 c999 hl24 mt10'>销量{val.sales}</View>
+              <View className='fs24 c999 hl24 mt10'>销量{val.sales || 0}</View>
               <View className='fsbs w100'>
                 <View className='price fsc'>
                   <Text className='fs20'>¥</Text>

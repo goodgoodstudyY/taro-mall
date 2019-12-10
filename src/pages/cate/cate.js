@@ -59,7 +59,7 @@ class Cate extends Component {
       this.props.dispatchMenu().then(data => {
         this.setState({
           loaded: true,
-          allMenu: res.concat(data)
+          allMenu: this.props.tagMenu.concat(data)
         })
       })
     })
@@ -187,6 +187,7 @@ class Cate extends Component {
     const { current, loading, currentOrderBy, currentOrder, filterOpen, allMenu } = this.state
     const height = getWindowHeight()
 
+    console.log(showPageError, 111111)
     if (!this.state.loaded) {
       return <Loading />
     }
@@ -277,7 +278,7 @@ class Cate extends Component {
             }}
           >
             <View className='filter-item-block'>
-              <View className='filter-item-block'>
+              {/* <View className='filter-item-block'>
                 <View className='block-title'>
                   <Text className='fs28 bold ls1'>商品状态</Text>
                 </View>
@@ -298,7 +299,7 @@ class Cate extends Component {
                     })
                   }
                 </View>
-              </View>
+              </View> */}
               <View className='filter-item-block'>
                 <View className='block-title'>
                   <Text className='fs28 bold ls1'>标签</Text>
