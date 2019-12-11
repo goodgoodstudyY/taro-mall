@@ -35,7 +35,15 @@ export default async function fetch(options) {
     if (res.statusCode == 200) {
       return data
     } else if (res.statusCode == 500) {
-      return {showPageError: true}
+      Taro.showToast({
+        title: '请求异常',
+        icon: 'none',
+        duration: 1000
+      })
+      setTimeout(() => {
+        Taro.navigateBack()
+      }, 1000)
+      return Promise.reject()
     } else if (res.statusCode == 403 || res.statusCode == 404) {
       Taro.showToast({
         title: '请求异常',

@@ -57,7 +57,7 @@ class Cate extends Component {
   }
 
   onInit() {
-    this.props.dispatchTagMenu().then((res) => {
+    this.props.dispatchTagMenu().then(() => {
       this.props.dispatchMenu().then(data => {
         this.setState({
           loaded: true,
@@ -79,16 +79,14 @@ class Cate extends Component {
         pageSize: this.state.pageSize,
         query: {
           minPrice: this.state.minPrice,
-          maxPrice: this.state.maxPrice
+          maxPrice: this.state.maxPrice,
+          status: 1
         }
       }
       if (this.state.currentOrderBy != 0) {
         params.q_orderBy = this.store.screen[this.state.currentOrderBy].orderBy
         params.q_order = this.state.currentOrder
       }
-      // if (this.state.selectedStatus != 3) {
-      //   params.query.status = this.state.selectedStatus
-      // }
       if (this.state.selectedTag != 0) {
         params.query.tagId = this.state.selectedTag
       }
@@ -111,7 +109,9 @@ class Cate extends Component {
       minPrice: '',
       maxPrice: ''
     }, () => {
-      let query = {}
+      let query = {
+        status: 1
+      }
       if (this.state.allMenu[index].tagId) {
         query.tagId = this.state.allMenu[index].tagId
       } else {
@@ -197,12 +197,21 @@ class Cate extends Component {
     }
   }
 
+  handlePrevent() {
+    Taro.showToast({
+      title: '搜索页面忘了写 这两天加上',
+      icon: 'none'
+    })
+    // Taro.navigateTo({
+    //   url: '/pages/search-goods/search-goods'
+    // })
+  }
+
   render () {
     const { showPageError, goodsList, tagMenu } = this.props
     const { current, loading, currentOrderBy, currentOrder, filterOpen, allMenu, minPrice, maxPrice } = this.state
     const height = getWindowHeight()
 
-    console.log(showPageError, 111111)
     if (!this.state.loaded) {
       return <Loading />
     }

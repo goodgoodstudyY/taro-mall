@@ -1,0 +1,84 @@
+@import "@styles/theme.scss";
+.home__search {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 0 30px 20px;
+  width: 100%;
+  background: #ffffff;
+  z-index: 9;
+
+  &-wrap {
+    height: 56px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border: 1px solid #333333;
+    @include hairline(border-width);
+    border-radius: 28px;
+  }
+
+  &-img {
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+  }
+
+  &-txt {
+    color: $text-color-light;
+    font-size: 28px;
+  }
+}
+
+.segment-title-con {
+  box-sizing: border-box;
+  padding: 0 30px;
+  width: 100%;
+}
+
+.history-segment {
+  margin-top: 45px;
+  transition: .1s;
+
+  &.active {
+    height: 355px;
+    opacity: 1;
+  }
+  &.dead {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+.history-block-con {
+  padding: 0 30px;
+  box-sizing: border-box;
+
+  .history-block {
+    position: relative;
+    margin-top: 40px;
+    margin-right: 20px;
+    padding: 2px 16px;
+    box-sizing: border-box;
+    min-width: 130px;
+    height: 54px;
+    line-height: 54px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    text-align: center;
+
+    .delete-icon-con {
+      position: absolute;
+      right: -12px;
+      top: -12px;
+    }
+  }
+}
+
+.empty-image {
+  margin-top: 23vh;
+  width: 200px;
+  height: 200px;
+}
