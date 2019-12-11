@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, ScrollView, Image, Text, Button } from '@tarojs/components'
+import { View, ScrollView, Image, Text, Button, Input } from '@tarojs/components'
 import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/cate'
@@ -25,7 +25,9 @@ class Cate extends Component {
     filterOpen: false,
     selectedTag: 0,
     pageNumber: 0,
-    pageSize: 20
+    pageSize: 20,
+    minPrice: '',
+    maxPrice: ''
   }
 
   store = {
@@ -75,7 +77,10 @@ class Cate extends Component {
       let params = {
         pageNumber: this.state.pageNumber,
         pageSize: this.state.pageSize,
-        query: {}
+        query: {
+          minPrice: this.state.minPrice,
+          maxPrice: this.state.maxPrice
+        }
       }
       if (this.state.currentOrderBy != 0) {
         params.q_orderBy = this.store.screen[this.state.currentOrderBy].orderBy
@@ -102,7 +107,9 @@ class Cate extends Component {
       currentOrder: 'desc',
       selectedTag: 0,
       pageNumber: 0,
-      pageSize: 20
+      pageSize: 20,
+      minPrice: '',
+      maxPrice: ''
     }, () => {
       let query = {}
       if (this.state.allMenu[index].tagId) {
@@ -133,13 +140,6 @@ class Cate extends Component {
     })
   }
 
-  selectStatusOptions(status, e) {
-    e.stopPropagation()
-    this.setState({
-      selectedStatus: status
-    })
-  }
-
   selectTag(id, e) {
     e.stopPropagation()
     this.setState({
@@ -150,8 +150,9 @@ class Cate extends Component {
   resetFilter(e) {
     e.stopPropagation()
     this.setState({
-      selectedStatus: 3,
-      selectedTag: 0
+      selectedTag: 0,
+      minPrice: '',
+      maxPrice: ''
     })
   }
 
@@ -162,6 +163,20 @@ class Cate extends Component {
     }, () => {
       this.getData()
     })
+  }
+
+  handleSetPrice(val, e) {
+    e.stopPropagation()
+    if (val == 'minPrice') {
+      this.setState({
+        minPrice: e.detail.value
+      })
+    } else {
+      this.setState({
+        maxPrice: e.detail.value
+      })
+    }
+    console.log(e)
   }
 
   handleFiltrateGoods(index) {
@@ -184,7 +199,7 @@ class Cate extends Component {
 
   render () {
     const { showPageError, goodsList, tagMenu } = this.props
-    const { current, loading, currentOrderBy, currentOrder, filterOpen, allMenu } = this.state
+    const { current, loading, currentOrderBy, currentOrder, filterOpen, allMenu, minPrice, maxPrice } = this.state
     const height = getWindowHeight()
 
     if (!this.state.loaded) {
@@ -279,28 +294,6 @@ class Cate extends Component {
             <View className='filter-item-block'>
               <View className='filter-item-block'>
                 <View className='block-title'>
-                  <Text className='fs28 bold ls1'>商品状态</Text>
-                </View>
-                <View className='block-content-con fss fw'>
-                  {
-                    this.store.goodsStatus.map((x, i) => {
-                      return (
-                        <View
-                          className={'block-item ' + (this.state.selectedStatus == i ? 'block-item-active' : '')}
-                          onClick={this.selectStatusOptions.bind(this, i)}
-                          key={x.id}
-                        >
-                          <Text
-                            className={'fs24 thin ' + (this.state.selectedStatus == i ? 'cab' : '')}
-                          >{x}</Text>
-                        </View>
-                      )
-                    })
-                  }
-                </View>
-              </View>
-              <View className='filter-item-block'>
-                <View className='block-title'>
                   <Text className='fs28 bold ls1'>标签</Text>
                 </View>
                 <View className='block-content-con fss fw'>
@@ -319,6 +312,32 @@ class Cate extends Component {
                       )
                     })
                   }
+                </View>
+              </View>
+              <View className='filter-item-block'>
+                <View className='block-title'>
+                  <Text className='fs28 bold ls1'>价格区间(元)</Text>
+                </View>
+                <View className='block-content-con fsc fw'>
+                  <Input
+                    className='min-price price-input fs26'
+                    placeholder='最低价'
+                    type='number'
+                    placeholderClass='c999 fs26 fcc'
+                    onClick={this.cancelMove}
+                    value={minPrice}
+                    onChange={this.handleSetPrice.bind(this, 'minPrice')}
+                  />
+                  <Text className='ml10'>——</Text>
+                  <Input
+                    className='max-price price-input fs26'
+                    placeholder='最高价'
+                    type='number'
+                    onClick={this.cancelMove}
+                    value={maxPrice}
+                    placeholderClass='c999 fs26 fcc'
+                    onChange={this.handleSetPrice.bind(this, 'maxPrice')}
+                  />
                 </View>
               </View>
             </View>
