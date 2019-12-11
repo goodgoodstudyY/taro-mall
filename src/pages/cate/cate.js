@@ -61,7 +61,7 @@ class Cate extends Component {
       this.props.dispatchMenu().then(data => {
         this.setState({
           loaded: true,
-          allMenu: res.concat(data)
+          allMenu: this.props.tagMenu.concat(data)
         })
       })
     })
@@ -202,6 +202,7 @@ class Cate extends Component {
     const { current, loading, currentOrderBy, currentOrder, filterOpen, allMenu, minPrice, maxPrice } = this.state
     const height = getWindowHeight()
 
+    console.log(showPageError, 111111)
     if (!this.state.loaded) {
       return <Loading />
     }

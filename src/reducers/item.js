@@ -2,7 +2,7 @@ import { ITEM_INFO, ITEM_RECOMMEND } from '@constants/item'
 
 const INITIAL_STATE = {
   itemInfo: {},
-  showPageErr: false
+  showPageError: false
 }
 
 export default function item(state = INITIAL_STATE, action) {
