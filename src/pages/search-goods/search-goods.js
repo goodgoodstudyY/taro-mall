@@ -1,14 +1,16 @@
 import Taro, { Component } from '@tarojs/taro'
 // eslint-disable-next-line no-unused-vars
-import { Block, View, Text, Image } from '@tarojs/components'
-
-/** 页面组件, 组件, 装饰器引入 */
+import { Block, View, Text, Image, Input } from '@tarojs/components'
+import { Loading } from '@components'
+import { connect } from '@tarojs/redux'
+import * as actions from '@actions/cate'
 import MyPage from '../../components/my-page/index'
-import searchIcon from '../../assets/search.png'
+import { crop } from '../../utils/util'
 
-/** 样式引入 */
 import './search-goods.scss'
 
+const PLATFORM_SEARCH_SHOP_LABEL_MAX_LENGTH = 10
+@connect(state => state.cate, { ...actions })
 export default class PlatformShopSearchPage extends Component {
 
   /** 页面配置 */
@@ -27,6 +29,10 @@ export default class PlatformShopSearchPage extends Component {
     shops: [],
     active: {
       selectedHistory: '',
+    },
+    pageInfo: {
+      pageSize: 20,
+      pageNumer: 0
     }
   }
   store = {
@@ -46,7 +52,16 @@ export default class PlatformShopSearchPage extends Component {
   /** 事件响应 */
 
   search (e) {
+    e = e.detail ? e.detail.value : e
     const history = Taro.getStorageSync('PLATFORM_SEARCH_SHOP_LABEL') || []
+    if (e) {
+      if (!history.includes(e)) {
+        if (history.length >= PLATFORM_SEARCH_SHOP_LABEL_MAX_LENGTH) {
+          history.pop()
+        }
+        history.unshift(e)
+      }
+    }
     this.setState({
       search: e,
       history
@@ -104,32 +119,55 @@ export default class PlatformShopSearchPage extends Component {
     })
   }
 
-  /** 页面跳转 */
+  changeSearchValue(e) {
+    this.setState({
+      search: e.detail.value
+    })
+  }
 
   goBack () {
     Taro.navigateBack()
   }
 
-  /** Computed */
+  handleGoDetail(id) {
+    Taro.navigateTo({
+      url: `/pages/goods-detail/goods-detail?id=${id}`
+    })
+  }
 
   render () {
-    const { loadStyle, search, history, shops, active } = this.state
+    const { search, history, shops, active, loadStyle } = this.state
+
+    if (this.state.loadStyle == 2) {
+      return <Loading />
+    }
 
     return (
-      <MyPage my-class='page' oninit={this.initSearchItem.bind(this)} loadStyle={loadStyle == 3 ? 0 : loadStyle}>
+      <MyPage my-class='page' oninit={this.initSearchItem.bind(this)}>
 
         <View className='sticky z10'>
-          <View className='home__search'>
-            <View className='home__search-wrap' onClick={this.handlePrevent}>
-              <Image className='home__search-img' src={searchIcon} />
-              <Text className='home__search-txt'>
-                搜索商品
-              </Text>
+          <View className='segment-bs-cb p-r search-con fsbc c999 dark'>
+            <Input
+              className='search-input dark'
+              type='text'
+              value={search}
+              placeholder='请输入商品名称'
+              placeholderClass='fs24 c888'
+              onInput={this.changeSearchValue}
+              onConfirm={this.search}
+            />
+            {/* search button */}
+            <View className='fcc' onClick={this.search}>
+              <Text className='iconfont icon-search c999 fs30 dark'>&#xe64d;</Text>
             </View>
+            <View className='fcc' onClick={this.resetList}>
+              <Text className={'iconfont icon-clear c999 fs30 ' + (search ? 'active' : '')}>&#xe652;</Text>
+            </View>
+            <Text className='fs32 c999' onClick={this.goBack}>取消</Text>
           </View>
         </View>
 
-        <View className={'segment history-segment fss-c ' + (search ? 'dead' : 'active')}>
+        <View className={'segment history-segment fss-c ' + (search || shops.length ? 'dead' : 'active')}>
           {/* header */}
           <View className='segment-title-con fsbc'>
             <View className='segment-title fs28'>历史搜索</View>
@@ -168,7 +206,7 @@ export default class PlatformShopSearchPage extends Component {
           (loadStyle == 3 && !shops.length) && (
             <View className='fsc-c '>
               <Image className='empty-image' src='https://weapp-1253522117.image.myqcloud.com//image/20190710/b166bd6ca055c38d.png' mode='aspectFill' />
-              <Text className='mt60 fs28 c999'>未找到相关店铺哦~ 换个关键字看看?</Text>
+              <Text className='mt60 fs28 c999'>未找到相关商品哦~ 换个关键字看看?</Text>
             </View>
           )
         }
@@ -178,7 +216,68 @@ export default class PlatformShopSearchPage extends Component {
             shops.map((s, idx) => {
               return (
                 <Block key={'' + s.id + idx}>
-                  <Shop shop={s} styleControl={idx === shops.length - 1 ? 'no-border' : ''} />
+                  <View
+                    className='shop'
+                    onClick={this.handleGoDetail.bind(this, s.id)}
+                  >
+                    <View className={'shop-content-con fsbc ' + (idx === shops.length - 1 ? 'no-border' : '')}>
+
+                      <View className='fcc h100'>
+                        <Image
+                          className='shop-image'
+                          src={crop(s.smallPic, 150)}
+                          mode='aspectFill'
+                        />
+                      </View>
+                      <View className='shop-body-con ml20 f1 fsbs-c'>
+                        {/* 商户名称行 */}
+                        <View className='fsbc w100'>
+                          <Text className='shop-name fs32 ls1 c1a bold ellipsis2'>{s.name}</Text>
+                        </View>
+
+                        {/* 商户优惠券行 */}
+                        <View className='mt18 f'>
+                          <View className='fs24 c999 hl24 mt10'>销量{s.sales || 0}</View>
+                        </View>
+
+                        {/* 商户信息行 */}
+                        <View className='shop-info f mt20 ellipsis1'>
+                        <View className='fsbs w100'>
+                          <View className='price fsc'>
+                            <Text className='fs20'>¥</Text>
+                            <Text className='fs30'>{s.price}</Text>
+                            <Text className='fs24'>/{s.unit}</Text>
+                          </View>
+                          <View className='fcc'>
+                            {
+                              s.num && s.num > 0 &&
+                                <View className='fsc'>
+                                  <View onClick={this.discrement.bind (this, s)} className='discrement-layout'>
+                                    <Image
+                                      className='discrement fcc'
+                                      mode='aspectFill'
+                                      src='https://weapp-1253522117.image.myqcloud.com//image/20190318/9b4ee6ca0bd7fafb.png'
+                                    />
+                                  </View>
+                                  <View className='f36 c000'>{s.num || 0}</View>
+                                </View>
+                            }
+                            <View className='increment-layout' onClick={this.increment.bind (this, s)}>
+                              <View className='increment-bg'>
+                                <Image
+                                  className='increment fcc'
+                                  mode='aspectFill'
+                                  src='https://weapp-1253522117.image.myqcloud.com//image/20190318/d490bd5578fc447b.png'
+                                />
+                              </View>
+                            </View>
+                          </View>
+                        </View>
+                        </View>
+
+                      </View>
+                    </View>
+                  </View>
                 </Block>
               )
             })
@@ -204,7 +303,10 @@ export default class PlatformShopSearchPage extends Component {
         loadStyle: 0,
         search: '',
         shops: [],
-        ...Taro.$const.pageInfo(),
+        pageInfo: {
+          pageNumer: 0,
+          pageSize: 20
+        },
       }, resolve)
     })
   }
@@ -213,7 +315,10 @@ export default class PlatformShopSearchPage extends Component {
     this.setState({
       loadStyle: 0,
       shops: [],
-      ...Taro.$const.pageInfo(),
+      pageInfo: {
+        pageNumer: 0,
+        pageSize: 20
+      }
     }, () => {
       this.loadMore()
     })
@@ -222,26 +327,24 @@ export default class PlatformShopSearchPage extends Component {
   // TODO 封装高阶组件
   getData () {
     return new Promise(resolve => {
-      const nextPage = this.state.pageInfo.pageIndex + 1
+      const nextPage = this.state.pageInfo.pageNumber + 1
       this.setState({
         pageInfo: {
           pageSize: this.state.pageInfo.pageSize,
-          pageIndex: nextPage
+          pageNumber: nextPage
         }
       }, () => {
-        Taro.$apiRenderData(this, {
-          url: '/customer/center/getShopList',
-          data: Object.assign({
-            popularity: 'desc',
-            keyword: this.state.search,
-            area_id: Taro.$globalData.platData.area.id,
-            pageIndex: this.state.pageInfo.pageIndex,
-            pageSize: this.state.pageInfo.pageSize,
-          })
+        this.props.dispatchSubList({
+          pageNumer: this.state.pageInfo.pageNumer,
+          pageSize: this.state.pageInfo.pageSize,
+          query: {
+            name: this.state.search,
+            status: 1
+          }
         }).then(res => {
-          const data = res.data.data
-          resolve(data.list)
-        }, resolve)
+          console.log(res)
+          resolve(res.list)
+        })
       })
     })
   }

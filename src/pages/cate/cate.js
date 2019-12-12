@@ -198,13 +198,9 @@ class Cate extends Component {
   }
 
   handlePrevent() {
-    Taro.showToast({
-      title: '搜索页面忘了写 这两天加上',
-      icon: 'none'
+    Taro.navigateTo({
+      url: '/pages/search-goods/search-goods'
     })
-    // Taro.navigateTo({
-    //   url: '/pages/search-goods/search-goods'
-    // })
   }
 
   render () {
