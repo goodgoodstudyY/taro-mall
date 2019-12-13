@@ -1,19 +1,12 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Image, ScrollView, Button } from '@tarojs/components'
+import { View, Text, Image, ScrollView } from '@tarojs/components'
 import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/home'
 import { dispatchCartNum } from '@actions/cart'
 import { getWindowHeight } from '@utils/style'
 import Banner from './banner'
-import Policy from './policy'
-import Pin from './pin'
 import MyPage from '../../components/my-page/index'
-import Operation from './operation'
-import Manufactory from './manufactory'
-import FlashSale from './flash-sale'
-import Popular from './popular'
-import Category from './category'
 import Recommend from './recommend'
 import searchIcon from '../../assets/search.png'
 import './home.scss'
@@ -72,13 +65,10 @@ class Home extends Component {
     })
   }
 
-  handlePrevent = (res) => {
-    console.log(res)
-    // XXX 时间关系，首页只实现底部推荐商品的点击
-    // Taro.showToast({
-    //   title: '目前只可点击底部推荐商品',
-    //   icon: 'none'
-    // })
+  handlePrevent = () => {
+    Taro.navigateTo({
+      url: '/pages/search-goods/search-goods'
+    })
   }
 
   render () {
@@ -86,20 +76,15 @@ class Home extends Component {
       return <Loading />
     }
 
-    const { homeInfo, searchCount, recommend, pin, showPageError } = this.props
+    const { homeInfo, recommend, showPageError } = this.props
     return (
       <MyPage showPageError={showPageError} onReload={this.onInit.bind(this)}>
         <View className='home'>
           <View className='home__search'>
-            <Button className='home__search-wrap'
-              onGetUserInfo={this.handlePrevent}
-              open-type='getUserInfo'
-            >
+            <View className='home__search-wrap' onClick={this.handlePrevent}>
               <Image className='home__search-img' src={searchIcon} />
-              <Text className='home__search-txt'>
-                {`搜索商品，共${searchCount}款好物`}
-              </Text>
-            </Button>
+              <Text className='home__search-txt'>搜索商品</Text>
+            </View>
           </View>
           <ScrollView
             scrollY
@@ -109,34 +94,6 @@ class Home extends Component {
           >
             <View onClick={this.handlePrevent}>
               <Banner list={homeInfo.focus} />
-              {/* <Policy list={homeInfo.policyDesc} /> */}
-
-              {/* 免费拼团 */}
-              {/* <Pin
-                banner={homeInfo.newUserExclusive}
-                list={pin}
-              /> */}
-
-              {/* 不知道叫啥 */}
-              {/* <Operation
-                list={homeInfo.operationCfg}
-                sale={homeInfo.saleCenter}
-              /> */}
-
-              {/* 品牌制造 */}
-              {/* <Manufactory
-                data={homeInfo.manufactory}
-                boss={homeInfo.dingBossRcmd}
-              /> */}
-
-              {/* 限时购 */}
-              {/* <FlashSale data={homeInfo.flashSale} /> */}
-
-              {/* 人气推荐 */}
-              {/* <Popular data={homeInfo.popularItems} /> */}
-
-              {/* 类目热销榜 */}
-              {/* <Category data={homeInfo.hotCategory} /> */}
             </View>
 
             {/* 为你推荐 */}
