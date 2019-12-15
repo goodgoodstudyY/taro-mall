@@ -33,8 +33,8 @@ class Cate extends Component {
 
   onInit() {
     this.props.dispatchGoodsDetail(this.state.goodsId).then((res) => {
-      res.descPic = res.descPic.split(',')
-      res.smallPic = res.smallPic.split(',')
+      res.descPic = res.descPic && res.descPic.split(',')
+      res.smallPic = res.smallPic && res.smallPic.split(',')
       this.setState({
         loaded: true,
         goodsDetail: res
@@ -76,7 +76,7 @@ class Cate extends Component {
           <View className='goods-swiper-layout'>
             <Swiper className='goods-swiper' interval={2600} circular autoplay>
                 {
-                    goodsDetail.smallPic.map((i, n) => {
+                    goodsDetail.smallPic && goodsDetail.smallPic.map((i, n) => {
                         return (
                             <SwiperItem key={i}>
                                 <View className='goods-swiper-item fcc'>
@@ -130,19 +130,19 @@ class Cate extends Component {
                 <ScrollView className='params-content' scrollY>
                   <View className='fsbc params-item'>
                     <Text className='fs30 c1a'>商品体积（立方）</Text>
-                    <Text className='c999 fs30'>{goodsDetail.size}</Text>
+                    <Text className='c999 fs30'>{goodsDetail.size || 0}</Text>
                   </View>
                   <View className='fsbc params-item'>
                     <Text className='fs30 c1a'>规格说明</Text>
-                    <Text className='c999 fs30'>{goodsDetail.standard}</Text>
+                    <Text className='c999 fs30'>{goodsDetail.standard || ''}</Text>
                   </View>
                   <View className='fsbc params-item'>
                     <Text className='fs30 c1a'>单位</Text>
-                    <Text className='c999 fs30'>{goodsDetail.unit}</Text>
+                    <Text className='c999 fs30'>{goodsDetail.unit || ''}</Text>
                   </View>
                   <View className='fsbc params-item'>
                     <Text className='fs30 c1a'>商品质量（千克）</Text>
-                    <Text className='c999 fs30'>{goodsDetail.weight}</Text>
+                    <Text className='c999 fs30'>{goodsDetail.weight || 0}</Text>
                   </View>
                 </ScrollView>
                 <View className='params-button fcc cfff fs34' onClick={this.handleOpenParams}>完成</View>

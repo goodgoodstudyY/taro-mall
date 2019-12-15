@@ -4,16 +4,18 @@ import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/home'
 import { dispatchCartNum } from '@actions/cart'
+import { dispatchLogin } from '@actions/user'
 import { getWindowHeight } from '@utils/style'
 import Banner from './banner'
 import MyPage from '../../components/my-page/index'
+import GetPhone from '../../components/getPhone/index'
 import Recommend from './recommend'
 import searchIcon from '../../assets/search.png'
 import './home.scss'
 
 const RECOMMEND_SIZE = 20
 
-@connect(state => state.home, { ...actions, dispatchCartNum })
+@connect(state => {return {home: state.home, user: state.user}}, { ...actions, dispatchLogin, dispatchCartNum })
 class Home extends Component {
   config = {
     navigationBarTitleText: '包装定制'
@@ -23,13 +25,11 @@ class Home extends Component {
     loaded: false,
     loading: false,
     lastItemId: 0,
-    hasMore: true
+    hasMore: true,
+    getPhone: true
   }
 
   componentDidMount() {
-    Taro.login().then(res => {
-      console.log(res, 1111)
-    })
     this.onInit()
   }
 
@@ -71,12 +71,38 @@ class Home extends Component {
     })
   }
 
+  handleCloseMark() {
+    this.setState({
+      getPhone: false
+    })
+  }
+
+  handleGetPhone(e) {
+    this.props.dispatchLogin({
+      encryptedData: e.detail.encryptedData,
+      iv: e.detail.iv,
+      sessionKey: Taro.$globalData.sessionKey
+    }).then((res) => {
+      this.setState({
+        getPhone: false
+      })
+      Taro.$globalData.token = res
+      Taro.setStorageSync('loginInfo', {
+        'sessionKey': Taro.$globalData.sessionKey,
+        'token': res,
+        'expire_time': Date.parse(new Date()) + 4.5 * 24 * 60 * 60 * 1000,
+      })
+    })
+  }
+
   render () {
     if (!this.state.loaded) {
       return <Loading />
     }
 
-    const { homeInfo, recommend, showPageError } = this.props
+    const { homeInfo, recommend, showPageError } = this.props.home
+    const { getPhone } = this.state
+
     return (
       <MyPage showPageError={showPageError} onReload={this.onInit.bind(this)}>
         <View className='home'>
@@ -111,6 +137,13 @@ class Home extends Component {
             }
           </ScrollView>
         </View>
+        {
+          getPhone
+          ? (
+            <GetPhone layout='closeMark' onCloseMark={this.handleCloseMark.bind(this)} onGetPhoneNumber={this.handleGetPhone.bind(this)} />
+          )
+          : <View></View>
+        }
       </MyPage>
     )
   }

@@ -59,6 +59,7 @@ class Cate extends Component {
   onInit() {
     this.props.dispatchTagMenu().then(() => {
       this.props.dispatchMenu().then(data => {
+        console.log(data, 11111)
         this.setState({
           loaded: true,
           allMenu: this.props.tagMenu.concat(data)

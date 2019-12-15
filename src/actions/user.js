@@ -1,4 +1,4 @@
-import { USER_INFO, USER_LOGIN, USER_LOGOUT } from '@constants/user'
+import { USER_INFO, USER_SESSION, USER_LOGOUT, USER_LOGIN } from '@constants/user'
 import { API_USER, API_USER_LOGIN } from '@constants/api'
 import { createAction } from '@utils/redux'
 
@@ -22,10 +22,16 @@ export const dispatchUser = payload => createAction({
  */
 export const dispatchLogin = payload => createAction({
   url: API_USER_LOGIN,
+  fetchOptions: {
+    showToast: false,
+    autoLogin: false
+  },
+  method: 'POST',
   type: USER_LOGIN,
   payload
 })
 
+export const dispatchSession = () => ({type: USER_SESSION})
 /**
  * 用户退出登录
  */

@@ -1,5 +1,6 @@
+import Taro from '@tarojs/taro'
 import { CATE_TAG_MENU, GOOGS_DETAIL, CATE_SUB_LIST, CATE_MENU } from '@constants/cate'
-import { API_GOODS_TAG_LIST, API_GOODS_Detail, API_CATE_SUB_LIST, API_CATE } from '@constants/api'
+import { API_GOODS_TAG_LIST, API_GOODS_Detail, API_CATE_SUB_LIST, API_CATE, API_CATE_SUB_LIST_HAVE_TOKEN } from '@constants/api'
 import { createAction } from '@utils/redux'
 
 /**
@@ -32,7 +33,7 @@ export const dispatchGoodsDetail = payload => createAction({
  * @param {*} payload
  */
 export const dispatchSubList = payload => createAction({
-  url: API_CATE_SUB_LIST,
+  url: Taro.$globalData.token ? API_CATE_SUB_LIST_HAVE_TOKEN : API_CATE_SUB_LIST,
   type: CATE_SUB_LIST,
   method: 'POST',
   payload

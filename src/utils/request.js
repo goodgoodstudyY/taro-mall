@@ -1,35 +1,47 @@
 import Taro from '@tarojs/taro'
-import { API_USER, API_USER_LOGIN } from '@constants/api'
+import { API_USER_SEESION } from '@constants/api'
 
-function getStorage(key) {
-  return Taro.getStorage({ key }).then(res => res.data).catch(() => '')
+
+const noNeedLoginURLs = [
+]
+
+export async function fetchApi(options) {
+  return new Promise((resolve, reject) => {
+    const token = Taro.$globalData.token
+    if (token) {
+      return directRequest(options).then(resolve).catch(reject)
+    } else if (noNeedLoginURLs.indexOf(options.url) >= 0) {
+      return directRequest(options).then(resolve).catch(reject)
+    } else {
+      return getToken().then(() => {
+        return directRequest(options).then(resolve).catch(reject)
+      })
+    }
+  })
 }
 
-function updateStorage(data = {}) {
-  return Promise.all([
-    Taro.setStorage({ key: 'token', data: data['3rdSession'] || '' }),
-    Taro.setStorage({ key: 'uid', data: data['uid'] || ''})
-  ])
-}
-
-/**
- * 简易封装网络请求
- * // NOTE 需要注意 RN 不支持 *StorageSync，此处用 async/await 解决
- * @param {*} options
- */
-export default async function fetch(options) {
+export async function directRequest(options) {
   const { url, payload, method = 'GET', showToast = true, autoLogin = true } = options
-  const token = await getStorage('token')
-  const header = token ? { 'WX-PIN-SESSION': token, 'X-WX-3RD-Session': token } : {}
+  let header = ''
   if (method === 'POST') {
-    header['content-type'] = 'application/json'
+    header = 'application/json'
   }
-
+  // if (Taro.$globalData.token) {
+  //   Object.assign(
+  //     payload || {},
+  //     {
+  //       token: Taro.$globalData.token
+  //     }
+  //   )
+  // }
   return Taro.request({
     url,
     method,
     data: payload,
-    header
+    header: {
+      'Content-Type': header || 'application/x-www-form-urlencoded',
+      'token': Taro.$globalData.token ? Taro.$globalData.token : ''
+    },
   }).then(async (res) => {
     const { data } = res.data
     if (res.statusCode == 200) {
@@ -58,16 +70,6 @@ export default async function fetch(options) {
       return Promise.reject()
     }
 
-    if (url === API_USER_LOGIN) {
-      await updateStorage(data)
-    }
-
-    // XXX 用户信息需展示 uid，但是 uid 是登录接口就返回的，比较蛋疼，暂时糅合在 fetch 中解决
-    if (url === API_USER) {
-      const uid = await getStorage('uid')
-      return { ...data, uid }
-    }
-
     return data
   }).catch((err) => {
     const defaultMsg = err.code && err.code === 'CODE_AUTH_EXPIRED' ? '登录失效' : '请求异常'
@@ -86,4 +88,71 @@ export default async function fetch(options) {
 
     return Promise.reject({ message: defaultMsg, ...err })
   })
+}
+export async function getToken() {
+  return new Promise(resolve => {
+    const loginInfo = Taro.getStorageSync('loginInfo')
+
+    if (loginInfo && Date.parse(new Date()) < loginInfo.expire_time) {
+      // store.dispatch({
+      //   type: 'USER_LOGIN',
+      //   payload: {
+      //     loginInfo: {
+      //       token: loginInfo.token,
+      //     }
+      //   }
+      // })
+      Taro.$globalData.token = loginInfo.token
+      Taro.$globalData.sessionKey = loginInfo.sessionKey
+      resolve()
+    } else if (loginInfo && loginInfo.sessionKey) {
+      Taro.checkSession({
+        success: () => {
+          Taro.$globalData.sessionKey = loginInfo.sessionKey
+          resolve()
+        },
+        fail: () => {
+          Taro.removeStorageSync('loginInfo')
+          login().then(resolve)
+        }
+      })
+    } else {
+      loginInfo && Taro.removeStorageSync('loginInfo')
+      login().then(resolve)
+    }
+  })
+}
+
+export function login() {
+  let loginPromise
+  loginPromise = new Promise(function (resolve, reject) {
+      Taro.login().then(resLogin => {
+        let loginpParams = {
+          url: API_USER_SEESION,
+          payload: {code: resLogin.code},
+          method: 'POST',
+          showToast: false,
+          autoLogin: false
+        }
+        directRequest(loginpParams).then(res => {
+          // Taro.setStorageSync('loginInfo', {
+          //   'sessionKey': res.sessionKey,
+          //   'expire_time': Date.parse(new Date()) + 4.5 * 24 * 60 * 60 * 1000,
+          // })
+          Taro.$globalData.sessionKey = res.sessionKey
+
+          resolve(res)
+        }).catch(err => {
+          reject(err)
+        })
+      }).catch(err => {
+        Taro.hideLoading()
+        Taro.showToast({
+          title: '登录失败',
+          icon: 'none'
+        })
+        reject(err)
+      })
+    })
+  return loginPromise
 }
