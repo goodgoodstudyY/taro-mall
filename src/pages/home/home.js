@@ -26,7 +26,12 @@ class Home extends Component {
     loading: false,
     lastItemId: 0,
     hasMore: true,
-    getPhone: true
+    getPhone: true,
+    banner: [
+      'https://weapp-1253522117.image.myqcloud.com//image/20190828/099b702e00c4b94a.png',
+      'https://weapp-1253522117.image.myqcloud.com//image/20190828/099b702e00c4b94a.png',
+      'https://weapp-1253522117.image.myqcloud.com//image/20190828/099b702e00c4b94a.png',
+    ]
   }
 
   componentDidMount() {
@@ -34,13 +39,14 @@ class Home extends Component {
   }
 
   onInit() {
-    this.props.dispatchHome().then(() => {
-      this.setState({ loaded: true })
-    })
-    this.props.dispatchCartNum()
-    this.props.dispatchSearchCount()
-    this.props.dispatchPin({ orderType: 4, size: 12 })
-    this.loadRecommend()
+    this.setState({ loaded: true })
+    // this.props.dispatchHome().then(() => {
+    //   this.setState({ loaded: true })
+    // })
+    // this.props.dispatchCartNum()
+    // this.props.dispatchSearchCount()
+    // this.props.dispatchPin({ orderType: 4, size: 12 })
+    // this.loadRecommend()
   }
 
   loadRecommend = () => {
@@ -100,8 +106,8 @@ class Home extends Component {
       return <Loading />
     }
 
-    const { homeInfo, recommend, showPageError } = this.props.home
-    const { getPhone } = this.state
+    const { showPageError } = this.props.home
+    const { getPhone, banner } = this.state
 
     return (
       <MyPage showPageError={showPageError} onReload={this.onInit.bind(this)}>
@@ -115,17 +121,27 @@ class Home extends Component {
           <ScrollView
             scrollY
             className='home__wrap'
-            onScrollToLower={this.loadRecommend}
+            // onScrollToLower={this.loadRecommend}
             style={{ height: getWindowHeight() }}
           >
             <View onClick={this.handlePrevent}>
-              <Banner list={homeInfo.focus} />
+              <Banner list={banner} />
             </View>
 
-            {/* 为你推荐 */}
-            <Recommend list={recommend} />
+            <View className='fcs fw mt20'>
+              <Image src='https://weapp-1253522117.image.myqcloud.com//image/20191202/508bd76cf5e61581.png?imageView2/1/w/200/h/200' className='img' />
+              <Image src='https://weapp-1253522117.image.myqcloud.com//image/20191202/508bd76cf5e61581.png?imageView2/1/w/200/h/200' className='ml20 img' />
+              <Image src='https://weapp-1253522117.image.myqcloud.com//image/20191202/508bd76cf5e61581.png?imageView2/1/w/200/h/200' className='ml20 img' />
+              <Image src='https://weapp-1253522117.image.myqcloud.com//image/20191202/508bd76cf5e61581.png?imageView2/1/w/200/h/200' className='img' />
+              <Image src='https://weapp-1253522117.image.myqcloud.com//image/20191202/508bd76cf5e61581.png?imageView2/1/w/200/h/200' className='ml20 img' />
+              <Image src='https://weapp-1253522117.image.myqcloud.com//image/20191202/508bd76cf5e61581.png?imageView2/1/w/200/h/200' className='ml20 img' />
+            </View>
 
-            {this.state.loading &&
+            <View className='footer'>
+              <Image src='https://weapp-1253522117.image.myqcloud.com//image/20190828/099b702e00c4b94a.png?imageView2/1/w/750/h/200' className='footer-img' />
+            </View>
+
+            {/* {this.state.loading &&
               <View className='home__loading'>
                 <Text className='home__loading-txt'>正在加载中...</Text>
               </View>
@@ -134,7 +150,7 @@ class Home extends Component {
               <View className='home__loading home__loading--not-more'>
                 <Text className='home__loading-txt'>更多内容，敬请期待</Text>
               </View>
-            }
+            } */}
           </ScrollView>
         </View>
         {

@@ -27,7 +27,8 @@ class Cate extends Component {
     pageNumber: 0,
     pageSize: 20,
     minPrice: '',
-    maxPrice: ''
+    maxPrice: '',
+    goodsList: []
   }
 
   store = {
@@ -52,14 +53,26 @@ class Cate extends Component {
     goodsStatus: ['下架', '上架', '待上架', '全部']
   }
 
-  componentDidMount() {
-    this.onInit()
+  componentDidShow() {
+    this.setState({
+      current: 0,
+      currentOrderBy: 0,
+      currentOrder: 'desc',
+      filterOpen: false,
+      selectedTag: 0,
+      pageNumber: 0,
+      pageSize: 20,
+      minPrice: '',
+      maxPrice: '',
+      goodsList: []
+    }, () => {
+      this.onInit()
+    })
   }
 
   onInit() {
     this.props.dispatchTagMenu().then(() => {
       this.props.dispatchMenu().then(data => {
-        console.log(data, 11111)
         this.setState({
           loaded: true,
           allMenu: this.props.tagMenu.concat(data)
@@ -90,10 +103,17 @@ class Cate extends Component {
       }
       if (this.state.selectedTag != 0) {
         params.query.tagId = this.state.selectedTag
+      } else if(this.state.current) {
+        if (this.state.allMenu[this.state.current].tagId) {
+          params.query.tagId = this.state.allMenu[this.state.current].tagId
+        } else {
+          params.query.typeId = this.state.allMenu[this.state.current].typeId
+        }
       }
-      this.props.dispatchSubList(params).then(() => {
+      this.props.dispatchSubList(params).then(res => {
         this.setState({
-          loading: false
+          loading: false,
+          goodsList: this.state.goodsList.concat(res.list)
         })
       })
     })
@@ -108,7 +128,8 @@ class Cate extends Component {
       pageNumber: 0,
       pageSize: 20,
       minPrice: '',
-      maxPrice: ''
+      maxPrice: '',
+      goodsList: []
     }, () => {
       let query = {
         status: 1
@@ -122,8 +143,12 @@ class Cate extends Component {
         pageNumber: 1,
         pageSize: 20,
         query
-      }).then(() => {
-        this.setState({ current: index, loading: false })
+      }).then(res => {
+        this.setState({ 
+          current: index,
+          loading: false,
+          goodsList: this.state.goodsList.concat(res.list)
+        })
       })
     })
   }
@@ -160,7 +185,8 @@ class Cate extends Component {
   getPageData() {
     this.setState({
       pageNumber: 0,
-      pageSize: 20
+      pageSize: 20,
+      goodsList: []
     }, () => {
       this.getData()
     })
@@ -191,7 +217,8 @@ class Cate extends Component {
         currentOrder: this.state.currentOrder == 'desc' ? 'asc' : 'desc',
         pageNumber: 0,
         pageSize: 20,
-        loading: true
+        loading: true,
+        goodsList: []
       }, () => {
         this.getData()
       })
@@ -205,8 +232,8 @@ class Cate extends Component {
   }
 
   render () {
-    const { showPageError, goodsList, tagMenu } = this.props
-    const { current, loading, currentOrderBy, currentOrder, filterOpen, allMenu, minPrice, maxPrice } = this.state
+    const { showPageError, tagMenu } = this.props
+    const { current, loading, currentOrderBy, currentOrder, filterOpen, allMenu, minPrice, maxPrice, goodsList } = this.state
     const height = getWindowHeight()
 
     if (!this.state.loaded) {

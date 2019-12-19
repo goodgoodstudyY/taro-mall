@@ -23,12 +23,12 @@ export default class SwiperBanner extends Component {
         >
           {list.map(item => (
             <SwiperItem
-              key={item.rank}
+              key={item}
               className='home-banner__swiper-item'
             >
               <Image
                 className='home-banner__swiper-item-img'
-                src={item.img}
+                src={item}
               />
             </SwiperItem>
           ))}
