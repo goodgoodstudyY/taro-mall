@@ -62,3 +62,22 @@
   width: 100vw;
   height: 200px;
 }
+
+.fixed-button {
+  position: fixed;
+  right: 20px;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 50%;
+  width: 90px;
+  height: 90px;
+  background: rgba(0, 0, 0, 0.8);
+}
+.contact-service {
+  bottom: 20%;
+}
+.call-business {
+  bottom: 10%;
+}

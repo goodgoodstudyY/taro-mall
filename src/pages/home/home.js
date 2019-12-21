@@ -98,6 +98,16 @@ class Home extends Component {
     })
   }
 
+  callPhone () {
+    Taro.makePhoneCall ({
+      phoneNumber: '18300681922',
+    })
+  }
+
+  handleContact(e) {
+    console.log(e)
+  }
+
   render () {
     if (!this.state.loaded) {
       return <Loading />
@@ -157,6 +167,13 @@ class Home extends Component {
           )
           : <View></View>
         }
+
+        <Button className='fixed-button contact-service fcc' openType='contact' onContact={this.handleContact.bind(this)}>
+          <View className='iconfont cfff fs56'>&#xe62b;</View>
+        </Button>
+        <View className='fixed-button call-business fcc' onClick={this.callPhone.bind(this)}>
+          <View className='iconfont cfff fs56'>&#xe628;</View>
+        </View>
       </MyPage>
     )
   }

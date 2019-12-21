@@ -24,12 +24,11 @@ class App extends Component {
       'pages/goods-detail/goods-detail',
       'pages/cart/cart',
       'pages/user/user',
-      'pages/user-login/user-login',
       'pages/user-login-email/user-login-email',
       'pages/item/item',
-      'pages/webview/webview',
       'pages/order/order',
-      'pages/search-goods/search-goods'
+      'pages/search-goods/search-goods',
+      'pages/shopInfo/shopInfo'
     ],
     window: {
       backgroundTextStyle: 'light',

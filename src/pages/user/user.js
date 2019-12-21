@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, ScrollView } from '@tarojs/components'
+import { View, Text, ScrollView, Button } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/user'
 import { dispatchCartNum } from '@actions/cart'
@@ -47,6 +47,10 @@ class User extends Component {
     Taro.makePhoneCall ({
       phoneNumber: '18300681922',
     })
+  }
+
+  handleContact(e) {
+    console.log(e)
   }
 
   render () {
@@ -115,24 +119,28 @@ class User extends Component {
                   renderContent={<Text className='fs32 c222 bold'>客户服务</Text>}
                 />
                 <View className='fsc order-bottom'>
-                  <PersonalBlock
-                    layout='discount'
-                    name='在线客服'
-                    onClick={this.goOrderList.bind(this, 0)}
-                    renderIcon={<View className='order-icon iconfont'>&#xe62b;</View>}
-                  />
+                  <Button openType='contact' onContact={this.handleContact.bind(this)}>
+                    <PersonalBlock
+                      layout='discount'
+                      name='在线客服'
+                      // onClick={this.goOrderList.bind(this, 0)}
+                      renderIcon={<View className='order-icon iconfont'>&#xe62b;</View>}
+                    />
+                  </Button>
+                  
                   <PersonalBlock
                     layout='discount'
                     name='联系商家'
                     onClick={this.callPhone.bind(this)}
                     renderIcon={<View className='order-icon iconfont'>&#xe628;</View>}
                   />
-                  <PersonalBlock
-                    layout='discount'
-                    name='批量订货咨询'
-                    onClick={this.goOrderList.bind(this, 0)}
-                    renderIcon={<View className='order-icon iconfont'>&#xe60a;</View>}
-                  />
+                  <Button openType='contact' onContact={this.handleContact.bind(this)}>
+                    <PersonalBlock
+                      layout='discount'
+                      name='批量订货咨询'
+                      renderIcon={<View className='order-icon iconfont'>&#xe60a;</View>}
+                    />
+                  </Button>
                   <PersonalBlock
                     layout='discount'
                     name='意见反馈'
