@@ -39,6 +39,7 @@ export const API_CART_UPDATE_CHECK = `${yanxuan}/xhr/promotionCart/updateCheck.j
 export const API_USER = `${yanxuan}/xhr/user/getDetail.json`
 export const API_USER_SEESION = `${host}/common/wxAutoLogin`
 export const API_USER_LOGIN = `${host}/common/getToken`
+export const API_REFRESH_TOKEN = `${host}/common/refreshToken`
 
 // item
 export const API_ITEM = `${yanxuan}/xhr/item/detail.json`

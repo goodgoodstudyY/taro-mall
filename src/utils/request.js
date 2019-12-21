@@ -1,8 +1,10 @@
 import Taro from '@tarojs/taro'
-import { API_USER_SEESION } from '@constants/api'
+import { API_USER_SEESION, API_REFRESH_TOKEN, API_USER_LOGIN } from '@constants/api'
 
 
 const noNeedLoginURLs = [
+  API_USER_LOGIN,
+  API_USER_SEESION
 ]
 
 export async function fetchApi(options) {
@@ -26,14 +28,6 @@ export async function directRequest(options) {
   if (method === 'POST') {
     header = 'application/json'
   }
-  // if (Taro.$globalData.token) {
-  //   Object.assign(
-  //     payload || {},
-  //     {
-  //       token: Taro.$globalData.token
-  //     }
-  //   )
-  // }
   return Taro.request({
     url,
     method,
@@ -45,7 +39,17 @@ export async function directRequest(options) {
   }).then(async (res) => {
     const { data } = res.data
     if (res.statusCode == 200) {
-      return data
+      if (!res.data.status) {
+        if (showToast) {
+          Taro.showModal({
+            title: '提示',
+            content: res.data.message
+          })
+        }
+        return Promise.reject(res)
+      } else {
+        return data
+      }
     } else if (res.statusCode == 500) {
       Taro.showToast({
         title: '请求异常',
@@ -55,7 +59,7 @@ export async function directRequest(options) {
       setTimeout(() => {
         Taro.navigateBack()
       }, 1000)
-      return Promise.reject()
+      return Promise.reject(res)
     } else if (res.statusCode == 403 || res.statusCode == 404) {
       Taro.showToast({
         title: '请求异常',
@@ -67,26 +71,27 @@ export async function directRequest(options) {
           url: '/pages/home/home'
         })
       }, 1000)
-      return Promise.reject()
+      return Promise.reject(res)
     }
 
     return data
   }).catch((err) => {
-    const defaultMsg = err.code && err.code === 'CODE_AUTH_EXPIRED' ? '登录失效' : '请求异常'
+    console.log(err)
+    // const defaultMsg = err.code && err.code === 'CODE_AUTH_EXPIRED' ? '登录失效' : '请求异常'
     if (showToast) {
       Taro.showToast({
-        title: err && err.errorMsg || defaultMsg,
+        title: err && err.message,
         icon: 'none'
       })
     }
 
-    if (err.code && err.code === 'CODE_AUTH_EXPIRED' && autoLogin) {
-      Taro.navigateTo({
-        url: '/pages/user-login/user-login'
-      })
-    }
+    // if (err.code && err.code === 'CODE_AUTH_EXPIRED' && autoLogin) {
+    //   Taro.navigateTo({
+    //     url: '/pages/user-login/user-login'
+    //   })
+    // }
 
-    return Promise.reject({ message: defaultMsg, ...err })
+    // return Promise.reject({ message: defaultMsg, ...err })
   })
 }
 export async function getToken() {
@@ -94,65 +99,79 @@ export async function getToken() {
     const loginInfo = Taro.getStorageSync('loginInfo')
 
     if (loginInfo && Date.parse(new Date()) < loginInfo.expire_time) {
-      // store.dispatch({
-      //   type: 'USER_LOGIN',
-      //   payload: {
-      //     loginInfo: {
-      //       token: loginInfo.token,
-      //     }
-      //   }
-      // })
       Taro.$globalData.token = loginInfo.token
-      Taro.$globalData.sessionKey = loginInfo.sessionKey
       resolve()
-    } else if (loginInfo && loginInfo.sessionKey) {
-      Taro.checkSession({
-        success: () => {
-          Taro.$globalData.sessionKey = loginInfo.sessionKey
-          resolve()
-        },
-        fail: () => {
-          Taro.removeStorageSync('loginInfo')
-          login().then(resolve)
-        }
-      })
-    } else {
+    } else if (loginInfo && loginInfo.token) {
+      Taro.$globalData.token = loginInfo.token
       loginInfo && Taro.removeStorageSync('loginInfo')
-      login().then(resolve)
+      // resolve()
+      refreshToken().then(resolve)
+    } else {
+      resolve()
     }
   })
 }
 
-export function login() {
+export function refreshToken() {
   let loginPromise
   loginPromise = new Promise(function (resolve, reject) {
-      Taro.login().then(resLogin => {
-        let loginpParams = {
-          url: API_USER_SEESION,
-          payload: {code: resLogin.code},
-          method: 'POST',
-          showToast: false,
-          autoLogin: false
-        }
-        directRequest(loginpParams).then(res => {
-          // Taro.setStorageSync('loginInfo', {
-          //   'sessionKey': res.sessionKey,
-          //   'expire_time': Date.parse(new Date()) + 4.5 * 24 * 60 * 60 * 1000,
-          // })
-          Taro.$globalData.sessionKey = res.sessionKey
-
-          resolve(res)
-        }).catch(err => {
-          reject(err)
-        })
-      }).catch(err => {
-        Taro.hideLoading()
-        Taro.showToast({
-          title: '登录失败',
-          icon: 'none'
-        })
-        reject(err)
-      })
+    let refreshToken = {
+      url: API_REFRESH_TOKEN,
+      method: 'POST',
+      showToast: false,
+      autoLogin: false
+    }
+    directRequest(refreshToken).then(res => {
+      console.log(res)
+      resolve(res)
+    }).catch(err => {
+      reject(err)
     })
+  })
   return loginPromise
+}
+
+export function login(detail) {
+  return new Promise(resolve => {
+    Taro.login().then(resLogin => {
+      let loginpParams = {
+        url: API_USER_SEESION,
+        payload: {code: resLogin.code},
+        method: 'POST',
+        showToast: false,
+        autoLogin: false
+      }
+      directRequest(loginpParams).then(res => {
+        console.log(res)
+        Taro.$globalData.openid = res.openId
+        directRequest({
+          url: API_USER_LOGIN,
+          payload: {
+            ...detail,
+            openId: res.openId
+          },
+          method: 'POST',
+          autoLogin: false
+        }).then(token => {
+          Taro.setStorageSync('loginInfo', {
+            'token': token,
+            'expire_time': Date.parse(new Date()) + 29 * 24 * 60 * 60 * 1000,
+          })
+          Taro.$globalData.token = token
+          console.log(token)
+          resolve()
+        })
+      })
+      // directRequest({
+      //   url: API_USER_LOGIN,
+      //   payload: {
+
+      //   }
+      // })
+      // Taro.setStorageSync('loginInfo', {
+      //   'sessionKey': res.sessionKey,
+      //   'expire_time': Date.parse(new Date()) + 4.5 * 24 * 60 * 60 * 1000,
+      // })
+    })
+  })
 }

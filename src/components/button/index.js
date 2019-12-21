@@ -29,7 +29,7 @@ export default class ButtonItem extends Component {
   render () {
     const {
       compStyle, textStyle, openType, loading, disabled, text,
-      onClick, onGetUserInfo
+      onClick, onGetUserInfo, onGetPhoneNumber
     } = this.props
     return (
       <Button
@@ -40,6 +40,7 @@ export default class ButtonItem extends Component {
         openType={openType}
         onClick={onClick}
         onGetUserInfo={onGetUserInfo}
+        onGetPhoneNumber={onGetPhoneNumber}
       >
         <Text
           className={this.getCls('comp-button__txt')}

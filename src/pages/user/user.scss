@@ -33,3 +33,25 @@
   right: 30px;
   bottom: 60px;
 }
+
+.order-icon {
+  font-size: 60px;
+  margin-top: 5px;
+  color: #6f6f6f;
+}
+.order-bottom {
+  height: 180px;
+}
+.order{
+  margin: 12px  20px 0 20px;
+  border-radius: 8px;
+}
+.w25 {
+  width: 25%;
+  height: 180px;
+}
+.more-oneline {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}

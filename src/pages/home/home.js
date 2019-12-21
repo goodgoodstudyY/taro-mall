@@ -4,18 +4,15 @@ import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/home'
 import { dispatchCartNum } from '@actions/cart'
-import { dispatchLogin } from '@actions/user'
 import { getWindowHeight } from '@utils/style'
+import { login, getToken } from '@utils/request'
 import Banner from './banner'
 import MyPage from '../../components/my-page/index'
 import GetPhone from '../../components/getPhone/index'
-import Recommend from './recommend'
 import searchIcon from '../../assets/search.png'
 import './home.scss'
 
-const RECOMMEND_SIZE = 20
-
-@connect(state => {return {home: state.home, user: state.user}}, { ...actions, dispatchLogin, dispatchCartNum })
+@connect(state => {return {home: state.home, user: state.user}}, { ...actions, dispatchCartNum })
 class Home extends Component {
   config = {
     navigationBarTitleText: '包装定制'
@@ -35,6 +32,14 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    getToken().then(() => {
+      if (Taro.$globalData.token) {
+        this.setState({
+          getPhone: false
+        })
+      }
+    })
+    
     this.onInit()
   }
 
@@ -84,20 +89,12 @@ class Home extends Component {
   }
 
   handleGetPhone(e) {
-    this.props.dispatchLogin({
+    login({
       encryptedData: e.detail.encryptedData,
       iv: e.detail.iv,
-      sessionKey: Taro.$globalData.sessionKey
-    }).then((res) => {
-      this.setState({
-        getPhone: false
-      })
-      Taro.$globalData.token = res
-      Taro.setStorageSync('loginInfo', {
-        'sessionKey': Taro.$globalData.sessionKey,
-        'token': res,
-        'expire_time': Date.parse(new Date()) + 4.5 * 24 * 60 * 60 * 1000,
-      })
+    })
+    this.setState({
+      getPhone: false
     })
   }
 

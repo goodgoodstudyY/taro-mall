@@ -30,22 +30,31 @@ class Index extends Component {
   }
 
   onInit() {
-    fetch({ url: API_CHECK_LOGIN, showToast: false, autoLogin: false }).then((res) => {
-      if (res) {
-        this.setState({ loaded: true, login: true })
-        this.props.dispatchCart()
-        this.props.dispatchCartNum()
-        this.props.dispatchRecommend()
-      } else {
-        this.setState({ loaded: true, login: false })
-      }
-    })
+    // fetch({ url: API_CHECK_LOGIN, showToast: false, autoLogin: false }).then((res) => {
+    //   if (res) {
+    //     this.setState({ loaded: true, login: true })
+    //     this.props.dispatchCart()
+    //     this.props.dispatchCartNum()
+    //     this.props.dispatchRecommend()
+    //   } else {
+    //     this.setState({ loaded: true, login: false })
+    //   }
+    // })
+    if (Taro.$globalData.token) {
+      this.setState({ loaded: true, login: true })
+    } else {
+      this.setState({ loaded: true, login: false })
+    }
   }
 
   toLogin = () => {
     Taro.navigateTo({
       url: '/pages/user-login/user-login'
     })
+  }
+
+  getPhoneNumber(e) {
+    
   }
 
   render () {
@@ -68,7 +77,9 @@ class Index extends Component {
             <ButtonItem
               type='primary'
               text='登录'
-              onClick={this.toLogin}
+              // onClick={this.toLogin}
+              openType='getPhoneNumber'
+              onGetPhoneNumber={this.getPhoneNumber.bind(this)}
               compStyle={{
                 background: '#b59f7b',
                 borderRadius: Taro.pxTransform(4)
