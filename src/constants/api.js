@@ -24,6 +24,7 @@ export const API_CATE = `${host}/common/goods/type/list`
 export const API_GOODS_Detail = `${host}/common/goods/info`
 export const API_CATE_SUB_LIST = `${host}/common/goods/list`
 export const API_CATE_SUB_LIST_HAVE_TOKEN = `${host}/wx/goods/list`
+export const API_GOODS_DETAIL_HAVE_TOKEN = `${host}/wx/goods/info`
 // order
 
 
@@ -40,6 +41,8 @@ export const API_USER = `${yanxuan}/xhr/user/getDetail.json`
 export const API_USER_SEESION = `${host}/common/wxAutoLogin`
 export const API_USER_LOGIN = `${host}/common/getToken`
 export const API_REFRESH_TOKEN = `${host}/common/refreshToken`
+export const API_CODE = `${host}/common/sendSms`
+export const API_MOBILE_LOGIN = `${host}/common/login`
 
 // item
 export const API_ITEM = `${yanxuan}/xhr/item/detail.json`

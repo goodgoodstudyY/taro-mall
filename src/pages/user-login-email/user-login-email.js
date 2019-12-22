@@ -1,52 +1,49 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Image } from '@tarojs/components'
+import { View, Text, Input, Button } from '@tarojs/components'
 import md5 from 'blueimp-md5'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/user'
-import { ButtonItem, InputItem } from '@components'
-import { CDN } from '@constants/api'
 import './user-login-email.scss'
-
-const LOGO = `${CDN}/6dbf208804386f12aa9e662d82abe563.png`
-const EMAIL_SUFFIX = [
-  '163.com', '126.com', 'yeah.net', 'vip.163.com', 'vip.126.com'
-]
 
 @connect(state => state.user, actions)
 class UserLoginEmail extends Component {
   config = {
-    navigationBarTitleText: '登录'
+    navigationBarTitleText: '切换账号'
   }
 
   state = {
-    username: '',
-    password: '',
-    isShowSuggest: false,
-    loading: false
-  }
-
-  componentDidMount() {
-    Taro.showToast({
-      title: '注意，严选小程序的登录有变动，目前无法正常登录',
-      icon: 'none',
-      duration: 5000
-    })
-  }
-
-  handleInput = (key, value) => {
-    this.setState({ [key]: value })
-    if (key === 'username') {
-      const isFinish = /\.(com|net)$/.test(value)
-      if (!this.state.isShowSuggest && value && !isFinish) {
-        this.setState({ isShowSuggest: true })
-      } else if (this.state.isShowSuggest && (!value || isFinish)) {
-        this.setState({ isShowSuggest: false })
-      }
+    loading: false,
+    activeGetValidCode: true,
+    getValidCodeText: '获取验证码',
+    infoForm: {
+      mobile: '',
+      code: ''
     }
   }
 
-  handleSuggest = (value) => {
-    this.handleInput('username', value)
+  store = {
+    validCodeTick: null,
+    validCodeCount: 60,
+    goLoginPageText: '立即登录'
+  }
+
+  componentDidMount() {
+  }
+
+  componentWillUnmount () {
+    this.clearValidCodeTick()
+  }
+
+  changeInfoFormParam (key, e) {
+    const newParamObj = {}
+    newParamObj[key] = e.detail.value
+
+    this.setState(
+      Object.assign(
+        this.state.infoForm,
+        newParamObj
+      )
+    )
   }
 
   handleLogin = () => {
@@ -67,61 +64,128 @@ class UserLoginEmail extends Component {
     })
   }
 
-  render () {
-    const { username, password, isShowSuggest, loading } = this.state
-    const isBtnDisabled = !username || !password
+  onGetValidCode() {
+    if (this.state.activeGetValidCode) {
+      if (/[0-9]{11}/.test(this.state.infoForm.mobile)) {
+        this.getValidCode()
+        this.setValidCodeText()
+      } else {
+        Taro.showModal({
+          title: '提示',
+          content: '手机号格式错误'
+        })
+      }
+    }
+  }
 
-    // XXX 暂未实现 input 的 autoFocus 的逻辑
+  clearValidCodeTick () {
+    this.store.validCodeTick && clearInterval(this.store.validCodeTick)
+  }
+
+  getValidCode() {
+    this.props.dispatchGetCode({
+      phone: this.state.infoForm.mobile,
+      loginFlag: 2
+    }).then(() => {
+      Taro.showToast({
+        title:'发送成功',
+        icon: 'success'
+      })
+    }).catch(() => {
+      this.clearValidCodeTick()
+    })
+  }
+
+  setValidCodeText () {
+    this.setState({
+      getValidCodeText: '60 s'
+    })
+    this.store.validCodeTick = setInterval(() => {
+      if (this.store.validCodeCount > 0) {
+        this.store.validCodeCount -= 1
+        this.setState({
+          getValidCodeText: this.store.validCodeCount + ' s'
+        })
+      } else {
+        this.setState({
+          activeGetValidCode: true,
+          getValidCodeText: '获取验证码'
+        })
+        this.store.validCodeCount = 60
+        this.clearValidCodeTick()
+      }
+    }, 1000)
+    this.setState({
+      activeGetValidCode: false
+    })
+  }
+
+  handleChangePassword() {
+    if (/[0-9]{11}/.test(this.state.infoForm.mobile) && /[0-9]{4}/.test(this.state.infoForm.code)) {
+      this.props.dispatchMobileLogin({
+        loginFlag: '2',
+        phone: this.state.infoForm.mobile,
+        code: this.state.infoForm.code
+      }).then(() => {
+        Taro.showToast({
+          title: '登录成功',
+          icon: 'success',
+          duration: 1000
+        })
+        setTimeout(() => {
+          Taro.reLaunch({
+            url: '/pages/home/home'
+          })
+        }, 1000)
+      })
+    }
+  }
+
+  render () {
+    const { loading, activeGetValidCode } = this.state
+    // const isBtnDisabled = !username || !password
+
     return (
-      <View className='user-login-email'>
-        <View className='user-login-email__logo'>
-          <Image src={LOGO} className='user-login-email__logo-img' />
-        </View>
-        <View className='user-login-email__wrap'>
-          <InputItem
-            value={username}
-            placeholder='邮箱账号'
-            onInput={this.handleInput.bind(this, 'username')}
-          />
-          <InputItem
-            password
-            value={password}
-            placeholder='密码'
-            onInput={this.handleInput.bind(this, 'password')}
-          />
-          {isShowSuggest &&
-            <View className='user-login-email__suggest'>
-              {EMAIL_SUFFIX.map((suffix) => {
-                const name = username.split('@')[0]
-                const value = `${name}@${suffix}`
-                return (
-                  <View
-                    key={suffix}
-                    className='user-login-email__suggest-item'
-                    onClick={this.handleSuggest.bind(this, value)}
-                  >
-                    <Text className='user-login-email__suggest-item-txt'>{value}</Text>
-                  </View>
+      <View className='page'>
+        {/* form segment */}
+        <View className='segment form-info-segment fcc-c bgc-w'>
+          <View className='input-view fsc fs26 input-view-first'>
+            <Text className='iconfont fs34 c999'>&#xe65f;</Text>
+            <Input
+              className='form-input input fs26'
+              type='digit'
+              placeholder='请输入手机号'
+              onInput={this.changeInfoFormParam.bind(this, 'mobile')}
+            />
+          </View>
+          <View className='input-view fsc fs26'>
+            <Text className='iconfont fs36 c999'>&#xe63d;</Text>
+            <Input
+              className='form-input input fs26'
+              type='digit'
+              placeholder='请输入验证码'
+              onInput={this.changeInfoFormParam.bind(this, 'code')}
+            />
+            <Button
+              className={
+                'get-valid-code-button br6 cfff fs26' + ' ' +
+                (
+                  activeGetValidCode ? 'bgc-m-o' : 'bgc-m-o-d'
                 )
-              })}
-            </View>
-          }
+              }
+              onClick={this.onGetValidCode}
+            >
+              <Text>{this.state.getValidCodeText}</Text>
+            </Button>
+          </View>
+          <Button
+            className='change-password-button br6 bgc-m-o cfff fcc'
+            onClick={this.handleChangePassword}
+          >
+            <Text>立即登录</Text>
+          </Button>
         </View>
-        <View className='user-login-email__btn'>
-          <ButtonItem
-            text='登录'
-            disabled={isBtnDisabled}
-            loading={loading}
-            onClick={this.handleLogin}
-            compStyle={{
-              background: '#b59f7b',
-              borderRadius: Taro.pxTransform(4)
-            }}
-            textStyle={{
-              color: isBtnDisabled ? 'rgba(255, 255, 255, 0.4)' : '#ffffff'
-            }}
-          />
-        </View>
+
       </View>
     )
   }

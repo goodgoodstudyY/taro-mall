@@ -1,5 +1,5 @@
-import { USER_INFO, USER_SESSION, USER_LOGOUT, USER_LOGIN } from '@constants/user'
-import { API_USER, API_USER_LOGIN } from '@constants/api'
+import { USER_INFO, USER_LOGIN, USER_CODE, USER_MOBILE_LOGIN } from '@constants/user'
+import { API_USER, API_USER_LOGIN, API_CODE, API_MOBILE_LOGIN } from '@constants/api'
 import { createAction } from '@utils/redux'
 
 /**
@@ -31,8 +31,16 @@ export const dispatchLogin = payload => createAction({
   payload
 })
 
-export const dispatchSession = () => ({type: USER_SESSION})
-/**
- * 用户退出登录
- */
-export const dispatchLogout = () => ({ type: USER_LOGOUT })
+export const dispatchGetCode = payload => createAction({
+  url: API_CODE,
+  method: 'POST',
+  type: USER_CODE,
+  payload
+})
+
+export const dispatchMobileLogin = payload => createAction({
+  url: API_MOBILE_LOGIN,
+  method: 'POST',
+  type: USER_MOBILE_LOGIN,
+  payload
+})

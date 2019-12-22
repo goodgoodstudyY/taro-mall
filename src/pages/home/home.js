@@ -1,11 +1,11 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Image, ScrollView } from '@tarojs/components'
+import { View, Text, Image, ScrollView, Button } from '@tarojs/components'
 import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/home'
 import { dispatchCartNum } from '@actions/cart'
 import { getWindowHeight } from '@utils/style'
-import { login, getToken } from '@utils/request'
+import { login, getToken, getUserToken } from '@utils/request'
 import Banner from './banner'
 import MyPage from '../../components/my-page/index'
 import GetPhone from '../../components/getPhone/index'
@@ -37,6 +37,8 @@ class Home extends Component {
         this.setState({
           getPhone: false
         })
+      } else {
+        login()
       }
     })
     
@@ -89,7 +91,7 @@ class Home extends Component {
   }
 
   handleGetPhone(e) {
-    login({
+    getUserToken({
       encryptedData: e.detail.encryptedData,
       iv: e.detail.iv,
     })

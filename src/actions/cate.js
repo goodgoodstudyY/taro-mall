@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import { CATE_TAG_MENU, GOOGS_DETAIL, CATE_SUB_LIST, CATE_MENU } from '@constants/cate'
-import { API_GOODS_TAG_LIST, API_GOODS_Detail, API_CATE_SUB_LIST, API_CATE, API_CATE_SUB_LIST_HAVE_TOKEN } from '@constants/api'
+import { API_GOODS_TAG_LIST, API_GOODS_Detail, API_CATE_SUB_LIST, API_CATE, API_CATE_SUB_LIST_HAVE_TOKEN, API_GOODS_DETAIL_HAVE_TOKEN } from '@constants/api'
 import { createAction } from '@utils/redux'
 
 /**
@@ -24,7 +24,7 @@ export const dispatchMenu = payload => createAction({
  * @param {*} payload
  */
 export const dispatchGoodsDetail = payload => createAction({
-  url: API_GOODS_Detail + '/' + payload,
+  url: (Taro.$globalData.token ? API_GOODS_DETAIL_HAVE_TOKEN : API_GOODS_Detail) + '/' + payload,
   type: GOOGS_DETAIL
 })
 

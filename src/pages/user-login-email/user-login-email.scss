@@ -1,53 +1,74 @@
-@import '@styles/theme.scss';
-
-.user-login-email {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  padding: 240px 40px 700px;
-  background: #ffffff;
+.page {
+  background-color: #b59f7b;
+  height: 100vh;
 }
-
-.user-login-email__logo {
+.segment {
+  position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: center;
   justify-content: center;
-  margin-bottom: 100px;
-
-  &-img {
-    width: 268px;
-    height: 90px;
-  }
+  box-sizing: border-box;
+  width: 750px;
+  height: auto;
+  background-color: white;
 }
 
-.user-login-email__wrap {
+.form-info-segment {
   position: relative;
-  z-index: 2;
+  top: 130px;
+  margin: 0 auto;
+  width: 690px;
+  height: 730px;
+  border-radius: 20px;
+  box-shadow: 0 9px 38px rgba(92, 92, 92, .29);
 }
 
-.user-login-email__suggest {
-  position: absolute;
-  top: 108px;
-  left: 0;
-  z-index: 9;
-  width: 100%;
-  background: #ffffff;
-
-  &-item {
-    height: 80px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    &-txt {
-      color: $text-color;
-      font-size: 24px;
-    }
-  }
+.get-valid-code-button {
+  margin-right: 20px;
+  width: 191px;
+  height: 64px;
+  line-height: 64px;
+  border: none;
 }
 
-.user-login-email__btn {
-  position: relative;
-  margin-top: 60px;
-  z-index: 1;
+.change-password-button {
+  margin-top: 65px;
+  width: 610px;
+  height: 90px;
+  border: none;
+}
+.input-view {
+  box-sizing: border-box;
+  margin-top: 36px;
+  padding-left: 50px;
+  width: 608px;
+  height: 100px;
+  line-height: 100px;
+  background: #f3f5f4;
+  color: #333;
+}
+.input-view-first {
+  margin-top: 0;
+}
+.form-input {
+  margin-left: 30px;
+  margin-right: 20px;
+  flex: 1;
+  height: 100px;
+  line-height: 100px;
+  border: none;
+}
+
+.info-view {
+  margin-top: 40px;
+  width: 610px;
+}
+.bgc-m-o {
+  background-color: #b59f7b;
+}
+.bgc-m-o-d {
+  background-color: rgba(181, 159, 123, 0.8);
+}
+.br6 {
+  border-radius: 6px;
 }

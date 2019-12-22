@@ -21,8 +21,8 @@ class User extends Component {
   }
 
   onInit() {
-    this.props.dispatchUser()
-    this.props.dispatchCartNum()
+    // this.props.dispatchUser()
+    // this.props.dispatchCartNum()
   }
 
   handleLogin = () => {
@@ -174,7 +174,7 @@ class User extends Component {
                   <View className='w25 fcc'>
                     <PersonalBlock
                       name='切换账号'
-                      onClick={this.toNewPage.bind(this, 'switchAcount')}
+                      onClick={this.toNewPage.bind(this, 'user-login-email')}
                       renderIcon={<View className='order-icon iconfont'>&#xe653;</View>}
                     />
                   </View>
