@@ -169,27 +169,33 @@ export function login() {
 
 export function getUserToken(detail) {
   const item = () => {
-    directRequest({
-      url: API_USER_LOGIN,
-      payload: {
-        ...detail,
-        openId: Taro.$globalData.openid
-      },
-      method: 'POST',
-      autoLogin: false
-    }).then(token => {
-      Taro.setStorageSync('loginInfo', {
-        'token': token,
-        'expire_time': Date.parse(new Date()) + 29 * 24 * 60 * 60 * 1000,
+    return new Promise(resolve => {
+      directRequest({
+        url: API_USER_LOGIN,
+        payload: {
+          ...detail,
+          openId: Taro.$globalData.openid
+        },
+        method: 'POST',
+        autoLogin: false
+      }).then(token => {
+        Taro.setStorageSync('loginInfo', {
+          'token': token,
+          'expire_time': Date.parse(new Date()) + 29 * 24 * 60 * 60 * 1000,
+        })
+        Taro.$globalData.token = token
+        resolve()
       })
-      Taro.$globalData.token = token
     })
   }
-  if (Taro.$globalData.openid) {
-    item()
-  } else {
-    login().then(() => {
-      item()
-    })
-  }
+  return new Promise(resolve => {
+    if (Taro.$globalData.openid) {
+      item().then(resolve)
+    } else {
+      login().then(() => {
+        item().then(resolve)
+      })
+    }
+  })
+  
 }

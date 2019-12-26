@@ -72,7 +72,7 @@ class Cate extends Component {
 
     return (
       <MyPage showPageError={showPageError} onReload={this.onInit.bind(this)}>
-        <View className='fsc-c bgc-f5'>
+        <View className='fsc-c bgc-f5 min-h100'>
           <View className='goods-swiper-layout'>
             <Swiper className='goods-swiper' interval={2600} circular autoplay>
                 {
@@ -92,14 +92,20 @@ class Cate extends Component {
             <View>
                 <View className='goods-info flex c-r base l44'>
                     <Text className='fs40'>¥</Text>
-                    <Text className='fs54'>{goodsDetail.price}</Text>
+                    <Text className='fs54'>{goodsDetail.realPrice || goodsDetail.price}</Text>
+                    {
+                      goodsDetail.realPrice
+                      ? <Text className='ml30 line-through c999'>¥{goodsDetail.price}</Text>
+                      : <Text></Text>
+                    }
+                    
                 </View>
               <View className='goods-info flex r mt26'>
                 <View className='goods-title flex fs42 c1a bold ellipsis2'>{goodsDetail.name}</View>
               </View>
             </View>
             <View className='goods-info flex r mt22'>
-              <View className='flex c999 fs24'>销量{goodsDetail.sales || 0}</View>
+              <View className='flex c999 fs24'>销量{goodsDetail.fakeSale || 0}</View>
             </View>
           </View>
           <View className='goods-detail bgc-w goods-params fsbc' onClick={this.handleOpenParams}>
@@ -108,7 +114,7 @@ class Cate extends Component {
           </View>
           {
             goodsDetail.descPic.length > 0 && (
-              <View className='goods-detail bgc-w'>
+              <View className='goods-detail mb100 bgc-w'>
                   <View className='goods-detail-title fs32 c1a'>商品详情</View>
                   {
                     goodsDetail.descPic.map((i, n) => {

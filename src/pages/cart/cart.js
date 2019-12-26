@@ -3,10 +3,9 @@ import { View, Text, Image, ScrollView } from '@tarojs/components'
 import { ButtonItem, ItemList, Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/cart'
-import { API_CHECK_LOGIN } from '@constants/api'
-import fetch from '@utils/request'
 import { getWindowHeight } from '@utils/style'
 import MyPage from '../../components/my-page/index'
+import { login, getToken, getUserToken } from '@utils/request'
 import Tip from './tip'
 import Gift from './gift'
 import Empty from './empty'
@@ -43,6 +42,7 @@ class Index extends Component {
     if (Taro.$globalData.token) {
       this.setState({ loaded: true, login: true })
     } else {
+      login()
       this.setState({ loaded: true, login: false })
     }
   }
@@ -54,16 +54,22 @@ class Index extends Component {
   }
 
   getPhoneNumber(e) {
-    
+    if (e.detail.encryptedData) {
+      getUserToken({
+        encryptedData: e.detail.encryptedData,
+        iv: e.detail.iv,
+      }).then(() => {
+        this.onInit()
+      })
+    }
   }
 
   render () {
-    const { cartInfo, recommend, showPageError } = this.props
+    const { cartInfo, showPageError } = this.props
     const { cartGroupList = [] } = cartInfo
     const cartList = cartGroupList.filter(i => !i.promType)
-    const extList = recommend.extList || []
     const isEmpty = !cartList.length
-    const isShowFooter = !isEmpty
+    const isShowFooter = !isEmpty || true
 
     if (!this.state.loaded) {
       return <Loading />
@@ -98,10 +104,7 @@ class Index extends Component {
             className='cart__wrap'
             style={{ height: getWindowHeight() }}
           >
-            <Tip list={cartInfo.policyDescList} />
             {isEmpty && <Empty />}
-
-            {!isEmpty && <Gift data={cartGroupList[0]} />}
 
             {!isEmpty && cartList.map((group, index) => (
               <List
@@ -115,21 +118,14 @@ class Index extends Component {
             ))}
 
             {/* 相关推荐 */}
-            {extList.map((ext, index) => (
+            {/* {extList.map((ext, index) => (
               <ItemList key={`${ext.id}_${index}`} list={ext.itemList}>
                 <View className='cart__ext'>
                   {!!ext.picUrl && <Image className='cart__ext-img' src={ext.picUrl} />}
                   <Text className='cart__ext-txt'>{ext.desc}</Text>
                 </View>
               </ItemList>
-            ))}
-
-            {/* 猜你喜欢 */}
-            <ItemList list={recommend.itemList}>
-              <View className='cart__recommend'>
-                <Text className='cart__recommend-txt'>{recommend.desc}</Text>
-              </View>
-            </ItemList>
+            ))} */}
 
             {isShowFooter &&
               <View className='cart__footer--placeholder' />

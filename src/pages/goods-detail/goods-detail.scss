@@ -126,6 +126,12 @@
 .mr30{
   margin-right: 30px;
 }
+.mb100 {
+  margin-bottom: 100px;
+}
+.min-h100 {
+  min-height: 100%;
+}
 
 .goods-detail {
   border-radius: 10px;
@@ -151,7 +157,7 @@
 
 .goods-detail-image-layout {
   width: 100%;
-  height: auto;
+  // height: auto;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -234,4 +240,8 @@
   background-image: linear-gradient(#f17942, #ee373f);
   box-shadow: 0px 5px 10px 0px rgba(204, 45, 20, 0.6);
   @extend .goods-button;
+}
+
+.line-through {
+  text-decoration: line-through;
 }

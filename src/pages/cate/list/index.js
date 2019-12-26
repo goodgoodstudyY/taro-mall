@@ -18,6 +18,12 @@ export default class List extends Component {
     })
   }
 
+  increment(item, e) {
+    e.stopPropagation()
+    console.log(item)
+    
+  }
+
   render () {
     const { list } = this.props
     return (
@@ -30,11 +36,11 @@ export default class List extends Component {
             </View>
             <View className='f1 ml20 fsbs-c item-h100'>
               <View className='fs30 bold dish-info-detail ellipsis2'>{val.name}</View>
-              <View className='fs24 c999 hl24 mt10'>销量{val.sales || 0}</View>
+              <View className='fs24 c999 hl24 mt10'>销量{val.fakeSale || 0}</View>
               <View className='fsbs w100'>
                 <View className='price fsc'>
                   <Text className='fs20'>¥</Text>
-                  <Text className='fs30'>{val.price}</Text>
+                  <Text className='fs30'>{val.realPrice || val.price}</Text>
                   <Text className='fs24'>/{val.unit}</Text>
                 </View>
                 <View className='fcc'>
