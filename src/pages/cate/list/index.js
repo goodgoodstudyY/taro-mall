@@ -1,11 +1,19 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
 import { crop } from '../../../utils/util'
+import { getUserToken } from '../../../utils/request'
+import GetPhone from '../../../components/getPhone/index'
 import './index.scss'
 
 export default class List extends Component {
   static defaultProps = {
-    list: []
+    list: [],
+    onAdd: () => {}
+  }
+
+  static state = {
+    getPhone: false,
+    listItem: {}
   }
 
   static options = {
@@ -20,12 +28,40 @@ export default class List extends Component {
 
   increment(item, e) {
     e.stopPropagation()
-    console.log(item)
+    this.setState({
+      listItem: item
+    })
+    if (!Taro.$globalData.token) {
+      this.setState({
+        getPhone: true
+      })
+    } else {
+      this.props.onAdd(item)
+    }
     
+  }
+
+  handleCloseMark() {
+    this.setState({
+      getPhone: false
+    })
+  }
+
+  handleGetPhone(e) {
+    getUserToken({
+      encryptedData: e.detail.encryptedData,
+      iv: e.detail.iv,
+    }).then(() => {
+      this.props.onAdd(this.state.listItem)
+    })
+    this.setState({
+      getPhone: false
+    })
   }
 
   render () {
     const { list } = this.props
+    const { getPhone } = this.state
     return (
       <View className='cate-list'>
         {list.length > 0 && list.map(val => (
@@ -72,6 +108,14 @@ export default class List extends Component {
           </View>
         </View>
         ))}
+
+{
+          getPhone
+          ? (
+            <GetPhone layout='closeMark' onCloseMark={this.handleCloseMark.bind(this)} onGetPhoneNumber={this.handleGetPhone.bind(this)} />
+          )
+          : <View></View>
+        }
       </View>
     )
   }

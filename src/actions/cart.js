@@ -33,25 +33,23 @@ export const dispatchCartNum = payload => createAction({
 })
 
 /**
- * 购物车推荐
- * @param {*} payload
- */
-export const dispatchRecommend = payload => createAction({
-  url: API_CART_RECOMMEND,
-  type: CART_RECOMMEND,
-  payload
-})
-
-/**
  * 添加商品到购物车
  * @param {*} payload
  */
-export const dispatchAdd = payload => createAction({
-  url: API_CART_ADD,
-  method: 'POST',
-  type: CART_ADD,
-  payload
-})
+// export const dispatchAdd = payload => createAction({
+//   url: API_CART_ADD,
+//   method: 'POST',
+//   type: CART_ADD,
+//   payload
+// })
+export const dispatchAdd = payload => {
+  return dispatch => {
+    dispatch({
+      type: CART_ADD,
+      payload
+    })
+  }
+}
 
 /**
  * 更新商品信息

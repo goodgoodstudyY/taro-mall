@@ -3,14 +3,16 @@ import { View, ScrollView, Image, Text, Button, Input } from '@tarojs/components
 import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/cate'
+import { dispatchAdd } from '@actions/cart'
 import { getWindowHeight } from '@utils/style'
+import { login } from '@utils/request'
 import MyPage from '../../components/my-page/index'
 import Menu from './menu'
 import List from './list'
 import searchIcon from '../../assets/search.png'
 import './cate.scss'
 
-@connect(state => state.cate, { ...actions })
+@connect(state => {return {cate: state.cate, cart: state.cart}}, { ...actions, dispatchAdd })
 class Cate extends Component {
   config = {
     navigationBarTitleText: '商品列表'
@@ -53,6 +55,13 @@ class Cate extends Component {
     goodsStatus: ['下架', '上架', '待上架', '全部']
   }
 
+  componentWillMount() {
+    if (!Taro.$globalData.token) {
+      login()
+    }
+    console.log(this.props)
+  }
+
   componentDidShow() {
     this.setState({
       current: 0,
@@ -75,7 +84,7 @@ class Cate extends Component {
       this.props.dispatchMenu().then(data => {
         this.setState({
           loaded: true,
-          allMenu: this.props.tagMenu.concat(data)
+          allMenu: this.props.cate.tagMenu.concat(data)
         })
       })
     })
@@ -203,7 +212,6 @@ class Cate extends Component {
         maxPrice: e.detail.value
       })
     }
-    console.log(e)
   }
 
   handleFiltrateGoods(index) {
@@ -231,8 +239,16 @@ class Cate extends Component {
     })
   }
 
+  addToCart(item) {
+    item = {
+      ...item,
+      num: 1
+    }
+    this.props.dispatchAdd(item)
+  }
+
   render () {
-    const { showPageError, tagMenu } = this.props
+    const { showPageError, tagMenu } = this.props.cate
     const { current, loading, currentOrderBy, currentOrder, filterOpen, allMenu, minPrice, maxPrice, goodsList } = this.state
     const height = getWindowHeight()
 
@@ -304,7 +320,7 @@ class Cate extends Component {
               >
                 <View className='cate__list-wrap'>
                   {/* <Banner banner={banner} /> */}
-                  <List list={goodsList} />
+                  <List list={goodsList} onAdd={this.addToCart.bind(this)} />
                 </View>
               </ScrollView>
             </View>
