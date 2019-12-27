@@ -56,7 +56,7 @@ export default class Footer extends Component {
         </View>
         <View className='cart-footer__amount'>
           <Text className='cart-footer__amount-txt'>
-            ¥{parseFloat(cartInfo.actualPrice).toFixed(2)}
+            ¥{parseFloat(cartInfo.actualPrice || 0).toFixed(2)}
           </Text>
         </View>
         <View className='cart-footer__btn'>

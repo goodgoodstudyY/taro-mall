@@ -13,7 +13,8 @@ export default class List extends Component {
 
   static state = {
     getPhone: false,
-    listItem: {}
+    listItem: {},
+    handleItem: ''
   }
 
   static options = {
@@ -29,7 +30,8 @@ export default class List extends Component {
   increment(item, e) {
     e.stopPropagation()
     this.setState({
-      listItem: item
+      listItem: item,
+      handleItem: 'add'
     })
     if (!Taro.$globalData.token) {
       this.setState({
@@ -38,7 +40,21 @@ export default class List extends Component {
     } else {
       this.props.onAdd(item)
     }
-    
+  }
+
+  discrement(item, e) {
+    e.stopPropagation()
+    this.setState({
+      listItem: item,
+      handleItem: 'reduce'
+    })
+    if (!Taro.$globalData.token) {
+      this.setState({
+        getPhone: true
+      })
+    } else {
+      this.props.onReduce(item)
+    }
   }
 
   handleCloseMark() {
@@ -52,7 +68,11 @@ export default class List extends Component {
       encryptedData: e.detail.encryptedData,
       iv: e.detail.iv,
     }).then(() => {
-      this.props.onAdd(this.state.listItem)
+      if (this.state.handleItem == 'add') {
+        this.props.onAdd(this.state.listItem)
+      } else {
+        this.props.onReduce(this.state.listItem)
+      }
     })
     this.setState({
       getPhone: false
@@ -73,7 +93,7 @@ export default class List extends Component {
             <View className='f1 ml20 fsbs-c item-h100'>
               <View className='fs30 bold dish-info-detail ellipsis2'>{val.name}</View>
               <View className='fs24 c999 hl24 mt10'>销量{val.fakeSale || 0}</View>
-              <View className='fsbs w100'>
+              <View className='fsbc w100'>
                 <View className='price fsc'>
                   <Text className='fs20'>¥</Text>
                   <Text className='fs30'>{val.realPrice || val.price}</Text>
@@ -83,7 +103,7 @@ export default class List extends Component {
                   {
                     val.num && val.num > 0 &&
                       <View className='fsc'>
-                        <View onClick={this.discrement.bind (this, val)} className='discrement-layout'>
+                        <View onClick={this.discrement.bind(this, val)} className='discrement-layout'>
                           <Image
                             className='discrement fcc'
                             mode='aspectFill'

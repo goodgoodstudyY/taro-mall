@@ -7,6 +7,7 @@ import {
 const INITIAL_STATE = {
   cartInfo: [],
   recommend: {},
+  count: 0,
   showPageError: false
 }
 
@@ -47,6 +48,7 @@ export default function cart(state = INITIAL_STATE, action) {
         goods.push(good)
       }
       return {
+        ...state,
         cartInfo: goods
       }
     }
@@ -59,8 +61,14 @@ export default function cart(state = INITIAL_STATE, action) {
       }
     }
     case CART_NUM: {
-      updateTabBar(action.payload.countCornerMark)
-      return state
+      const num = action.payload.countCornerMark + state.count || 0
+      if (!action.payload.notUpdateNum) {
+        updateTabBar(num)
+      }
+      return {
+        ...state,
+        count: num
+      }
     }
     case CART_RECOMMEND: {
       return {

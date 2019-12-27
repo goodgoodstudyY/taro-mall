@@ -115,16 +115,6 @@ class Index extends Component {
               />
             ))}
 
-            {/* 相关推荐 */}
-            {/* {extList.map((ext, index) => (
-              <ItemList key={`${ext.id}_${index}`} list={ext.itemList}>
-                <View className='cart__ext'>
-                  {!!ext.picUrl && <Image className='cart__ext-img' src={ext.picUrl} />}
-                  <Text className='cart__ext-txt'>{ext.desc}</Text>
-                </View>
-              </ItemList>
-            ))} */}
-
             {isShowFooter &&
               <View className='cart__footer--placeholder' />
             }

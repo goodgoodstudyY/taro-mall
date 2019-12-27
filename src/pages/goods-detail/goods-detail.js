@@ -3,12 +3,13 @@ import { View, Swiper, SwiperItem, Image, Text, ScrollView } from '@tarojs/compo
 import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/cate'
+import { dispatchAdd, dispatchCartNum } from '@actions/cart'
 import MyPage from '../../components/my-page/index'
 import SpecComponent from './spec'
 import { crop } from '../../utils/util'
 import './goods-detail.scss'
 
-@connect(state => state.cate, { ...actions })
+@connect(state => state.cate, { ...actions, dispatchAdd, dispatchCartNum })
 class Cate extends Component {
   config = {
     navigationBarTitleText: '商品详情'
@@ -62,10 +63,25 @@ class Cate extends Component {
     });
   }
 
+  addToCart(item) {
+    this.props.dispatchAdd(item)
+    this.props.dispatchCartNum({
+      countCornerMark: item.num,
+      notUpdateNum: true
+    })
+    Taro.showToast({
+      title: '添加成功',
+      duration: 1000,
+      icon: 'success'
+    })
+    this.setState({
+      showSpec: false
+    })
+  }
+
   render () {
     const { showPageError } = this.props
     const { loading, goodsDetail, showParams, showSpec, addToCart } = this.state
-
     if (!this.state.loaded) {
       return <Loading />
     }
@@ -163,7 +179,7 @@ class Cate extends Component {
             <View className='goods-button-2 cfff fcc fs32' onClick={this.handleSubmit.bind(this)}>立即购买</View>
           </View>
         </View>
-        <SpecComponent data={goodsDetail} mode={addToCart} showSpec={showSpec} />
+        <SpecComponent data={goodsDetail} mode={addToCart} showSpec={showSpec} onAddToCart={this.addToCart.bind(this)} />
       </MyPage>
     )
   }

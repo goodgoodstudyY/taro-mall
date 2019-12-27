@@ -3,7 +3,7 @@ import { View, ScrollView, Image, Text, Button, Input } from '@tarojs/components
 import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/cate'
-import { dispatchAdd } from '@actions/cart'
+import { dispatchAdd, dispatchCartNum } from '@actions/cart'
 import { getWindowHeight } from '@utils/style'
 import { login } from '@utils/request'
 import MyPage from '../../components/my-page/index'
@@ -12,7 +12,7 @@ import List from './list'
 import searchIcon from '../../assets/search.png'
 import './cate.scss'
 
-@connect(state => {return {cate: state.cate, cart: state.cart}}, { ...actions, dispatchAdd })
+@connect(state => {return {cate: state.cate, cart: state.cart}}, { ...actions, dispatchAdd, dispatchCartNum })
 class Cate extends Component {
   config = {
     navigationBarTitleText: '商品列表'
@@ -59,7 +59,6 @@ class Cate extends Component {
     if (!Taro.$globalData.token) {
       login()
     }
-    console.log(this.props)
   }
 
   componentDidShow() {
@@ -77,6 +76,12 @@ class Cate extends Component {
     }, () => {
       this.onInit()
     })
+    if (this.props.cart.count > 0) {
+      Taro.setTabBarBadge({
+        index: 3,
+        text: `${this.props.cart.count}`
+      })
+    }
   }
 
   onInit() {
@@ -245,6 +250,61 @@ class Cate extends Component {
       num: 1
     }
     this.props.dispatchAdd(item)
+    this.props.dispatchCartNum({
+      countCornerMark: 1
+    })
+  }
+
+  reduceToCart(item) {
+    item = {
+      ...item, 
+      num: -1
+    }
+    this.props.dispatchAdd(item)
+    this.props.dispatchCartNum({
+      countCornerMark: -1
+    })
+  }
+
+  syncGoods() {
+    const cart = this.props.cart.cartInfo
+    const list = this.state.goodsList
+    if (cart.length > 0) {
+      const idInCart = cart.map (i => i.id);
+      const goodsInCart = list.filter (i => idInCart.includes (i.id));
+      const goodsHasDeleted = list.filter (
+        i => !idInCart.includes (i.id) && i.num && i.num > 0
+      )
+      goodsInCart.map (i => {
+        const goodsInCardWithSameId = cart.filter (x => x.id == i.id);
+        i.num = this.sum (goodsInCardWithSameId.map (x => x.num));
+        // goodsInCardWithSameId.map(x => {
+        //   i.sku.map(res => {
+        //     if (res.id == x.specSelected.id && res.takeout_price != x.specSelected.price) {
+        //       Cart.syncPrice('dishesCart', res)
+        //     }
+        //   })
+        // })
+        // const index = list.findIndex (x => x.id == i.id)
+        // if (index >= 0) {
+        //   i.allowDelete = goodsInCardWithSameId.length < 2;
+        // }
+      });
+      goodsHasDeleted.map (i => {
+        i.num = 0;
+      })
+      
+      // this.setState({
+      //   list: list
+      // })
+    }
+    return list
+  }
+
+  sum (list = []) {
+    let sum = 0;
+    list.map (i => (sum = sum + i));
+    return sum;
   }
 
   render () {
@@ -320,7 +380,7 @@ class Cate extends Component {
               >
                 <View className='cate__list-wrap'>
                   {/* <Banner banner={banner} /> */}
-                  <List list={goodsList} onAdd={this.addToCart.bind(this)} />
+                  <List list={this.syncGoods()} onAdd={this.addToCart.bind(this)} onReduce={this.reduceToCart.bind(this)} />
                 </View>
               </ScrollView>
             </View>

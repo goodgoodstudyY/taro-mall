@@ -13,10 +13,6 @@ const yanxuan_m = 'https://m.you.163.com'
 export const CDN = 'https://yanxuan.nosdn.127.net'
 
 // home
-export const API_HOME = `${yanxuan}/xhr/index/index.json`
-export const API_HOME_SEARCH_COUNT = `${yanxuan}/xhr/search/displayBar.json`
-export const API_HOME_PIN = `${yanxuan_m}/pin/min/item/recommend.json`
-export const API_HOME_RECOMMEND = `${yanxuan}/xhr/rcmd/index.json`
 
 // cate
 export const API_GOODS_TAG_LIST = `${host}/common/goods/tags/list`

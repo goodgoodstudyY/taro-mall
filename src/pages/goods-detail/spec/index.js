@@ -16,7 +16,8 @@ export default class Spec extends Component {
 
   static defaultProps = {
     goodsInfo: null,
-    mode: ''
+    mode: '',
+    onAddToCart: () => {}
   }
 
   static options = {
@@ -39,6 +40,26 @@ export default class Spec extends Component {
         num: 1
     });
 }
+
+  discrement() {
+    this.setState({
+      num: this.state.num > 1 ? this.state.num - 1 : 1
+    })
+  }
+
+  increment() {
+    this.setState({
+      num: this.state.num + 1
+    })
+  }
+
+  addToCart() {
+    const item = {
+      ...this.state.goodsInfo,
+      num: this.state.num
+    }
+    this.props.onAddToCart(item)
+  }
 
   render() {
     const { num, goodsInfo, mode, show } = this.state;

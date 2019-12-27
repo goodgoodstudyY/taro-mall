@@ -3,8 +3,7 @@ import {
   CART_ADD, CART_UPDATE, CART_UPDATE_CHECK
 } from '@constants/cart'
 import {
-  API_CART, API_CART_NUM, API_CART_RECOMMEND,
-  API_CART_ADD, API_CART_UPDATE, API_CART_UPDATE_CHECK
+  API_CART, API_CART_UPDATE, API_CART_UPDATE_CHECK
 } from '@constants/api'
 import { createAction } from '@utils/redux'
 
@@ -22,15 +21,23 @@ export const dispatchCart = payload => createAction({
  * 购物车物品数量
  * @param {*} payload
  */
-export const dispatchCartNum = payload => createAction({
-  url: API_CART_NUM,
-  fetchOptions: {
-    showToast: false,
-    autoLogin: false
-  },
-  type: CART_NUM,
-  payload
-})
+// export const dispatchCartNum = payload => createAction({
+//   url: API_CART_NUM,
+//   fetchOptions: {
+//     showToast: false,
+//     autoLogin: false
+//   },
+//   type: CART_NUM,
+//   payload
+// })
+export const dispatchCartNum = payload => {
+  return dispatch => {
+    dispatch({
+      type: CART_NUM,
+      payload
+    })
+  }
+}
 
 /**
  * 添加商品到购物车
