@@ -8,7 +8,7 @@ import MyPage from '../../components/my-page/index'
 import { login, getUserToken } from '@utils/request'
 import Empty from './empty'
 import List from './list'
-import Footer from './footer'
+import Footer from './footer/index'
 import './cart.scss'
 
 @connect(state => state.cart, actions)
@@ -62,12 +62,51 @@ class Index extends Component {
     }
   }
 
+  handleUpdateCart(item) {
+    this.props.dispatchCartNum({
+      countCornerMark: item.num
+    })
+    this.props.dispatchAdd(item)
+    // this.imputePrice()
+  }
+
+  handleUpdateCheck(item) {
+    this.props.dispatchUpdateCheck(item)
+    // this.imputePrice()
+  }
+
+  imputePrice() {
+    const cart = this.props.cartInfo
+    const checkedCart = cart.filter(x => x.checked == true)
+    let num = 0
+
+    console.log(checkedCart, 111111)
+  }
+
+  handleCheckedAll(haveChecked) {
+    if (haveChecked) {
+      this.props.cartInfo.map(x => {
+        this.props.dispatchUpdateCheck({
+          ...x,
+          checked: false
+        })
+      })
+    } else {
+      this.props.cartInfo.map(x => {
+        this.props.dispatchUpdateCheck({
+          ...x,
+          checked: true
+        })
+      })
+    }
+  }
+
   render () {
     const { cartInfo, showPageError } = this.props
-    const { cartGroupList = [] } = cartInfo
-    const cartList = cartGroupList.filter(i => !i.promType)
-    const isEmpty = !cartList.length
-    const isShowFooter = !isEmpty || true
+    // const { cartGroupList = [] } = cartInfo
+    // const cartList = cartGroupList.filter(i => !i.promType)
+    const isEmpty = !cartInfo.length
+    const isShowFooter = !isEmpty
 
     if (!this.state.loaded) {
       return <Loading />
@@ -104,7 +143,7 @@ class Index extends Component {
           >
             {isEmpty && <Empty />}
 
-            {!isEmpty && cartList.map((group, index) => (
+            {/* {!isEmpty && cartInfo.map((group, index) => (
               <List
                 key={`${group.promId}_${index}`}
                 promId={group.promId}
@@ -113,7 +152,18 @@ class Index extends Component {
                 onUpdate={this.props.dispatchUpdate}
                 onUpdateCheck={this.props.dispatchUpdateCheck}
               />
-            ))}
+            ))} */}
+            {
+              !isEmpty
+              ? (
+                <List 
+                  list={cartInfo}
+                  onUpdate={this.handleUpdateCart.bind(this)}
+                  onUpdateCheck={this.handleUpdateCheck.bind(this)}
+                />
+              )
+              : <View></View>
+            }
 
             {isShowFooter &&
               <View className='cart__footer--placeholder' />
@@ -124,7 +174,7 @@ class Index extends Component {
             <View className='cart__footer'>
               <Footer
                 cartInfo={cartInfo}
-                onUpdateCheck={this.props.dispatchUpdateCheck}
+                onUpdateCheck={this.handleCheckedAll.bind(this)}
               />
             </View>
           }

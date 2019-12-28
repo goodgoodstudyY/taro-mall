@@ -80,11 +80,24 @@ export async function directRequest(options) {
         }, 1000)
         reject(res)
       } else if (res.statusCode == 401) {
-        Taro.showModal({
-          title: '提示',
-          content: res.data.message
-        })
-        reject(res)
+        console.log(res.data)
+        if (res.data.message.includes('会话过期')) {
+          refreshToken()
+        } else if (res.data.message.includes('登陆未授权')) {
+          delete Taro.$globalData.token
+          Taro.removeStorageSync('loginInfo')
+          Taro.showModal({
+            title: '提示',
+            content: res.data.message
+          })
+          reject()
+        } else {
+          Taro.showModal({
+            title: '提示',
+            content: res.data.message
+          })
+          reject(res)
+        }
       }
   
       resolve(data)
@@ -129,12 +142,11 @@ export async function getToken() {
 export function refreshToken(token) {
   let loginPromise
   loginPromise = new Promise(function (resolve, reject) {
-    console.log(token, 1111111)
     let refreshToken = {
       url: API_REFRESH_TOKEN,
-      payload: {
-        token
-      },
+      // payload: {
+      //   token
+      // },
       method: 'POST',
       showToast: false,
       autoLogin: false

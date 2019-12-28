@@ -28,7 +28,8 @@ class App extends Component {
       'pages/item/item',
       'pages/order/order',
       'pages/search-goods/search-goods',
-      'pages/shopInfo/shopInfo'
+      'pages/shopInfo/shopInfo',
+      'pages/goodsPayment/goodsPayment'
     ],
     window: {
       backgroundTextStyle: 'light',

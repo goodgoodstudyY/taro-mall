@@ -1,4 +1,4 @@
-import Taro, { getBluetoothDevices } from '@tarojs/taro'
+import Taro from '@tarojs/taro'
 import {
   CART_INFO, CART_NUM, CART_RECOMMEND,
   CART_ADD, CART_UPDATE, CART_UPDATE_CHECK
@@ -39,7 +39,10 @@ export default function cart(state = INITIAL_STATE, action) {
         if (x.id == good.id) {
           good.num = x.num + good.num
           haveSameGood = true
-          goods.push(good)
+          goods.push(Object.assign(
+            x,
+            good
+          ))
         } else {
           goods.push(x)
         }
@@ -52,12 +55,15 @@ export default function cart(state = INITIAL_STATE, action) {
         cartInfo: goods
       }
     }
-    case CART_INFO:
-    case CART_UPDATE:
     case CART_UPDATE_CHECK: {
       return {
         ...state,
-        cartInfo: action.payload
+        cartInfo: state.cartInfo.map(x => {
+          if (x.id == action.payload.id) {
+            x = action.payload
+          }
+          return x
+        })
       }
     }
     case CART_NUM: {
@@ -68,12 +74,6 @@ export default function cart(state = INITIAL_STATE, action) {
       return {
         ...state,
         count: num
-      }
-    }
-    case CART_RECOMMEND: {
-      return {
-        ...state,
-        recommend: action.payload
       }
     }
     default:

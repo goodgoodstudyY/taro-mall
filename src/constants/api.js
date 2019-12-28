@@ -24,19 +24,14 @@ export const API_GOODS_DETAIL_HAVE_TOKEN = `${host}/wx/goods/info`
 // order
 
 
-// cart
-export const API_CART = `${yanxuan}/xhr/promotionCart/getCarts.json`
-export const API_CART_NUM = `${yanxuan}/xhr/promotionCart/getMiniCartNum.json`
-export const API_CART_RECOMMEND = `${yanxuan}/xhr/rcmd/cart.json`
-export const API_CART_ADD = `${yanxuan}/xhr/promotionCart/add.json`
-export const API_CART_UPDATE = `${yanxuan}/xhr/promotionCart/update.json`
-export const API_CART_UPDATE_CHECK = `${yanxuan}/xhr/promotionCart/updateCheck.json`
+// address
+export const API_ADDRESS_LIST = `${host}/wx/customer/address/list`
 
 // user
 export const API_USER = `${yanxuan}/xhr/user/getDetail.json`
 export const API_USER_SEESION = `${host}/common/wxAutoLogin`
 export const API_USER_LOGIN = `${host}/common/getToken`
-export const API_REFRESH_TOKEN = `${host}/common/refreshToken`
+export const API_REFRESH_TOKEN = `${host}/common/refreshWxToken`
 export const API_CODE = `${host}/common/sendSms`
 export const API_MOBILE_LOGIN = `${host}/common/login`
 

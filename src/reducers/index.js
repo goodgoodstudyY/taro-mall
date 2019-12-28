@@ -4,11 +4,13 @@ import cart from './cart'
 import home from './home'
 import item from './item'
 import user from './user'
+import address from './address'
 
 export default combineReducers({
   home,
   cate,
   cart,
   item,
-  user
+  user,
+  address
 })

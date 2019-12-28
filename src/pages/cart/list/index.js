@@ -1,6 +1,7 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
 import { CheckboxItem, InputNumber } from '@components'
+import { crop } from '../../../utils/util'
 import './index.scss'
 
 export default class List extends Component {
@@ -22,15 +23,23 @@ export default class List extends Component {
   })
 
   handleUpdate = (item, cnt) => {
+    // const payload = {
+    //   skuList: [{ ...this.getBaseItem(item), cnt }]
+    // }
     const payload = {
-      skuList: [{ ...this.getBaseItem(item), cnt }]
+      ...item,
+      num: cnt - item.num
     }
     this.props.onUpdate(payload)
   }
 
   handleUpdateCheck = (item) => {
+    // const payload = {
+    //   skuList: [{ ...this.getBaseItem(item), checked: !item.checked }]
+    // }
     const payload = {
-      skuList: [{ ...this.getBaseItem(item), checked: !item.checked }]
+      ...item,
+      checked: !item.checked
     }
     this.props.onUpdateCheck(payload)
   }
@@ -54,7 +63,7 @@ export default class List extends Component {
             />
             <Image
               className='cart-list__item-img'
-              src={item.pic}
+              src={crop(item.smallPic, 160)}
             />
             <View className='cart-list__item-info'>
               <View className='cart-list__item-title'>
@@ -62,23 +71,23 @@ export default class List extends Component {
                   <Text className='cart-list__item-title-tag'>{item.prefix}</Text>
                 }
                 <Text className='cart-list__item-title-name' numberOfLines={1}>
-                  {item.itemName}
+                  {item.name}
                 </Text>
               </View>
 
-              <View className='cart-list__item-spec'>
+              {/* <View className='cart-list__item-spec'>
                 <Text className='cart-list__item-spec-txt'>
                   {item.specList.map(sepc => sepc.specValue).join(' ')}
                 </Text>
-              </View>
+              </View> */}
 
               <View className='cart-list__item-wrap'>
                 <Text className='cart-list__item-price'>
-                  ¥{item.actualPrice}
+                  ¥{item.realPrice || item.price}
                 </Text>
                 <View className='cart-list__item-num'>
                   <InputNumber
-                    num={item.cnt}
+                    num={item.num}
                     onChange={this.handleUpdate.bind(this, item)}
                   />
                 </View>
