@@ -43,12 +43,6 @@ class Cate extends Component {
     })
   }
 
-  handleMenu = (index) => {
-    this.setState({ loading: true }, () => {
-      this.setState({ loading: false })
-    })
-  }
-
   handleOpenParams(e) {
     e.stopPropagation()
     this.setState({
@@ -81,7 +75,7 @@ class Cate extends Component {
 
   render () {
     const { showPageError } = this.props
-    const { loading, goodsDetail, showParams, showSpec, addToCart } = this.state
+    const { goodsDetail, showParams, showSpec, addToCart } = this.state
     if (!this.state.loaded) {
       return <Loading />
     }

@@ -1,1 +1,2 @@
 export const ADDRESS_LIST = 'ADDRESS_LIST'
+export const ADDRESS_ADD = 'ADDRESS_ADD'

@@ -20,15 +20,12 @@ export default class goodsPayment extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            takeType: [
-                { label: '物流配送', value: 1 }
-            ],
             addressInfo: {},
             handleGoodsInfo: [],
             showTextarea: false,
             remarks: '',
             textareaFocus: false,
-             canCreateOrder: false
+            canCreateOrder: false
         }
     }
 
@@ -37,7 +34,15 @@ export default class goodsPayment extends Component {
     }
 
     getInit() {
-      this.props.dispatchAddressList()
+        this.props.dispatchAddressList()
+    }
+
+    chooseAddress() {
+        const { addressInfo } = this.state;
+        Taro.navigateTo({
+            url: '/pages/addressList/addressList?id=' + (addressInfo && addressInfo.id ? addressInfo.id : '') + '&type=2',
+        })
+        Taro.$page['goodsPayment'] = this;
     }
 
     render() {
@@ -45,8 +50,8 @@ export default class goodsPayment extends Component {
         
         return (
             <MyPage onReload={this.getInit.bind(this)}>
-              <View className='page fsc-c'>
-              <View className='address-layout fsc w100'>
+                <View className='page fsc-c'>
+                <View className='address-layout fsc w100'>
                     <View className='address-bg w100'></View>
                     <View className='address bgc-w'>
                         {
@@ -59,14 +64,14 @@ export default class goodsPayment extends Component {
                                 </View>
                             )
                             : 
-                              <View className='address-none w100 fcc c-red fs36' onClick={this.chooseAddress.bind(this)}>
-                                  <View className='iconfont icondizhi'>&#xe75c;</View>添加配送地址
-                              </View>
+                                <View className='address-none w100 fcc c-red fs36' onClick={this.chooseAddress.bind(this)}>
+                                    <View className='iconfont icondizhi'>&#xe75c;</View>添加配送地址
+                                </View>
                         }
                     </View>
                 </View>
                 <View className='goodsAndMoney bgc-w border-radius-bottom marginTop10'>
-                  {
+                    {
                         handleGoodsInfo.map((i, n) => {
                             return (
                                 <View key={i.name}>
@@ -95,12 +100,12 @@ export default class goodsPayment extends Component {
 
                     <View className='amount fsbc fs30'>
                         <View className='c000'>
-                          {takePrice > 0 ? `配送费 ${takePrice}元` : canUseTake ? '免配送费' : '配送费 --'}
+                            {takePrice > 0 ? `配送费 ${takePrice}元` : canUseTake ? '免配送费' : '配送费 --'}
                         </View>
                         <View className='c333'>
-                          <Text>已优惠￥{totalCount}{' '}</Text>
-                          <Text>小计：</Text>
-                          <Text className='c-red'>￥{totalPrice}</Text>
+                            <Text>已优惠￥{totalCount}{' '}</Text>
+                            <Text>小计：</Text>
+                            <Text className='c-red'>￥{totalPrice}</Text>
                         </View>
                     </View>
                 </View>
@@ -132,8 +137,7 @@ export default class goodsPayment extends Component {
                     }
                     <View className={`pay cfff fcc fs30 ${canCreateOrder ? '' : 'pay-disabled'}`} onClick={this.preCreateOrder.bind(this)}>立即支付</View>
                 </View>
- 
-              </View>
+                </View>
                 
             </MyPage>
         )

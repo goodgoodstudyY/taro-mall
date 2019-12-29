@@ -1,7 +1,7 @@
-import Taro from '@tarojs/taro'
 import {
-  ADDRESS_LIST
-} from '@constants/cart'
+  ADDRESS_LIST,
+  ADDRESS_ADD
+} from '@constants/address'
 
 const INITIAL_STATE = {
   addressList: [],
@@ -15,7 +15,12 @@ export default function address(state = INITIAL_STATE, action) {
   }
   switch(action.type) {
     case ADDRESS_LIST: {
-      console.log(action.payload)
+      return {
+        ...state,
+        addressList: action.payload
+      }
+    }
+    case ADDRESS_ADD: {
       return {
         ...state
       }

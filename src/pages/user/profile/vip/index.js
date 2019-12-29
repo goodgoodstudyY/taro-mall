@@ -43,11 +43,18 @@ export default class Vip extends Component {
     return { transform: `translateX(${Taro.pxTransform(this.state.x)})` }
   }
 
+  goAddressList() {
+    Taro.navigateTo({
+      url: '/pages/addressList/addressList'
+    })
+  }
+
   render () {
     return (
       <View
         className='user-profile-vip'
         style={this.getAnimateStyle()}
+        onClick={this.goAddressList}
       >
         <View className='iconfont ml20 cd3c'>&#xe75c;</View>
         <View className='user-profile-vip__desc'>

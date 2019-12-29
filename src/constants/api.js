@@ -7,7 +7,6 @@ export const host = HOST
 export const hostM = HOST_M
 /* eslint-enable */
 const yanxuan = 'https://miniapp.you.163.com'
-const yanxuan_m = 'https://m.you.163.com'
 
 // pic
 export const CDN = 'https://yanxuan.nosdn.127.net'
@@ -26,6 +25,7 @@ export const API_GOODS_DETAIL_HAVE_TOKEN = `${host}/wx/goods/info`
 
 // address
 export const API_ADDRESS_LIST = `${host}/wx/customer/address/list`
+export const API_ADD_ADDRESS = `${host}/wx/customer/address/add`
 
 // user
 export const API_USER = `${yanxuan}/xhr/user/getDetail.json`

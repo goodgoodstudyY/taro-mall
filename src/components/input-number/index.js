@@ -16,7 +16,7 @@ export default class InputNumber extends Component {
   }
 
   handleMinus = () => {
-    if (this.props.num > 1) {
+    if (this.props.num > 0) {
       this.props.onChange(this.props.num - 1)
     }
   }
@@ -27,7 +27,7 @@ export default class InputNumber extends Component {
 
   render () {
     const { num, compStyle, numStyle } = this.props
-    const isMinusDisabled = num <= 1
+    const isMinusDisabled = num <= 0
     return (
       <View className='comp-input-number' style={compStyle}>
         <View

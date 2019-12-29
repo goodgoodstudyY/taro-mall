@@ -1,12 +1,26 @@
 import Taro from '@tarojs/taro'
-import { API_USER_SEESION, API_REFRESH_TOKEN, API_USER_LOGIN, API_CODE, API_MOBILE_LOGIN } from '@constants/api'
+import {
+  API_USER_SEESION,
+  API_REFRESH_TOKEN,
+  API_USER_LOGIN,
+  API_CODE,
+  API_MOBILE_LOGIN,
+  API_GOODS_TAG_LIST,
+  API_CATE,
+  API_GOODS_Detail,
+  API_CATE_SUB_LIST
+} from '@constants/api'
 
 
 const noNeedLoginURLs = [
   API_USER_LOGIN,
   API_USER_SEESION,
   API_CODE,
-  API_MOBILE_LOGIN
+  API_MOBILE_LOGIN,
+  API_GOODS_TAG_LIST,
+  API_CATE,
+  API_GOODS_Detail,
+  API_CATE_SUB_LIST
 ]
 
 export async function fetchApi(options) {

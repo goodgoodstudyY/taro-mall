@@ -29,7 +29,9 @@ class App extends Component {
       'pages/order/order',
       'pages/search-goods/search-goods',
       'pages/shopInfo/shopInfo',
-      'pages/goodsPayment/goodsPayment'
+      'pages/goodsPayment/goodsPayment',
+      'pages/addressList/addressList',
+      'pages/addressEdit/addressEdit'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -101,3 +103,4 @@ class App extends Component {
 Taro.render(<App />, document.getElementById('app'))
 
 Taro.$globalData = {}
+Taro.$page = {}

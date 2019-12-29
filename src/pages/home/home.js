@@ -56,28 +56,6 @@ class Home extends Component {
     // this.loadRecommend()
   }
 
-  loadRecommend = () => {
-    if (!this.state.hasMore || this.state.loading) {
-      return
-    }
-
-    const payload = {
-      lastItemId: this.state.lastItemId,
-      size: RECOMMEND_SIZE
-    }
-    this.setState({ loading: true })
-    this.props.dispatchRecommend(payload).then((res) => {
-      const lastItem = res.rcmdItemList[res.rcmdItemList.length - 1]
-      this.setState({
-        loading: false,
-        hasMore: res.hasMore,
-        lastItemId: lastItem && lastItem.id
-      })
-    }).catch(() => {
-      this.setState({ loading: false })
-    })
-  }
-
   handlePrevent = () => {
     Taro.navigateTo({
       url: '/pages/search-goods/search-goods'

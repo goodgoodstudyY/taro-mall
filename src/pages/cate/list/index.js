@@ -104,22 +104,24 @@ export default class List extends Component {
                     val.num && val.num > 0 &&
                       <View className='fsc'>
                         <View onClick={this.discrement.bind(this, val)} className='discrement-layout'>
-                          <Image
-                            className='discrement fcc'
+                          {/* <Image
+                            className='discrement fcc iconfont'
                             mode='aspectFill'
                             src='https://weapp-1253522117.image.myqcloud.com//image/20190318/9b4ee6ca0bd7fafb.png'
-                          />
+                          /> */}
+                          <View className='discrement fcc iconfont fs24'>&#xe62a;</View>
                         </View>
                         <View className='f36 c000'>{val.num || 0}</View>
                       </View>
                   }
                   <View className='increment-layout' onClick={this.increment.bind (this, val)}>
                     <View className='increment-bg'>
-                      <Image
+                      {/* <Image
                         className='increment fcc'
                         mode='aspectFill'
                         src='https://weapp-1253522117.image.myqcloud.com//image/20190318/d490bd5578fc447b.png'
-                      />
+                      /> */}
+                      <View className='iconfont increment fcc fs24 cfff'>&#xe608;</View>
                     </View>
                   </View>
                 </View>

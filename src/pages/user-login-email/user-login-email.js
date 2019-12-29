@@ -46,24 +46,6 @@ class UserLoginEmail extends Component {
     )
   }
 
-  handleLogin = () => {
-    const payload = {
-      username: this.state.username,
-      password: md5(this.state.password)
-    }
-    this.setState({ loading: true })
-    this.props.dispatchLogin(payload).then(() => {
-      this.setState({ loading: false })
-      Taro.navigateBack({ delta: 2 })
-      // TODO RN 的 navigateBack 参数 delta 无效，暂时用如下方式解决
-      if (process.env.TARO_ENV === 'rn') {
-        setTimeout(() => Taro.navigateBack(), 1000)
-      }
-    }).catch(() => {
-      this.setState({ loading: false })
-    })
-  }
-
   onGetValidCode() {
     if (this.state.activeGetValidCode) {
       if (/[0-9]{11}/.test(this.state.infoForm.mobile)) {
@@ -142,7 +124,7 @@ class UserLoginEmail extends Component {
   }
 
   render () {
-    const { loading, activeGetValidCode } = this.state
+    const { activeGetValidCode } = this.state
     // const isBtnDisabled = !username || !password
 
     return (

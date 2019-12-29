@@ -70,7 +70,7 @@
 }
 .discrement-layout {
   margin-right: 10px;
-  padding: 20px;
+  padding: 10px 20px;
 }
 .numCtrl {
   position: absolute;
@@ -84,9 +84,14 @@
   box-sizing: border-box;
 }
 .increment {
+  padding-left: -2px;
+  padding-top: 1px;
   @extend .circle;
 }
 .discrement {
+  color: #c0c0c0;
+  padding-left: 3px;
+  padding-top: 2px;
 	background-color: #f7f8fa;
   border: solid 1px #c8c9cc;
   @extend .circle;

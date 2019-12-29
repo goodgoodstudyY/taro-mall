@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import {
-  CART_INFO, CART_NUM, CART_RECOMMEND,
+  CART_INFO, CART_NUM,
   CART_ADD, CART_UPDATE, CART_UPDATE_CHECK
 } from '@constants/cart'
 
@@ -39,11 +39,13 @@ export default function cart(state = INITIAL_STATE, action) {
         if (x.id == good.id) {
           good.num = x.num + good.num
           haveSameGood = true
+          if (good.num == 0) return
           goods.push(Object.assign(
             x,
             good
           ))
         } else {
+          if (good.num == 0) return
           goods.push(x)
         }
       })

@@ -1,22 +1,19 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Image, OpenData } from '@tarojs/components'
-import defaultAvatar from '@assets/default-avatar.png'
+import { View, Button, Image, OpenData } from '@tarojs/components'
+import { login, getUserToken } from '../../../utils/request'
 import Vip from './vip'
 import bg from './assets/bg.png'
-import qrCode from './assets/qr-code.png'
-import level01 from './assets/level-01.png'
 import './index.scss'
 
 export default class Profile extends Component {
   static defaultProps = {
-    userInfo: {}
+    userInfo: {},
+    onHaveToken: () => {}
   }
 
-  handleLogin = () => {
-    if (!this.props.userInfo.login) {
-      Taro.navigateTo({
-        url: '/pages/user-login/user-login'
-      })
+  componentWillMount() {
+    if (!Taro.$globalData.token) {
+      login()
     }
   }
 
@@ -30,12 +27,22 @@ export default class Profile extends Component {
     return `${firstLetter}****${lastLetter}@${suffix}`
   }
 
+  handleLogin(e) {
+    if (e.detail.encryptedData) {
+      getUserToken({
+        encryptedData: e.detail.encryptedData,
+        iv: e.detail.iv,
+      }).then(() => {
+        this.props.onHaveToken()
+      })
+    }
+  }
+
   render () {
-    const { userInfo } = this.props
+    const token = Taro.$globalData.token
 
     return (
       <View className='user-profile'>
-        {/* // NOTE 背景图片：Image 标签 + position absolute 实现 */}
         <Image
           className='user-profile__bg'
           src={bg}
@@ -52,12 +59,9 @@ export default class Profile extends Component {
             /> */}
           </View>
 
-          <View className='user-profile__info' onClick={this.handleLogin}>
+          <View className='user-profile__info'>
             <OpenData type='userNickName' />
-            {/* <Text className='user-profile__info-name'>
-              {userInfo.login ? userInfo.nickname : '未登录'}
-            </Text> */}
-            {userInfo.login ?
+            {token ?
               <View className='user-profile__info-wrap'>
                 {/* XXX 没有全部 level 对应的图标，暂时都用 v1 */}
                 {/* <Image className='user-profile__info-level' src={level01} />
@@ -65,7 +69,7 @@ export default class Profile extends Component {
                   {this.getUid(userInfo.uid)}
                 </Text> */}
               </View> :
-              <Text className='user-profile__info-tip'>点击登录账号</Text>
+              <Button className='user-profile__info-tip' openType='getPhoneNumber' onGetPhoneNumber={this.handleLogin}>点击登录账号</Button>
             }
           </View>
 

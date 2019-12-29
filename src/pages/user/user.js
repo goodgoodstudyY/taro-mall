@@ -54,7 +54,7 @@ class User extends Component {
   }
 
   render () {
-    const { userInfo, showPageError } = this.props
+    const { showPageError } = this.props
 
     return (
       <MyPage showPageError={showPageError} onReload={this.onInit.bind(this)}>
@@ -64,7 +64,7 @@ class User extends Component {
             className='user__wrap'
             style={{ height: getWindowHeight() }}
           >
-            <Profile userInfo={userInfo} />
+            <Profile onHaveToken={this.onInit.bind(this)} />
             <View className='order bgc-w'>
               <ListShapeButton
                 layout={['border-bottom', 'h100']}
