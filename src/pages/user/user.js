@@ -21,8 +21,6 @@ class User extends Component {
   }
 
   onInit() {
-    // this.props.dispatchUser()
-    // this.props.dispatchCartNum()
   }
 
   handleLogin = () => {

@@ -40,6 +40,62 @@ export default class addressList extends Component {
     })
   }
 
+  // 编辑地址
+  edit (e) {
+    // 指定当前页面，刷新当前页面
+    Taro.$page['addressList'] = this;
+    Taro.navigateTo({
+      url: '/pages/addressEdit/addressEdit?item=' + JSON.stringify(e)
+    })
+  }
+  delete (e) {
+    let self = this
+    // 显示删除提示的模态框
+    Taro.showModal({
+      title: '删除地址',
+      content: '请确认是否删除所选地址',
+      cancelText: '取消',
+      success: res => {
+        if (res.confirm) {
+          this.props.dispatchDelAddress(e.id).then(() => {
+            Taro.showToast({
+              title: '删除成功',
+              icon: 'success',
+              duration: 1000
+            })
+            self.init()
+          })
+        }
+      }
+    })
+  }
+
+  // 设置默认地址
+  change (e) {
+    let self = this
+    // 显示删除提示的模态框
+    Taro.showModal({
+      title: '默认地址',
+      content: '确认所选地址为默认地址',
+      cancelText: '取消',
+      success: res => {
+        e.isDefault = 1
+        if (res.confirm) {
+          this.props.dispatchEditAddress({
+            ...e
+          }).then(() => {
+            this.init()
+            Taro.showToast({
+              title: '修改成功',
+              icon: 'success',
+              duration: 1000
+            })
+          })
+        }
+      }
+    })
+  }
+
   render () {
     const { loaded } = this.state
     const { addressList } = this.props
@@ -79,7 +135,7 @@ export default class addressList extends Component {
               <View className='row f100 f1 center'>
                 <View className='c666 fs28' onClick={this.delete.bind(this, e)}><Text className='iconfont small-icon mr10'>&#xe9e2;</Text><Text>删除</Text></View>
                 <View className='divide'></View>
-                <View className='c-red f28 mr40' onClick={this.edit.bind(this, e)}><Text className='iconfont small-icon mr10'>&#xe9e3;</Text><Text>编辑</Text></View>
+                <View className='c-red fs28 mr40' onClick={this.edit.bind(this, e)}><Text className='iconfont small-icon mr10'>&#xe9e3;</Text><Text>编辑</Text></View>
               </View>
             </View> :
               <View className='rowc'>

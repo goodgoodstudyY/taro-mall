@@ -26,6 +26,8 @@ export const API_GOODS_DETAIL_HAVE_TOKEN = `${host}/wx/goods/info`
 // address
 export const API_ADDRESS_LIST = `${host}/wx/customer/address/list`
 export const API_ADD_ADDRESS = `${host}/wx/customer/address/add`
+export const API_DEL_ADDRESS = `${host}/wx/customer/address/del`
+export const API_EDIT_ADDRESS = `${host}/wx/customer/address/update`
 
 // user
 export const API_USER = `${yanxuan}/xhr/user/getDetail.json`

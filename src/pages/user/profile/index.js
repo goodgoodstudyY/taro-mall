@@ -11,20 +11,22 @@ export default class Profile extends Component {
     onHaveToken: () => {}
   }
 
-  componentWillMount() {
-    if (!Taro.$globalData.token) {
-      login()
-    }
+  static state = {
+    token: ''
   }
 
-  getUid = (uid) => {
-    if (!uid || !/@/.test(uid)) {
-      return ''
+  componentWillMount() {
+    this.needLogin()
+  }
+
+  needLogin() {
+    if (!Taro.$globalData.token) {
+      login()
+    } else {
+      this.setState({
+        token: Taro.$globalData.token
+      })
     }
-    const [username, suffix] = uid.split('@')
-    const firstLetter = username[0]
-    const lastLetter = username[username.length - 1]
-    return `${firstLetter}****${lastLetter}@${suffix}`
   }
 
   handleLogin(e) {
@@ -34,12 +36,13 @@ export default class Profile extends Component {
         iv: e.detail.iv,
       }).then(() => {
         this.props.onHaveToken()
+        this.needLogin()
       })
     }
   }
 
   render () {
-    const token = Taro.$globalData.token
+    const { token } = this.state
 
     return (
       <View className='user-profile'>

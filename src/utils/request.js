@@ -73,7 +73,7 @@ export async function directRequest(options) {
         }
       } else if (res.statusCode == 500) {
         Taro.showToast({
-          title: '请求异常',
+          title: res.data.message,
           icon: 'none',
           duration: 1000
         })
