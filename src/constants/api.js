@@ -20,8 +20,12 @@ export const API_GOODS_Detail = `${host}/common/goods/info`
 export const API_CATE_SUB_LIST = `${host}/common/goods/list`
 export const API_CATE_SUB_LIST_HAVE_TOKEN = `${host}/wx/goods/list`
 export const API_GOODS_DETAIL_HAVE_TOKEN = `${host}/wx/goods/info`
-// order
 
+// order
+export const API_ORDER_PRICE = `${host}/wx/pay/price`
+export const API_ORDER_PRE = `${host}/wx/pay/pre`
+export const API_ORDER_PAY = `${host}/wx/pay/order`
+export const API_ORDER_PAY_CALLBACK = `${host}/wx/pay/callback`
 
 // address
 export const API_ADDRESS_LIST = `${host}/wx/customer/address/list`

@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro'
 import {
   CART_INFO, CART_NUM,
-  CART_ADD, CART_UPDATE, CART_UPDATE_CHECK
+  CART_ADD, CART_UPDATE_CHECK
 } from '@constants/cart'
 
 const INITIAL_STATE = {

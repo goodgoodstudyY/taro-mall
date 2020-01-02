@@ -26,9 +26,18 @@ export default class addressList extends Component {
   }
 
   init() {
-    this.props.dispatchAddressList().then(() => {
+    this.props.dispatchAddressList().then(res => {
       this.setState({
         loaded: true
+      })
+      res.map(x => {
+        x.disabled = false
+        if (this.$router.params.id && this.$router.params.id == x.id) {
+          x.disabled = true
+        }
+      })
+      this.setState({
+        addressList: res
       })
     })
   }
@@ -96,9 +105,35 @@ export default class addressList extends Component {
     })
   }
 
+  // 选择地址
+  checkAddress (key, id) {
+    if (this.$router.params && this.$router.params.type == 2) {
+      let list = this.state.addressList
+      // 初始化选中状态
+      list.map(e => {
+        e.disabled = false
+        return e
+      })
+      list.map((e, index) => {
+        if (index == id) {
+          e.disabled = true
+        }
+        return e
+      })
+      this.setState({
+        addressList: list
+      }, () => {
+        if (Taro.$page['goodsPayment']) {
+          Taro.$page['goodsPayment'].setAddress(this.state.addressList[id])
+          Taro.navigateBack();
+        }
+      })
+    }
+
+  }
+
   render () {
-    const { loaded } = this.state
-    const { addressList } = this.props
+    const { loaded, addressList } = this.state
 
     if (!this.state.loaded) {
       return <Loading />

@@ -27,16 +27,6 @@ class Index extends Component {
   }
 
   onInit() {
-    // fetch({ url: API_CHECK_LOGIN, showToast: false, autoLogin: false }).then((res) => {
-    //   if (res) {
-    //     this.setState({ loaded: true, login: true })
-    //     this.props.dispatchCart()
-    //     this.props.dispatchCartNum()
-    //     this.props.dispatchRecommend()
-    //   } else {
-    //     this.setState({ loaded: true, login: false })
-    //   }
-    // })
     if (Taro.$globalData.token) {
       this.setState({ loaded: true, login: true })
     } else {

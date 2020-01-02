@@ -1,14 +1,15 @@
 import Taro, { Component } from '@tarojs/taro';
 
-import { View, Text, Textarea, Image, Checkbox } from '@tarojs/components';
+import { View, Text, Textarea, Image } from '@tarojs/components';
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/cart'
+import * as orders from '@actions/order'
 import { dispatchAddressList } from '@actions/address'
 import MyPage from '../../components/my-page'
 import './goodsPayment.scss';
 import { crop } from '../../utils/util';
 
-@connect(state => state.cart, {...actions, dispatchAddressList})
+@connect(state => state.cart, {...actions, dispatchAddressList, ...orders})
 export default class goodsPayment extends Component {
 
     config = {
@@ -25,7 +26,8 @@ export default class goodsPayment extends Component {
             showTextarea: false,
             remarks: '',
             textareaFocus: false,
-            canCreateOrder: false
+            canCreateOrder: false,
+            totalPrice: 0
         }
     }
 
@@ -34,7 +36,57 @@ export default class goodsPayment extends Component {
     }
 
     getInit() {
-        this.props.dispatchAddressList()
+        this.props.dispatchAddressList().then(data => {
+            let addressInfo = {}
+            data.length > 0 && data.map(x => {
+                if (x.isDefault == 1) {
+                    addressInfo = x
+                }
+            })
+            this.setState({
+                addressInfo: addressInfo,
+                handleGoodsInfo: this.props.cartInfo.filter(x => !!x.checked)
+            }, () => {
+                this.calcTotalPrice()
+            })
+        })
+    }
+
+    calcTotalPrice() {
+        if (this.state.addressInfo.id) {
+            let totalPrice = 0
+            this.props.dispatchOrderPrice({
+                addressId: this.state.addressInfo.id,
+                goodsInfoList: this.state.handleGoodsInfo.map(x => {
+                    totalPrice = x.price * x.num + totalPrice
+                    return {
+                        count: x.num,
+                        price: x.realPrice || x.price,
+                        goodsId: x.id
+                    }
+                })
+            }).then(res => {
+                console.log(res)
+                this.setState({
+                    takePrice: res.packagePrice,
+                    totalPrice: res.goodsPrice,
+                    totalCount: totalPrice - res.goodsPrice,
+                    canUseTake: res.packagePrice == 0 ? true : false,
+                    canCreateOrder: true
+                })
+            })
+        } else {
+            let count = 0
+            let totalPrice = 0
+            this.state.handleGoodsInfo.map(x => {
+                count = (x.realPrice || x.price) * x.num + count
+                totalPrice = x.price * x.num + totalPrice
+            })
+            this.setState({
+                totalPrice: count,
+                totalCount: totalPrice - count
+            })
+        }
     }
 
     chooseAddress() {
@@ -45,8 +97,87 @@ export default class goodsPayment extends Component {
         Taro.$page['goodsPayment'] = this;
     }
 
+    setAddress(addressInfo = {}) {
+        if (!addressInfo.id) {
+            this.setState({
+                addressInfo: {}
+            }, this.calcTotalPrice);
+        } else {
+            this.setState({
+                addressInfo
+            }, this.calcTotalPrice)
+        }
+    }
+
+    showTextarea () {
+        if (this.textareaFocusTimer) clearTimeout(this.textareaFocusTimer);
+        this.setState({
+            showTextarea: true
+        }, () => {
+            this.textareaFocusTimer = setTimeout(() => {
+                this.setState({
+                    textareaFocus: true
+                });
+            }, 300)
+        });
+    }
+
+    hideTextarea() {
+        if (this.textareaFocusTimer) clearTimeout(this.textareaFocusTimer);
+        this.setState({
+            showTextarea: false,
+            textareaFocus: false
+        });
+    }
+
+    handleRemarksInput(e) {
+        const { value } = e.detail;
+        this.setState({
+            remarks: value
+        });
+    }
+
+    preCreateOrder() {
+        this.props.dispatchOrderPre({
+            addressId: this.state.addressInfo.id,
+            goodsInfoList: this.state.handleGoodsInfo.map(x => {
+                return {
+                    count: x.num,
+                    price: x.realPrice || x.price,
+                    goodsId: x.id
+                }
+            })
+        }).then(res => {
+            this.setState({
+                orderId: res
+            }, () => {
+                this.pay()
+            })
+        })
+    }
+
+    pay() {
+        this.props.dispatchOrderPay({
+            orderId: this.state.orderId
+        }).then(res => {
+            console.log(res)
+        })
+    }
+
     render() {
-        const { addressInfo, handleGoodsInfo, showTextarea, remarks, textareaFocus, canCreateOrder } = this.state
+        const {
+            addressInfo,
+            handleGoodsInfo,
+            showTextarea,
+            remarks,
+            textareaFocus,
+            canCreateOrder,
+            totalPrice,
+            totalCount,
+            takePrice,
+            canUseTake
+        } = this.state
+        const {} = this.props
         
         return (
             <MyPage onReload={this.getInit.bind(this)}>
@@ -58,9 +189,9 @@ export default class goodsPayment extends Component {
                             addressInfo && Object.keys(addressInfo).length > 0
                             ? (
                                 <View className='address-content-icon address-content iconfont w100' onClick={this.chooseAddress.bind(this)}>
-                                    <View className='address-provinceAndCity fs24 c999'>上海市上海市闵行区</View>
+                                    <View className='address-provinceAndCity fs24 c999'>{addressInfo.province + addressInfo.city + addressInfo.area}</View>
                                     <View className='address-address fs38 c1a'>{addressInfo.address}</View>
-                                    <View className='address-consignee fs26 c1a'>{ `收货人：${addressInfo.realname} (${addressInfo.mobile})`}</View>
+                                    <View className='address-consignee fs26 c1a'>{ `收货人：${addressInfo.receiver} (${addressInfo.phone})`}</View>
                                 </View>
                             )
                             : 
@@ -80,11 +211,9 @@ export default class goodsPayment extends Component {
                                         <View className='goods-content f1'>
                                             <View className='w100 fsbc fs28 c1a'>
                                                 <View className='maxWidth ellipsis2'>{i.name}</View>
-                                                <View>￥{i.specSelected.price}</View>
+                                                <View>￥{i.realPrice || i.price}</View>
                                             </View>
                                             <View className='fsbc fs26 c999'>
-                                                <View className='ellipsis2'>
-                                                    {i.specSelected.name + ' ' + (i.attribute ? i.attribute.map(item => item.item.name).join(' ') : '')}                                                </View>
                                                 <View>x{i.num}</View>
                                             </View>
                                         </View>
@@ -130,7 +259,7 @@ export default class goodsPayment extends Component {
                                 <Text className='totalCount-discount f24 c9'>共优惠{totalCount}元</Text>
                             </View>
                         ) : addressInfo && addressInfo.id && !canUseTake ? (
-                            <View className='totalCount-count f32 c3 flex'>{canUseTakeErrorMsg ? canUseTakeErrorMsg : '订单不满足配送条件'}</View>
+                            <View className='totalCount-count fs32 c3 flex'>{canUseTakeErrorMsg ? canUseTakeErrorMsg : '订单不满足配送条件'}</View>
                         ) : (
                             <View></View>
                         )
