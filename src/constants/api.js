@@ -26,6 +26,9 @@ export const API_ORDER_PRICE = `${host}/wx/pay/price`
 export const API_ORDER_PRE = `${host}/wx/pay/pre`
 export const API_ORDER_PAY = `${host}/wx/pay/order`
 export const API_ORDER_PAY_CALLBACK = `${host}/wx/pay/callback`
+export const API_ORDER_LIST = `${host}/wx/order/list`
+export const API_ORDER_CONFIRM_GOODS = `${host}/wx/order/sendComplete`
+export 
 
 // address
 export const API_ADDRESS_LIST = `${host}/wx/customer/address/list`

@@ -1,13 +1,12 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text, ScrollView } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import * as actions from '@actions/user'
-import { dispatchCartNum } from '@actions/cart'
+import * as actions from '@actions/order'
 import { getWindowHeight } from '@utils/style'
 import MyPage from '../../components/my-page/index'
 import './order.scss'
 
-@connect(state => state.user, { ...actions, dispatchCartNum })
+@connect(state => state.order, { ...actions })
 class Order extends Component {
   config = {
     navigationBarTitleText: '我的订单'
@@ -18,8 +17,7 @@ class Order extends Component {
   }
   
   onInit() {
-    this.props.dispatchUser()
-    this.props.dispatchCartNum()
+    this.props.dispatchOrderList()
   }
 
   handleLogin = () => {
