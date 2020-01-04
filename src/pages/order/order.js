@@ -1,58 +1,156 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, ScrollView } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/order'
-import { getWindowHeight } from '@utils/style'
 import MyPage from '../../components/my-page/index'
-import './order.scss'
+import Tab from '../../components/tab/tab'
+import Order from '../../components/order/order'
+import './orderList.scss'
 
 @connect(state => state.order, { ...actions })
-class Order extends Component {
+export default class Index extends Component {
+
   config = {
-    navigationBarTitleText: '我的订单'
+    navigationBarTitleText: '订单列表',
+    backgroundColor: '#edeef5',
+    navigationBarBackgroundColor: '#f9de1a',
+    enablePullDownRefresh: true
+  }
+  // Taro.$globalData.type 存储订单状态
+  constructor(props) {
+    super(props)
+    this.state = {
+      type: 0,
+      tabBarList: ['', 0, 1, 3, '4, 5', 6],
+      tabBarListMean: ['全部', '待发货', '待收货', '待评价', '已完成'],
+      list: [],
+      pageNumber: 0,
+      pageSize: 10
+    }
+  }
+  componentWillMount() {
+    Taro.$page['orderList'] = this
+    let type = this.$router.params.type || ''
+    if(type == 4) {
+      type = '4,5'
+    }
+    this.setState({
+      type: type
+    })
+    this.changeList(type)
   }
 
-  componentDidShow() {
-    this.onInit()
-  }
-  
-  onInit() {
-    this.props.dispatchOrderList()
+  onPullDownRefresh() {
+    this.changeList(this.state.type)
   }
 
-  handleLogin = () => {
-    Taro.navigateTo({
-      url: '/pages/user-login/user-login'
+  componentWillUnmount() {
+    delete Taro.$page['orderList']
+  }
+
+  // 获取列表
+  getList() {
+    return new Promise(resolve => {
+      const nextPage = this.state.pageNumber + 1
+      this.setState({
+        pageNumber: nextPage
+      }, () => {
+        this.props.dispatchOrderList().then( el => {
+          let e = el.data.data
+          resolve(e)
+        })
+      })
     })
   }
 
-  render () {
-    const { userInfo, showPageError } = this.props
+  loadMore() {
+    if ([3].includes(this.state.loadStyle)) {
+      return null
+    }
+    this.setState({
+      loadStyle: 2
+    })
+    this.getList().then(list => {
+      this.setState({
+        list: this.state.list.concat(list)
+      })
+    })
+  }
 
-    return (
-      <MyPage showPageError={showPageError} onReload={this.onInit.bind(this)}>
-        <View className='user'>
-          <ScrollView
-            scrollY
-            className='user__wrap'
-            style={{ height: getWindowHeight() }}
-          >
-            {/* <Profile userInfo={userInfo} /> */}
-            {/* <Menu /> */}
-            {userInfo.login &&
-              <View className='user__logout' onClick={this.handleLogin}>
-                <Text className='user__logout-txt'>切换账号</Text>
-              </View>
+  changeList(key) {
+    this.setState({
+      loadStyle: 2,
+      list: [],
+      type: key,
+      pageNumber: 0,
+      pageSize: 10
+    }, () => {
+      this.loadMore()
+    })
+  }
+
+  onReachBottom() {
+    this.loadMore()
+  }
+
+  getProduct(key) {
+    Taro.showModal({
+      title: '确认收货',
+      content: '请确认你是否收到你的商品',
+      cancelText: '取消',
+      success: (res) => {
+        if(res.confirm) {
+          Taro.$api(this, {
+            url: '/customer/order/confirmOrderFinish',
+            data: {
+              order_id: key
             }
-            <View className='user__empty' />
-          </ScrollView>
-          {/* <View className='user__activity'>
-            <Activity />
-          </View> */}
-        </View>
-      </MyPage>
-    )
+          }, 'GET').then(() => {
+            this.setState({
+              list: []
+            }, () => {
+              this.changeList(this.state.type)
+            })
+          })
+        }
+      }
+    })
+  }
+
+  calcLoadStyle () {
+    const { loadStyle, list } = this.state
+
+    return loadStyle == 3 && !list.length
+      ? 'none'
+      : loadStyle
+  }
+
+  render () {
+      const {list} = this.state
+
+      return (
+        <MyPage loadStyle={this.calcLoadStyle()} noTab oninit={this.changeList.bind(this, 0)}>
+          <Tab
+            tabBarList={this.state.tabBarList}
+            active={this.state.type}
+            onChangeTab={this.changeList.bind(this)}
+            tabBarMean={this.state.tabBarListMean}
+          />
+          <View className='fsc-c mt90'>
+            {
+              list.map(e => {
+                return (
+                  <View className='mt15' key={e.id}>
+                    <Order
+                      order={e}
+                      onGetProduct={this.getProduct.bind(this)}
+                    />
+                  </View>
+                )
+              })
+            }
+          </View>
+        </MyPage>
+      )
   }
 }
-
-export default Order

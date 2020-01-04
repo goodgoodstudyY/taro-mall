@@ -64,6 +64,7 @@ export default class List extends Component {
             <Image
               className='cart-list__item-img'
               src={crop(item.smallPic, 160)}
+              mode='aspectFill'
             />
             <View className='cart-list__item-info'>
               <View className='cart-list__item-title'>

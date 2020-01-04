@@ -5,3 +5,28 @@ export function crop (url, w, h) {
     ? ('http://122.51.167.221:8001' + url + '?imageView2/1/w/' + w + '/h/' + h)
     : ''
 }
+
+export function formatTime(date, sep = '/') {
+  var year = date.getFullYear()
+  var month = date.getMonth() + 1
+  var day = date.getDate()
+  var hour = date.getHours()
+  var minute = date.getMinutes()
+  var second = date.getSeconds()
+  return [year, month, day].map(formatNumber).join(sep) + ' ' + [hour, minute, second].map(formatNumber).join(':')
+}
+
+export function OnlyTime(date, sep = ':') {
+var hour = parseInt(date / 3600000)
+date = date % 3600000
+var minute = parseInt(date / 60000)
+date = date % 60000
+var second = parseInt(date / 1000)
+
+return [hour, minute, second].map(formatNumber).join(sep)
+}
+
+export function formatNumber(n) {
+  n = n.toString()
+  return n[1] ? n : '0' + n
+}

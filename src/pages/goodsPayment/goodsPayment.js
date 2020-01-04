@@ -13,7 +13,7 @@ import { crop } from '../../utils/util';
 export default class goodsPayment extends Component {
 
     config = {
-        navigationBarTitleText: '',
+        navigationBarTitleText: '确认订单',
         navigationBarBackgroundColor: '#ab2b2b',
         backgroundColor: '#ab2b2b',
     }
@@ -138,29 +138,81 @@ export default class goodsPayment extends Component {
     }
 
     preCreateOrder() {
-        this.props.dispatchOrderPre({
-            addressId: this.state.addressInfo.id,
-            goodsInfoList: this.state.handleGoodsInfo.map(x => {
-                return {
-                    count: x.num,
-                    price: x.realPrice || x.price,
-                    goodsId: x.id
-                }
+        if (this.state.canCreateOrder) {
+            Taro.showToast({
+                title: '支付请求中',
+                icon: 'loading',
+                mask: true
             })
-        }).then(res => {
-            this.setState({
-                orderId: res
-            }, () => {
-                this.pay()
+            if (Taro.$lock['pay']) {
+                console.log('锁住了,支付中')
+                return
+            }
+            Taro.$lock['pay'] = true
+            this.props.dispatchOrderPre({
+                addressId: this.state.addressInfo.id,
+                goodsInfoList: this.state.handleGoodsInfo.map(x => {
+                    return {
+                        count: x.num,
+                        price: x.realPrice || x.price,
+                        goodsId: x.id
+                    }
+                })
+            }).then(res => {
+                this.setState({
+                    orderId: res
+                }, () => {
+                    this.pay()
+                })
+            }).catch(() => {
+                this.delLock()
             })
-        })
+        }
+    }
+
+    delLock() {
+        Taro.hideToast()
+        delete Taro.$lock['pay']
     }
 
     pay() {
         this.props.dispatchOrderPay({
             orderId: this.state.orderId
         }).then(res => {
-            console.log(res)
+            if (Object.keys(res).length > 0) {
+                res.package = res.prepayId
+                Taro.requestPayment(res).then(() => {
+                    this.props.dispatchOrderCallback({
+                        orderId: this.state.orderId,
+                        status: true
+                    }).then(() => {
+                        this.delLock()
+                        Taro.showToast({
+                            title: '支付成功',
+                            icon: 'success',
+                            duration: 1000
+                        })
+                        setTimeout(() => {
+                            Taro.reLaunch({
+                                url: '/pages/order/order'
+                            })
+                        }, 1000)
+                    })
+                }).catch(() => {
+                    this.delLock()
+                    Taro.showToast({
+                        title: '用户取消',
+                        icon: 'none',
+                        mask: true
+                    })
+                    this.props.dispatchOrderCallback({
+                        orderId: this.state.orderId,
+                        status: false
+                    })
+                })
+            }
+        }).catch(() => {
+            this.delLock()
         })
     }
 

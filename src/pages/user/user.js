@@ -4,9 +4,9 @@ import { connect } from '@tarojs/redux'
 import * as actions from '@actions/user'
 import { dispatchCartNum } from '@actions/cart'
 import { getWindowHeight } from '@utils/style'
-import MyPage from '../../components/my-page/index'
 import ListShapeButton from '@components/listShapeButton/index'
 import PersonalBlock from '@components/personalBlock/index'
+import MyPage from '../../components/my-page/index'
 import Profile from './profile'
 import './user.scss'
 
@@ -29,9 +29,9 @@ class User extends Component {
     })
   }
 
-  goOrderList() {
-    Taro.navigateTo({
-      url: '/pages/orderList/orderList'
+  goOrderList(type) {
+    Taro.reLaunch({
+      url: '/pages/order/order?type=' + type
     })
   }
 
@@ -69,7 +69,7 @@ class User extends Component {
                 norenderHeaderIcon='true'
                 renderContent={<Text className='fs32 c222 bold'>我的订单</Text>}
                 renderTail={<Text className='mr10 fs24 ca9'>全部订单</Text>}
-                onClick={this.goOrderList.bind(this, 0)}
+                onClick={this.goOrderList.bind(this, '')}
               />
               <View className='fsc order-bottom'>
                 <PersonalBlock
@@ -83,30 +83,37 @@ class User extends Component {
                   layout='order'
                   name='待发货'
                   floatNum='1'
-                  onClick={this.goOrderList.bind(this, 0)}
+                  onClick={this.goOrderList.bind(this, 1)}
                   renderIcon={<View className='order-icon iconfont'>&#xe649;</View>}
                 />
                 <PersonalBlock
                   layout='order'
                   name='待收货'
                   floatNum='1'
-                  onClick={this.goOrderList.bind(this, 0)}
+                  onClick={this.goOrderList.bind(this, 3)}
                   renderIcon={<View className='order-icon iconfont'>&#xe70a;</View>}
+                />
+                <PersonalBlock
+                  layout='order'
+                  name='待评价'
+                  floatNum='1'
+                  onClick={this.goOrderList.bind(this, 4)}
+                  renderIcon={<View className='order-icon iconfont'>&#xe614;</View>}
                 />
                 <PersonalBlock
                   layout='order'
                   name='已完成'
                   floatNum='1'
-                  onClick={this.goOrderList.bind(this, 0)}
+                  onClick={this.goOrderList.bind(this, 6)}
                   renderIcon={<View className='order-icon iconfont'>&#xe60f;</View>}
                 />
-                <PersonalBlock
+                {/* <PersonalBlock
                   layout='order'
                   name='售后'
                   floatNum='1'
                   onClick={this.goOrderList.bind(this, 0)}
                   renderIcon={<View className='order-icon iconfont'>&#xe604;</View>}
-                />
+                /> */}
               </View>
             </View>
             

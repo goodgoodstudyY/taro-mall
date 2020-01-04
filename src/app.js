@@ -104,3 +104,4 @@ Taro.render(<App />, document.getElementById('app'))
 
 Taro.$globalData = {}
 Taro.$page = {}
+Taro.$lock = {}

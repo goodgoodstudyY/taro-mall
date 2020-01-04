@@ -21,8 +21,8 @@ export const dispatchOrderPre = payload => createAction({
 })
 
 export const dispatchOrderPay = payload => createAction({
-  url: API_ORDER_PAY,
-  // method: 'POST',
+  url: API_ORDER_PAY + '?orderId=' + payload.orderId,
+  method: 'POST',
   type: ORDER_PAY,
   payload
 })
