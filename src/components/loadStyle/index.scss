@@ -1,0 +1,57 @@
+.loading-info-component {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  overflow: hidden;
+  width: 100%;
+  min-height: 60px;
+
+  &.hide {
+    padding: 0;
+    height: 0;
+    min-height: unset;
+  }
+}
+
+.image-default {
+  margin-top: 0;
+  margin-bottom: 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transition: opacity,width,height .15s ease .15s;
+  will-change: auto;
+  transform: rotate3d(0);
+}
+.text-default {
+  margin-top: 0;
+  opacity: 0;
+  transition: .45s ease .45s;
+}
+.image-loading {
+  opacity: 0;
+}
+.image-none {
+  margin-top: 10vh;
+  height: 16vh;
+  width: 16vh;
+  opacity: 1;
+}
+.text-loading {
+  opacity: 0;
+  transition: .15s;
+}
+.text-none {
+  margin-top: 3vh;
+  opacity: 1;
+  transition: .15s;
+}
+
+.load-icon {
+  height: 28px;
+  width: 28px;
+}
+
+.fixed::after {
+  content: "";
+  height: 128px;
+}

@@ -53,6 +53,7 @@ export default class List extends Component {
         getPhone: true
       })
     } else {
+      console.log(item, 333333)
       this.props.onReduce(item)
     }
   }

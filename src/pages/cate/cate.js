@@ -256,10 +256,7 @@ class Cate extends Component {
   }
 
   reduceToCart(item) {
-    item = {
-      ...item, 
-      num: -1
-    }
+    item.num = -1
     this.props.dispatchAdd(item)
     this.props.dispatchCartNum({
       countCornerMark: -1

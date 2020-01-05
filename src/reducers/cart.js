@@ -39,13 +39,15 @@ export default function cart(state = INITIAL_STATE, action) {
         if (x.id == good.id) {
           good.num = x.num + good.num
           haveSameGood = true
-          if (good.num == 0) return
+          console.log(goods.num, x.num, good.num, 2222)
+          if (good.num <= 0) return
           goods.push(Object.assign(
             x,
             good
           ))
+          console.log(11111)
         } else {
-          if (good.num == 0) return
+          if (good.num <= 0) return
           goods.push(x)
         }
       })

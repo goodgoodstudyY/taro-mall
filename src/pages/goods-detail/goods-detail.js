@@ -86,7 +86,7 @@ class Cate extends Component {
           <View className='goods-swiper-layout'>
             <Swiper className='goods-swiper' interval={2600} circular autoplay>
                 {
-                    goodsDetail.smallPic && goodsDetail.smallPic.map((i, n) => {
+                    goodsDetail.description && goodsDetail.description.split(',').map((i, n) => {
                         return (
                             <SwiperItem key={i}>
                                 <View className='goods-swiper-item fcc'>

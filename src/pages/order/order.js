@@ -5,6 +5,7 @@ import * as actions from '@actions/order'
 import MyPage from '../../components/my-page/index'
 import Tab from '../../components/tab/tab'
 import Order from '../../components/order/order'
+import LoadStyle from '../../components/loadStyle/index'
 import './orderList.scss'
 
 @connect(state => state.order, { ...actions })
@@ -12,17 +13,17 @@ export default class Index extends Component {
 
   config = {
     navigationBarTitleText: '订单列表',
-    backgroundColor: '#edeef5',
-    navigationBarBackgroundColor: '#f9de1a',
+    backgroundColor: '#ab2b2b',
+    navigationBarBackgroundColor: '#ab2b2b',
     enablePullDownRefresh: true
   }
   // Taro.$globalData.type 存储订单状态
   constructor(props) {
     super(props)
     this.state = {
-      type: 0,
-      tabBarList: ['', 0, 1, 3, '4, 5', 6],
-      tabBarListMean: ['全部', '待发货', '待收货', '待评价', '已完成'],
+      type: 100,
+      tabBarList: [100, 2, 1, 3, '4, 5', 6],
+      tabBarListMean: ['全部', '待支付', '待发货', '待收货', '待评价', '已完成'],
       list: [],
       pageNumber: 0,
       pageSize: 10
@@ -30,7 +31,7 @@ export default class Index extends Component {
   }
   componentWillMount() {
     Taro.$page['orderList'] = this
-    let type = this.$router.params.type || ''
+    let type = this.$router.params.type || 100
     if(type == 4) {
       type = '4,5'
     }
@@ -55,8 +56,14 @@ export default class Index extends Component {
       this.setState({
         pageNumber: nextPage
       }, () => {
-        this.props.dispatchOrderList().then( el => {
-          let e = el.data.data
+        this.props.dispatchOrderList({
+          pageNumber: this.state.pageNumber,
+          pageSize: this.state.pageSize,
+          query: {
+            orderStatus: this.state.type == 100 ? '' : this.state.type
+          }
+        }).then( el => {
+          let e = el.list
           resolve(e)
         })
       })
@@ -72,7 +79,10 @@ export default class Index extends Component {
     })
     this.getList().then(list => {
       this.setState({
-        list: this.state.list.concat(list)
+        list: this.state.list.concat(list),
+        loadStyle: list && list.length < this.state.pageSize
+            ? 3
+            : 4
       })
     })
   }
@@ -100,12 +110,9 @@ export default class Index extends Component {
       cancelText: '取消',
       success: (res) => {
         if(res.confirm) {
-          Taro.$api(this, {
-            url: '/customer/order/confirmOrderFinish',
-            data: {
-              order_id: key
-            }
-          }, 'GET').then(() => {
+          this.props.dispatchConfirmGoods({
+            orderId: key
+          }).then(() => {
             this.setState({
               list: []
             }, () => {
@@ -115,6 +122,48 @@ export default class Index extends Component {
         }
       }
     })
+  }
+
+  toPay(id) {
+    this.props.dispatchOrderPay({
+      orderId: id
+  }).then(res => {
+      if (Object.keys(res).length > 0) {
+          res.package = res.prepayId
+          Taro.requestPayment(res).then(() => {
+              this.props.dispatchOrderCallback({
+                  orderId: id,
+                  status: true
+              }).then(() => {
+                  this.delLock()
+                  Taro.showToast({
+                      title: '支付成功',
+                      icon: 'success',
+                      duration: 1000
+                  })
+                  this.changeList(this.state.type)
+              })
+          }).catch(() => {
+              this.delLock()
+              Taro.showToast({
+                  title: '用户取消',
+                  icon: 'none',
+                  mask: true
+              })
+              this.props.dispatchOrderCallback({
+                  orderId: this.state.orderId,
+                  status: false
+              })
+          })
+      }
+  }).catch(() => {
+      this.delLock()
+  })
+  }
+
+  delLock() {
+    Taro.hideToast()
+    delete Taro.$lock['pay']
   }
 
   calcLoadStyle () {
@@ -129,7 +178,7 @@ export default class Index extends Component {
       const {list} = this.state
 
       return (
-        <MyPage loadStyle={this.calcLoadStyle()} noTab oninit={this.changeList.bind(this, 0)}>
+        <MyPage onReload={this.changeList.bind(this, '')}>
           <Tab
             tabBarList={this.state.tabBarList}
             active={this.state.type}
@@ -144,12 +193,17 @@ export default class Index extends Component {
                     <Order
                       order={e}
                       onGetProduct={this.getProduct.bind(this)}
+                      onToPay={this.toPay.bind(this)}
                     />
                   </View>
                 )
               })
             }
           </View>
+          <LoadStyle
+            loadStyle={this.calcLoadStyle()}
+            noneLoad='暂无数据'
+          />
         </MyPage>
       )
   }

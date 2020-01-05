@@ -36,11 +36,11 @@ export default class Tab extends Component {
   render () {
     const { active, tabBarList, isOutBorder, tabBarMean } = this.props
     return (
-      <View className='row90 bcf status-list'>
+      <View className='row90 bgc-w status-list'>
           {tabBarList.map( (item, index) => { 
               return (
-                active == item?<View className={isOutBorder ? 'fl f26 bold r' : 'fl f26 bold'}><Text className={isOutBorder ? '' : 'smallBox'}>{tabBarMean ? tabBarMean[index] : item}</Text></View>:
-                <View key={index} className='fl f26 c6' onClick={this.changeTab.bind(this, item)}><Text>{tabBarMean ? tabBarMean[index] : item}</Text></View>
+                active == item?<View className={isOutBorder ? 'fl fs26 bold r' : 'fl fs26 bold'}><Text className={isOutBorder ? '' : 'smallBox'}>{tabBarMean ? tabBarMean[index] : item}</Text></View>:
+                <View key={index} className='fl fs26 c666' onClick={this.changeTab.bind(this, item)}><Text>{tabBarMean ? tabBarMean[index] : item}</Text></View>
               )
             })}
       </View>
