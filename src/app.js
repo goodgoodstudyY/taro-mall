@@ -31,7 +31,8 @@ class App extends Component {
       'pages/shopInfo/shopInfo',
       'pages/goodsPayment/goodsPayment',
       'pages/addressList/addressList',
-      'pages/addressEdit/addressEdit'
+      'pages/addressEdit/addressEdit',
+      'pages/orderDetail/orderDetail'
     ],
     window: {
       backgroundTextStyle: 'light',
