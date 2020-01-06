@@ -91,11 +91,22 @@ export default class Tenant extends Component {
     const status = [1, 4, 5, 6]
     const totalPrice = orderItem.goodsInfo && orderItem.goodsInfo.reduce((now, next) => {return now + next.count * next.price}, 0)
     const totalNum = orderItem.goodsInfo && orderItem.goodsInfo.reduce((now, next) => {return now + next.count}, 0)
+    const typeText = {
+      2: '待支付',
+      1: '待发货',
+      3: '待收货',
+      4: '待评价',
+      5: '待评价',
+      6: '已完成'
+    }
     return (
       <View className='card-component bgc-w'>
         <View className='fsbc order-top' onClick={this.goOrderDetail.bind(this, orderItem.id)}>
           <View className='fs28 c000'>
-            <Text>订单编号：{orderItem.id}</Text>
+            <Text>创建时间：{formatTime(new Date(orderItem.updateTime))}</Text>
+          </View>
+          <View className='fs28 cef bold'>
+            <Text>{typeText[orderItem.orderStatus]}</Text>
           </View>
         </View>
         <View className='shop-list'>
@@ -123,9 +134,10 @@ export default class Tenant extends Component {
           }
         </View>
         <View
-          className={'fs30 order-top w100 ' + (orderItem.orderType == 6 && orderItem.type == 100 ? 'fsbc' : 'fec')} 
+          className='fs30 order-top w100 fec' 
           onClick={this.goOrderDetail.bind(this, orderItem.id)}
         >
+          {/* <Text>创建时间：{formatTime(new Date(orderItem.updateTime))}</Text> */}
           <View>
             <Text>共{totalNum}件商品  合计：</Text><Text className='cr'>¥{orderItem.goodsPrice + orderItem.packagePrice}</Text>
           </View>

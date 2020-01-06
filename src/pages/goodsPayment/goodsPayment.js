@@ -157,7 +157,8 @@ export default class goodsPayment extends Component {
                         price: x.realPrice || x.price,
                         goodsId: x.id
                     }
-                })
+                }),
+                remark: this.state.remarks
             }).then(res => {
                 this.setState({
                     orderId: res
