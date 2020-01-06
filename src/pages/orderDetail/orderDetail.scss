@@ -1,3 +1,8 @@
+page {
+  background: #f2f3f7;
+  width: 100vw;
+}
+
 .prdf{
   position: relative;
   display: flex;
@@ -12,6 +17,7 @@
   left: 0;
   width: 100vw;
   height: 900px;
+  background: linear-gradient(to bottom, #ab2b2b, #fff);
 }
 .awidth{
   width: 300px;
@@ -25,6 +31,7 @@
 .address{
   background-color: #fff;
   width: 720px;
+  margin: 0 auto;
 }
 .w176{
   width: 176px;
@@ -365,6 +372,7 @@
 }
 .order-detail {
   width: 720px;
+  margin: 0 auto;
 }
 .pt16 {
   padding-top: 16px;

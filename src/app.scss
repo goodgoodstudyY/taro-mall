@@ -18,6 +18,9 @@
 .br16 {
   border-radius: 16px;
 }
+.p-r {
+  position: relative !important;
+}
 
 button {
   line-height: 1;
@@ -287,7 +290,7 @@ button[plain].button-hover {
   margin-top: 15px;
 }
 .mt16 {
-  margin-top: 16px;
+  margin-top: 16px !important;
 }
 .mt18 {
   margin-top: 18px;

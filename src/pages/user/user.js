@@ -76,7 +76,7 @@ class User extends Component {
                   layout='order'
                   name='待支付'
                   floatNum='1'
-                  onClick={this.goOrderList.bind(this, 0)}
+                  onClick={this.goOrderList.bind(this, 2)}
                   renderIcon={<View className='order-icon iconfont'>&#xe709;</View>}
                 />
                 <PersonalBlock

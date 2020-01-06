@@ -15,7 +15,8 @@ export default class Index extends Component {
     navigationBarTitleText: '订单列表',
     backgroundColor: '#ab2b2b',
     navigationBarBackgroundColor: '#ab2b2b',
-    enablePullDownRefresh: true
+    enablePullDownRefresh: true,
+    navigationBarTextStyle: 'white'
   }
   // Taro.$globalData.type 存储订单状态
   constructor(props) {
@@ -125,9 +126,19 @@ export default class Index extends Component {
   }
 
   toPay(id) {
+    Taro.showToast({
+      title: '支付请求中',
+      icon: 'loading',
+      mask: true
+    })
+    if (Taro.$lock['pay']) {
+      console.log('锁住了,支付中')
+      return
+    }
+    Taro.$lock['pay'] = true
     this.props.dispatchOrderPay({
       orderId: id
-  }).then(res => {
+    }).then(res => {
       if (Object.keys(res).length > 0) {
           res.package = res.prepayId
           Taro.requestPayment(res).then(() => {
@@ -159,6 +170,28 @@ export default class Index extends Component {
   }).catch(() => {
       this.delLock()
   })
+  }
+
+  cancel(id) {
+    Taro.showModal({
+      title: '取消订单',
+      content: '是否确定取消订单',
+      cancelText: '取消',
+      success: res => {
+        if (res.confirm) {
+          this.props.dispatchCancelOrder({
+            orderId: id
+          }).then(() => {
+            Taro.showToast({
+              title: '取消成功',
+              icon: 'success',
+              duration: 1000
+            })
+            this.changeList(this.state.type)
+          })
+        }
+      }
+    })
   }
 
   delLock() {
@@ -194,6 +227,7 @@ export default class Index extends Component {
                       order={e}
                       onGetProduct={this.getProduct.bind(this)}
                       onToPay={this.toPay.bind(this)}
+                      onCancel={this.cancel.bind(this)}
                     />
                   </View>
                 )
