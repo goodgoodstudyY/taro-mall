@@ -180,6 +180,7 @@ export default class goodsPayment extends Component {
         this.props.dispatchOrderPay({
             orderId: this.state.orderId
         }).then(res => {
+            this.props.dispatchUpdate()
             if (Object.keys(res).length > 0) {
                 res.package = res.prepayId
                 Taro.requestPayment(res).then(() => {

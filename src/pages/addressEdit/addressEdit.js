@@ -126,7 +126,7 @@ export default class myCoupon extends Component {
           <View className='f1 item'>
             <View className='row mt45'>
               <Text className='title fs32'>详细地址</Text>
-              <Textarea className='fs32' placeholder='请填写详细地址' placeholder-class='c999 fs32' value={detail.address} onInput={this.inputHandler.bind(this, 'address')} />
+              <Textarea className={detail.address ? 'fs32' : 'fs32 c999'} value={detail.address} onInput={this.inputHandler.bind(this, 'address')}>{detail.address ? '' : '请填写详细地址'}</Textarea>
             </View>
           </View>
           <Button onClick={this.submit} className='submit'>保存</Button>

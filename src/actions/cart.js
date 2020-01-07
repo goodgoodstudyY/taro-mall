@@ -1,6 +1,6 @@
 import {
   CART_NUM,
-  CART_ADD, CART_UPDATE_CHECK
+  CART_ADD, CART_UPDATE_CHECK, CART_UPDATE
 } from '@constants/cart'
 
 /**
@@ -43,12 +43,10 @@ export const dispatchAdd = payload => {
  * 更新商品信息
  * @param {*} payload
  */
-// export const dispatchUpdate = payload => createAction({
-//   url: API_CART_UPDATE,
-//   method: 'POST',
-//   type: CART_UPDATE,
-//   payload
-// })
+export const dispatchUpdate = payload => ({
+  type: CART_UPDATE,
+  payload
+})
 
 /**
  * 更新商品选中状态

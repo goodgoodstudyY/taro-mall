@@ -27,17 +27,21 @@ export default class addressList extends Component {
 
   init() {
     this.props.dispatchAddressList().then(res => {
-      this.setState({
-        loaded: true
-      })
+      let address = []
       res.map(x => {
         x.disabled = false
         if (this.$router.params.id && this.$router.params.id == x.id) {
           x.disabled = true
         }
+        if (x.isDefault == 1) {
+          address.unshift(x)
+        } else {
+          address.push(x)
+        }
       })
       this.setState({
-        addressList: res
+        addressList: address,
+        loaded: true
       })
     })
   }

@@ -1,8 +1,9 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, ScrollView } from '@tarojs/components'
-import { ButtonItem, ItemList, Loading } from '@components'
+import { ButtonItem, Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/cart'
+import { dispatchOrderList } from '@actions/order'
 import { login, getUserToken } from '@utils/request'
 import { getWindowHeight } from '@utils/style'
 import MyPage from '../../components/my-page/index'
@@ -11,7 +12,7 @@ import List from './list'
 import Footer from './footer/index'
 import './cart.scss'
 
-@connect(state => state.cart, actions)
+@connect(state => state.cart, {...actions, dispatchOrderList})
 class Index extends Component {
   config = {
     navigationBarTitleText: '购物车'
@@ -24,6 +25,13 @@ class Index extends Component {
 
   componentDidShow() {
     this.onInit()
+    this.getOrderList()
+    if (this.props.count > 0) {
+      Taro.setTabBarBadge({
+        index: 3,
+        text: `${this.props.count}`
+      })
+    }
   }
 
   onInit() {
@@ -50,6 +58,24 @@ class Index extends Component {
         this.onInit()
       })
     }
+  }
+
+  getOrderList() {
+    this.props.dispatchOrderList({
+      pageNumber: 1,
+      pageSize: 10,
+      query: {
+        orderStatus: 2
+      }
+    }).then(data => {
+      if (data.total > 0) {
+        Taro.showToast({
+          title: '您还存在待支付订单哦',
+          icon: 'none',
+          duration: 800
+        })
+      }
+    })
   }
 
   handleUpdateCart(item) {

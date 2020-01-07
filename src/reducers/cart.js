@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro'
 import {
-  CART_INFO, CART_NUM,
+  CART_NUM, CART_UPDATE,
   CART_ADD, CART_UPDATE_CHECK
 } from '@constants/cart'
 
@@ -74,6 +74,21 @@ export default function cart(state = INITIAL_STATE, action) {
       }
       return {
         ...state,
+        count: num
+      }
+    }
+    case CART_UPDATE: {
+      let num = 0
+      let curCart = []
+      state.cartInfo.map(x => {
+        if (!x.checked) {
+          num = num + x.num
+          curCart.push(x)
+        }
+      })
+      return {
+        ...state,
+        cartInfo: curCart,
         count: num
       }
     }
