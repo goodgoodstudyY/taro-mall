@@ -106,26 +106,6 @@ class Cate extends Component {
                 }
             </Swiper>
           </View>
-          {/* <View className='goods-info-layout fsbs'>
-            <View>
-                <View className='goods-info flex c-r base l44'>
-                    <Text className='fs40'>¥</Text>
-                    <Text className='fs54'>{goodsDetail.realPrice || goodsDetail.price}</Text>
-                    {
-                      goodsDetail.realPrice
-                      ? <Text className='ml30 line-through c999'>¥{goodsDetail.price}</Text>
-                      : <Text></Text>
-                    }
-                    
-                </View>
-              <View className='goods-info flex r mt26'>
-                <View className='goods-title flex fs38 c1a bold ellipsis2'>{goodsDetail.name}</View>
-              </View>
-            </View>
-            <View className='goods-info flex r mt22'>
-              <View className='flex c999 fs24'>销量{goodsDetail.fakeSale || 0}</View>
-            </View>
-          </View> */}
           <View className='goods-info-layout fss'>
             <View className='goods-info f1'>
               <View className='goods-title fs38 c1a bold ellipsis2'>{goodsDetail.name}</View>
@@ -139,6 +119,7 @@ class Cate extends Component {
                   : <Text></Text>
                 }
               </View>
+              <View className='fs28 mt14 c1a'>{goodsDetail.description}</View>
             </View>
             <Button openType='share' className='goods-share iconfont fs28' hoverClass='none'>&#xe657;</Button>
           </View>
@@ -150,6 +131,7 @@ class Cate extends Component {
             goodsDetail.descPic.length > 0 && (
               <View className='goods-detail mb100 bgc-w'>
                   <View className='goods-detail-title fs32 c1a'>商品详情</View>
+                  <View className='fs28 c666 ml24 lh40 mb20'>{goodsDetail.descriptionDetails}</View>
                   {
                     goodsDetail.descPic.map((i, n) => {
                         return (
