@@ -53,7 +53,6 @@ export default class List extends Component {
         getPhone: true
       })
     } else {
-      console.log(item, 333333)
       this.props.onReduce(item)
     }
   }
@@ -93,12 +92,20 @@ export default class List extends Component {
             </View>
             <View className='f1 ml20 fsbs-c item-h100'>
               <View className='fs30 bold dish-info-detail ellipsis2'>{val.name}</View>
-              <View className='fs24 c999 hl24 mt10'>销量{val.fakeSale || 0}</View>
+              <View className='hl24 mt10 price'>
+                <Text className='fs20'>¥</Text>
+                <Text className='fs30'>{val.realPrice || val.price}</Text>
+                <Text className='fs24'>/{val.unit}</Text>
+                {
+                  val.realPrice && (val.realPrice < val.price)
+                  ? <Text className='fs24 c999 ml20 ltr'>¥{val.price}</Text>
+                  : <Text></Text>
+                }
+              </View>
               <View className='fsbc w100'>
-                <View className='price fsc'>
-                  <Text className='fs20'>¥</Text>
-                  <Text className='fs30'>{val.realPrice || val.price}</Text>
-                  <Text className='fs24'>/{val.unit}</Text>
+                <View className='fsc'>
+                  <Text className='fs24 c999'>销量{val.fakeSale || 0}</Text>
+                  
                 </View>
                 <View className='fcc'>
                   {

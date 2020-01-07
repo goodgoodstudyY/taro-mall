@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Swiper, SwiperItem, Image, Text, ScrollView } from '@tarojs/components'
+import { View, Swiper, SwiperItem, Image, Text, ScrollView, Button } from '@tarojs/components'
 import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/cate'
@@ -34,8 +34,10 @@ class Cate extends Component {
 
   onInit() {
     this.props.dispatchGoodsDetail(this.state.goodsId).then((res) => {
+      let picture = []
       res.descPic = res.descPic && res.descPic.split(',')
-      res.smallPic = res.smallPic && res.smallPic.split(',')
+      picture.push(res.smallPic)
+      res.picture = picture.concat(res.descPic)
       this.setState({
         loaded: true,
         goodsDetail: res
@@ -73,6 +75,12 @@ class Cate extends Component {
     })
   }
 
+  closeSpec() {
+    this.setState({
+      showSpec: false
+    })
+  }
+
   render () {
     const { showPageError } = this.props
     const { goodsDetail, showParams, showSpec, addToCart } = this.state
@@ -86,7 +94,7 @@ class Cate extends Component {
           <View className='goods-swiper-layout'>
             <Swiper className='goods-swiper' interval={2600} circular autoplay>
                 {
-                    goodsDetail.description && goodsDetail.description.split(',').map((i, n) => {
+                    goodsDetail.picture.map((i, n) => {
                         return (
                             <SwiperItem key={i}>
                                 <View className='goods-swiper-item fcc'>
@@ -98,7 +106,7 @@ class Cate extends Component {
                 }
             </Swiper>
           </View>
-          <View className='goods-info-layout fsbs'>
+          {/* <View className='goods-info-layout fsbs'>
             <View>
                 <View className='goods-info flex c-r base l44'>
                     <Text className='fs40'>¥</Text>
@@ -111,12 +119,28 @@ class Cate extends Component {
                     
                 </View>
               <View className='goods-info flex r mt26'>
-                <View className='goods-title flex fs42 c1a bold ellipsis2'>{goodsDetail.name}</View>
+                <View className='goods-title flex fs38 c1a bold ellipsis2'>{goodsDetail.name}</View>
               </View>
             </View>
             <View className='goods-info flex r mt22'>
               <View className='flex c999 fs24'>销量{goodsDetail.fakeSale || 0}</View>
             </View>
+          </View> */}
+          <View className='goods-info-layout fss'>
+            <View className='goods-info f1'>
+              <View className='goods-title fs38 c1a bold ellipsis2'>{goodsDetail.name}</View>
+              <View className='fs24 c999 marginBottom26'>销量{goodsDetail.fakeSale || 0}</View>
+              <View className='goods-price fs40 c-red'>
+                <Text className='fs24'>￥</Text>
+                {goodsDetail.realPrice || goodsDetail.price}
+                {
+                  goodsDetail.realPrice < goodsDetail.price
+                  ? <Text className='ml30 line-through c999 fs24'>¥{goodsDetail.price}</Text>
+                  : <Text></Text>
+                }
+              </View>
+            </View>
+            <Button openType='share' className='goods-share iconfont fs28' hoverClass='none'>&#xe657;</Button>
           </View>
           <View className='goods-detail bgc-w goods-params fsbc' onClick={this.handleOpenParams}>
             <Text className='fs32 c1a'>产品参数</Text>
@@ -148,10 +172,10 @@ class Cate extends Component {
                     <Text className='fs30 c1a'>商品体积（立方）</Text>
                     <Text className='c999 fs30'>{goodsDetail.size || 0}</Text>
                   </View>
-                  <View className='fsbc params-item'>
+                  {/* <View className='fsbc params-item'>
                     <Text className='fs30 c1a'>规格说明</Text>
                     <Text className='c999 fs30'>{goodsDetail.standard || ''}</Text>
-                  </View>
+                  </View> */}
                   <View className='fsbc params-item'>
                     <Text className='fs30 c1a'>单位</Text>
                     <Text className='c999 fs30'>{goodsDetail.unit || ''}</Text>
@@ -173,7 +197,7 @@ class Cate extends Component {
             <View className='goods-button-2 cfff fcc fs32' onClick={this.handleSubmit.bind(this)}>立即购买</View>
           </View>
         </View>
-        <SpecComponent data={goodsDetail} mode={addToCart} showSpec={showSpec} onAddToCart={this.addToCart.bind(this)} />
+        <SpecComponent data={goodsDetail} mode={addToCart} showSpec={showSpec} onAddToCart={this.addToCart.bind(this)} onClosePop={this.closeSpec.bind(this)} />
       </MyPage>
     )
   }

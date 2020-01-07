@@ -30,7 +30,8 @@ class Cate extends Component {
     pageSize: 20,
     minPrice: '',
     maxPrice: '',
-    goodsList: []
+    goodsList: [],
+    loadStyle: 0
   }
 
   store = {
@@ -72,7 +73,8 @@ class Cate extends Component {
       pageSize: 20,
       minPrice: '',
       maxPrice: '',
-      goodsList: []
+      goodsList: [],
+      loadStyle: 0
     }, () => {
       this.onInit()
     })
@@ -97,6 +99,7 @@ class Cate extends Component {
   }
 
   getData() {
+    if (this.state.loadStyle == 4) return
     const nextPage = this.state.pageNumber + 1
     this.setState({
       pageNumber: nextPage,
@@ -127,7 +130,8 @@ class Cate extends Component {
       this.props.dispatchSubList(params).then(res => {
         this.setState({
           loading: false,
-          goodsList: this.state.goodsList.concat(res.list)
+          goodsList: this.state.goodsList.concat(res.list),
+          loadStyle: res.total < 10 ? 4 : 0
         })
       })
     })
@@ -143,7 +147,8 @@ class Cate extends Component {
       pageSize: 20,
       minPrice: '',
       maxPrice: '',
-      goodsList: []
+      goodsList: [],
+      loadStyle: 0
     }, () => {
       let query = {
         status: 1
@@ -200,7 +205,8 @@ class Cate extends Component {
     this.setState({
       pageNumber: 0,
       pageSize: 20,
-      goodsList: []
+      goodsList: [],
+      loadStyle: 0
     }, () => {
       this.getData()
     })
@@ -231,7 +237,8 @@ class Cate extends Component {
         pageNumber: 0,
         pageSize: 20,
         loading: true,
-        goodsList: []
+        goodsList: [],
+        loadStyle: 0
       }, () => {
         this.getData()
       })

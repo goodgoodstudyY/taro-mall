@@ -17,7 +17,8 @@ export default class Spec extends Component {
   static defaultProps = {
     goodsInfo: null,
     mode: '',
-    onAddToCart: () => {}
+    onAddToCart: () => {},
+    onClosePop: () => {}
   }
 
   static options = {
@@ -39,6 +40,7 @@ export default class Spec extends Component {
         show: false,
         num: 1
     });
+    this.props.onClosePop()
 }
 
   discrement() {

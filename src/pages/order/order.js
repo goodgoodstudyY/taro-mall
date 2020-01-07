@@ -6,7 +6,7 @@ import MyPage from '../../components/my-page/index'
 import Tab from '../../components/tab/tab'
 import Order from '../../components/order/order'
 import LoadStyle from '../../components/loadStyle/index'
-import './orderList.scss'
+import './order.scss'
 
 @connect(state => state.order, { ...actions })
 export default class Index extends Component {
@@ -33,6 +33,7 @@ export default class Index extends Component {
   componentWillMount() {
     Taro.$page['orderList'] = this
     let type = this.$router.params.type || 100
+    // TODO 把所有状态都显示
     if(type == 4) {
       type = '4,5'
     }
