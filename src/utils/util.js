@@ -30,3 +30,20 @@ export function formatNumber(n) {
   n = n.toString()
   return n[1] ? n : '0' + n
 }
+
+export function shareAppMessage (url,title='', imageUrl='') {
+	const hasParam = url.search(/\?/)>0;
+	let path;
+  if(hasParam) {
+    path=`${url}`
+	}else{
+		path=`${url}`
+	}
+  var obj =  {
+    path: path,
+    title:title || 'app',
+    imageUrl
+  }
+  console.log(path)
+  return obj;
+}

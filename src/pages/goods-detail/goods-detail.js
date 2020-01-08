@@ -6,7 +6,7 @@ import * as actions from '@actions/cate'
 import { dispatchAdd, dispatchCartNum } from '@actions/cart'
 import MyPage from '../../components/my-page/index'
 import SpecComponent from './spec'
-import { crop } from '../../utils/util'
+import { crop, shareAppMessage } from '../../utils/util'
 import './goods-detail.scss'
 
 @connect(state => state.cate, { ...actions, dispatchAdd, dispatchCartNum })
@@ -79,6 +79,14 @@ class Cate extends Component {
     this.setState({
       showSpec: false
     })
+  }
+
+  onShareAppMessage() {
+    const {
+      id,
+      name
+    } = this.state.goodsDetail;
+    return shareAppMessage(`/pages/goods-detail/goods-detail?id=${id}`, name);
   }
 
   render () {
