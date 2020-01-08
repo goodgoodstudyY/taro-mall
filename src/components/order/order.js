@@ -32,7 +32,7 @@ export default class Tenant extends Component {
       // orderItem: bridgeOrderData(this.props.order)
       orderItem: this.props.order
     }, () => {
-      if (this.state.orderItem.type == 0) {
+      if (this.state.orderItem.orderStatus == 2) {
         this.countDown()
       }
     })
@@ -44,7 +44,7 @@ export default class Tenant extends Component {
 
   countDown () {
     const count = () => {
-      const restTime = this.state.orderItem.createTime * 1000 + 15 * 60 * 1000 - Date.now()
+      const restTime = new Date(this.state.orderItem.updateTime).getTime() + 60 * 24 * 60 * 1000 - Date.now()
       this.setState({
         restTime: restTime > 0 ? OnlyTime(restTime) : ''
       })
@@ -89,7 +89,6 @@ export default class Tenant extends Component {
   render () {
     const { orderItem, restTime } = this.state
     const status = [1, 4, 5, 6]
-    const totalPrice = orderItem.goodsInfo && orderItem.goodsInfo.reduce((now, next) => {return now + next.count * next.price}, 0)
     const totalNum = orderItem.goodsInfo && orderItem.goodsInfo.reduce((now, next) => {return now + next.count}, 0)
     const typeText = {
       2: '待支付',
@@ -155,10 +154,20 @@ export default class Tenant extends Component {
           orderItem.orderStatus == 2 && (
             <View className='order-bottom fec'>
               {
-                orderItem.type.status != 0 && 
+                restTime && 
                 <Button className='btn-size fs26 c666 w176 button-gray' onClick={this.cancel.bind(this, orderItem.id)}>取消订单</Button>
               }
-                <Button className='btn-size fs26 get-btn cfff ml30 btn-fix' onClick={this.toPay.bind(this, orderItem.id)}>待支付 {restTime}</Button>
+              {
+                restTime && (
+                  <Button className='btn-size fs26 get-btn cfff ml30 btn-fix' onClick={this.toPay.bind(this, orderItem.id)}>待支付 {restTime}</Button>
+                )
+              }
+              {
+                !restTime && 
+                (
+                  <View className='btn-size fs26 c666 ml30 button-gray w176'>已失效</View>
+                )
+              }
           </View>
           )
         }

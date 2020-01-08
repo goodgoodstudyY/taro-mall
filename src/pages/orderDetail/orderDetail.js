@@ -5,7 +5,7 @@ import { connect } from '@tarojs/redux'
 import * as actions from '@actions/order'
 import MyPage from '../../components/my-page/index'
 // import { bridgeOrderData } from '../../../../comm/order'
-import { formatTime, crop } from '../../utils/util'
+import { formatTime, crop, OnlyTime } from '../../utils/util'
 import './orderDetail.scss'
 
 // import logIcon from '../../../../imgs/log_icon.png'
@@ -79,11 +79,14 @@ export default class Index extends Component {
           longitude: 113.327
         }
       ],
-      centerLatlng: [23.0997, 113.327]
+      centerLatlng: [23.0997, 113.327],
+      restTime: '',
+      canPay: false
     }
     this.store = {
       mapCtx: Taro.createMapContext('map'),
-      deliveryRefresh: null
+      deliveryRefresh: null,
+      timer: null
     }
   }
   componentWillMount() {
@@ -113,11 +116,6 @@ export default class Index extends Component {
     }
   }
   
-  getTime(e) {
-    return new Date().getTime() - new Date(e * 1000) - 120 * 60 * 1000 < 0
-      ? true
-      : false
-  }
   //  跳转物流详情
   toLogistics(e) {
     Taro.nav({
@@ -259,6 +257,32 @@ export default class Index extends Component {
     this.queryDeliveryOrderDetail()
   }
 
+  getTimes() {
+    clearInterval(this.store.timer)
+    let restTime = new Date(this.state.order.updateTime).getTime()
+    const timer = () => {
+      if (restTime) {
+        if (restTime - Date.now() + 60 * 24 * 60 * 1000 < 0) {
+          this.setState({
+            canPay: false
+          })
+          clearInterval(this.store.timer)
+        } else {
+          restTime = OnlyTime(new Date(this.state.order.updateTime).getTime() - Date.now() + 60 * 24 * 60 * 1000)
+          this.setState({
+            restTime: restTime,
+            canPay: true
+          })
+        }
+      }
+    }
+
+    timer()
+    this.store.timer = setInterval(() => {
+      timer()
+    }, 1000)
+  }
+
   callCourierPhone () {
     // 此处为配送员电话
     Taro.makePhoneCall({
@@ -273,7 +297,9 @@ export default class Index extends Component {
       openPopup,
       markers,
       markersWithPage,
-      centerLatlng
+      centerLatlng,
+      canPay,
+      restTime
     } = this.state
     // const canShowMap = ['22', '23', '24'].includes(order.type) || order.type == 60 && order.deliveryType == 2
     const canShowMap = false
@@ -421,10 +447,14 @@ export default class Index extends Component {
             {/* 支付金额详情 */}
             <View className='row pay-crash'>
                 <View className='fs26 c10 ml15'>
-                  {order.type == 40 && <Text>免配送费</Text>}
-                  {order.logistics_price > 0 && <Text>{`运费${order.logistics_price}元`}</Text>}
+                  {order.packagePrice == 0 && <Text>免配送费</Text>}
+                  {order.packagePrice > 0 && <Text>{`运费${order.packagePrice}元`}</Text>}
                 </View>
               <View className='fs26 c333 ml15 row'>
+                { order.goodsPrice > order.goodsRealPrice
+                  ? <Text>共优惠¥{order.goodsPrice - order.goodsRealPrice * 1}</Text>
+                  : <Text></Text>
+                }
                 <View className='ml20'>
                   <Text>实付：¥{order.goodsPrice + order.packagePrice * 1}</Text>
                 </View>
@@ -530,18 +560,31 @@ export default class Index extends Component {
         {/* 未支付 */}
         {order.orderStatus == 2 && (
           <View className='bottom-button bcf rowe baseline'>
-              <View
-                className='btn-size fs26 c666 button-gray w176'
-                onClick={this.cancelOrder}
-              >
-                取消订单
-              </View>
-              <View
-                className='btn-size fs26 get-btn cfff ml30 w220'
-                onClick={this.toPay}
-              >
-                待支付
-              </View>
+            {
+              canPay && (
+                <View
+                  className='btn-size fs26 c666 button-gray w176'
+                  onClick={this.cancelOrder}
+                >
+                  取消订单
+                </View>
+              )
+            }
+            {
+              canPay && (
+                <View
+                  className='btn-size fs26 get-btn cfff ml30 w220'
+                  onClick={this.toPay}
+                >
+                  待支付 {restTime}
+                </View>
+              )
+            }
+            {
+              !canPay && (
+                <View className='btn-size fs26 c666 ml30 button-gray w176'>已失效</View>
+              )
+            } 
           </View>
         )}
         {
@@ -630,6 +673,10 @@ export default class Index extends Component {
     }).then(data => {
       this.setState({
         order: data.list[0]
+      }, () => {
+        if (this.state.order.orderStatus == 2) {
+          this.getTimes()
+        }
       })
     })
   }
