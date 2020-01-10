@@ -31,6 +31,10 @@ class Index extends Component {
         index: 3,
         text: `${this.props.count}`
       })
+    } else {
+      Taro.removeTabBarBadge({
+        index: 3
+      })
     }
   }
 
