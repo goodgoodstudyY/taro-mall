@@ -3,7 +3,6 @@ import { View, Text, Image, ScrollView, Button } from '@tarojs/components'
 import { Loading } from '@components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/home'
-import { dispatchCartNum } from '@actions/cart'
 import { getWindowHeight } from '@utils/style'
 import { login, getToken, getUserToken } from '@utils/request'
 import Banner from './banner'
@@ -12,7 +11,7 @@ import GetPhone from '../../components/getPhone/index'
 import searchIcon from '../../assets/search.png'
 import './home.scss'
 
-@connect(state => {return {home: state.home, user: state.user}}, { ...actions, dispatchCartNum })
+@connect(state => {return {home: state.home, user: state.user}}, { ...actions })
 class Home extends Component {
   config = {
     navigationBarTitleText: '包装定制'

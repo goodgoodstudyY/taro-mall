@@ -8,7 +8,7 @@ import Order from '../../components/order/order'
 import LoadStyle from '../../components/loadStyle/index'
 import './order.scss'
 
-@connect(state => state.order, { ...actions })
+@connect(state => {return {order: state.order, cart: state.cart}}, { ...actions })
 export default class Index extends Component {
 
   config = {
@@ -38,6 +38,16 @@ export default class Index extends Component {
       type: type
     })
     this.changeList(type)
+    if (this.props.cart.count > 0) {
+      Taro.setTabBarBadge({
+        index: 3,
+        text: `${this.props.cart.count}`
+      })
+    } else {
+      Taro.removeTabBarBadge({
+        index: 3
+      })
+    }
   }
 
   onPullDownRefresh() {

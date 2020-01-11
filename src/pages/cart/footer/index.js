@@ -17,7 +17,7 @@ export default class Footer extends Component {
   componentWillReceiveProps(prop) {
     const cart = prop.cartInfo
     const checkedCart = cart.filter(x => x.checked)
-    let checkedNum = checkedCart.length
+    let checkedNum = checkedCart.length || 0
     let totalPrice = 0
     checkedCart.map(x => {
       totalPrice = totalPrice + x.num * (x.realPrice || x.price)
@@ -33,13 +33,21 @@ export default class Footer extends Component {
   }
 
   handleOrder = () => {
-    Taro.navigateTo({
-      url: '/pages/goodsPayment/goodsPayment'
-    })
+    if (this.state.checkedNum) {
+      Taro.navigateTo({
+        url: '/pages/goodsPayment/goodsPayment'
+      })
+    } else {
+      Taro.showToast({
+        title: '请选择商品',
+        icon: 'none',
+        duration: 1000
+      })
+    }
+    
   }
 
   render () {
-    const { cartInfo } = this.props
     const { checkedNum, totalPrice } = this.state
     return (
       <View className='cart-footer'>
