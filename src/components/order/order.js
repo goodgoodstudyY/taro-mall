@@ -86,6 +86,12 @@ export default class Tenant extends Component {
     this.props.onToPay(id)
   }
 
+  getEvaluate(item) {
+    Taro.navigateTo({
+      url: '/pages/evaluateOrder/evaluateOrder?item=' + JSON.stringify(item)
+    })
+  }
+
   render () {
     const { orderItem, restTime } = this.state
     const status = [1, 4, 5, 6]
@@ -95,8 +101,7 @@ export default class Tenant extends Component {
       1: '待发货',
       3: '待收货',
       4: '待评价',
-      5: '待评价',
-      6: '已完成'
+      5: '已完成'
     }
     return (
       <View className='card-component bgc-w'>
@@ -172,7 +177,15 @@ export default class Tenant extends Component {
           )
         }
         {
-          status.includes(Number(orderItem.orderStatus))
+          orderItem.orderStatus == 4 && (
+            <View className='order-bottom fec'>
+              <Button className='btn-size fs26 c666 w176 button-gray' onClick={this.callPhone}>联系商家</Button>
+              <Button className='btn-size fs26 get-btn cfff ml30 w176' onClick={this.getEvaluate.bind(this, orderItem)}>评价</Button>
+            </View>
+          )
+        }
+        {
+          orderItem.orderStatus == 5
           ?
           <View className='order-bottom fec'>
             <Button className='btn-size fs26 c666 w176 button-gray' onClick={this.callPhone}>联系商家</Button>

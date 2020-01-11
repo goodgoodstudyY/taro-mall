@@ -1,0 +1,137 @@
+page {
+  background: #f2f3f7;
+}
+.page {
+  position: relative;
+}
+.goods-item {
+  background: #fff;
+}
+.title {
+  height: 100px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  width: 100%;
+  border-bottom: 1px solid #eee;
+}
+.goods-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+}
+.des-level {
+  height: 100px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+}
+.textarea {
+  margin-top: 20px;
+  line-height: 1.6;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+.content {
+  min-height: 200px;
+}
+.images-layout {
+  height: 200px;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding: 0 30px;
+  margin-top: 40px;
+}
+
+.images-layout>view {
+  margin-right: 14px;
+  margin-top: 14px;
+}
+
+.images-layout>view:nth-child(-n + 3) {
+  margin-top: 0
+}
+
+.images-layout>view:nth-child(3n + 3) {
+  margin-right: 0;
+}
+
+.image-size {
+  height: 150px;
+  width: 150px;
+  position: relative;
+}
+
+.image-border {
+  border: 1px dotted #dcdcdc;
+}
+
+.image-inner {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, .4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 30px;
+  color: #fff;
+  font-size: 26px;
+}
+
+.image-loading {
+  height: 36px;
+  width: 36px;
+}
+
+.image-progress {
+  width: 100px;
+}
+
+.image-delete {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+}
+
+.add {
+  color: #d0d0d0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 100px;
+  line-height: 100%;
+}
+.fs66 {
+  font-size: 66px;
+}
+.active {
+  color: #ab2b2b;
+}
+.fixed-button {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 120px;
+  width: 100%;
+  background: #fff;
+}
+.submit {
+  width: 200px;
+  height: 75px;
+  margin-right: 30px;
+  background: #ab2b2b;
+  color: #fff;
+  line-height: 75px;
+  text-align: center;
+  border-radius: 6px;
+}

@@ -32,7 +32,8 @@ class App extends Component {
       'pages/goodsPayment/goodsPayment',
       'pages/addressList/addressList',
       'pages/addressEdit/addressEdit',
-      'pages/orderDetail/orderDetail'
+      'pages/orderDetail/orderDetail',
+      'pages/evaluateOrder/evaluateOrder'
     ],
     window: {
       backgroundTextStyle: 'light',

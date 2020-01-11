@@ -23,7 +23,7 @@ export default class Index extends Component {
     super(props)
     this.state = {
       type: 100,
-      tabBarList: [100, 2, 1, 3, '4, 5', 6],
+      tabBarList: [100, 2, 1, 3, 4, 5],
       tabBarListMean: ['全部', '待支付', '待发货', '待收货', '待评价', '已完成'],
       list: [],
       pageNumber: 0,
@@ -34,9 +34,6 @@ export default class Index extends Component {
     Taro.$page['orderList'] = this
     let type = this.$router.params.type || 100
     // TODO 把所有状态都显示
-    if(type == 4) {
-      type = '4,5'
-    }
     this.setState({
       type: type
     })
@@ -61,9 +58,9 @@ export default class Index extends Component {
         this.props.dispatchOrderList({
           pageNumber: this.state.pageNumber,
           pageSize: this.state.pageSize,
-          query: {
-            orderStatus: this.state.type == 100 ? '' : this.state.type
-          }
+          // query: {
+          //   orderStatus: this.state.type == 100 ? '' : this.state.type
+          // }
         }).then( el => {
           let e = el.list
           resolve(e)

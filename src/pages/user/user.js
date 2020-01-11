@@ -75,35 +75,35 @@ class User extends Component {
                 <PersonalBlock
                   layout='order'
                   name='待支付'
-                  floatNum='1'
+                  // floatNum='1'
                   onClick={this.goOrderList.bind(this, 2)}
                   renderIcon={<View className='order-icon iconfont'>&#xe709;</View>}
                 />
                 <PersonalBlock
                   layout='order'
                   name='待发货'
-                  floatNum='1'
+                  // floatNum='1'
                   onClick={this.goOrderList.bind(this, 1)}
                   renderIcon={<View className='order-icon iconfont'>&#xe649;</View>}
                 />
                 <PersonalBlock
                   layout='order'
                   name='待收货'
-                  floatNum='1'
+                  // floatNum='1'
                   onClick={this.goOrderList.bind(this, 3)}
                   renderIcon={<View className='order-icon iconfont'>&#xe70a;</View>}
                 />
                 <PersonalBlock
                   layout='order'
                   name='待评价'
-                  floatNum='1'
+                  // floatNum='1'
                   onClick={this.goOrderList.bind(this, 4)}
                   renderIcon={<View className='order-icon iconfont'>&#xe614;</View>}
                 />
                 <PersonalBlock
                   layout='order'
                   name='已完成'
-                  floatNum='1'
+                  // floatNum='1'
                   onClick={this.goOrderList.bind(this, 6)}
                   renderIcon={<View className='order-icon iconfont'>&#xe60f;</View>}
                 />
@@ -146,12 +146,12 @@ class User extends Component {
                       renderIcon={<View className='order-icon iconfont'>&#xe60a;</View>}
                     />
                   </Button>
-                  <PersonalBlock
+                  {/* <PersonalBlock
                     layout='discount'
                     name='意见反馈'
                     onClick={this.goOrderList.bind(this, 0)}
                     renderIcon={<View className='order-icon iconfont'>&#xe685;</View>}
-                  />
+                  /> */}
                 </View>
               </View>
 

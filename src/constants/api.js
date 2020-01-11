@@ -29,6 +29,7 @@ export const API_ORDER_PAY_CALLBACK = `${host}/wx/pay/callback`
 export const API_ORDER_LIST = `${host}/wx/order/list`
 export const API_ORDER_CONFIRM_GOODS = `${host}/wx/order/sendComplete`
 export const API_ORDER_CANCEL = `${host}/wx/order/cancel`
+export const API_ORDER_COMMENT = `${host}/wx/comment/addOrderGoodsComment`
 
 // address
 export const API_ADDRESS_LIST = `${host}/wx/customer/address/list`
@@ -37,13 +38,9 @@ export const API_DEL_ADDRESS = `${host}/wx/customer/address/del`
 export const API_EDIT_ADDRESS = `${host}/wx/customer/address/update`
 
 // user
-export const API_USER = `${yanxuan}/xhr/user/getDetail.json`
 export const API_USER_SEESION = `${host}/common/wxAutoLogin`
 export const API_USER_LOGIN = `${host}/common/getToken`
 export const API_REFRESH_TOKEN = `${host}/common/refreshWxToken`
 export const API_CODE = `${host}/common/sendSms`
 export const API_MOBILE_LOGIN = `${host}/common/login`
 
-// item
-export const API_ITEM = `${yanxuan}/xhr/item/detail.json`
-export const API_ITEM_RECOMMEND = `${yanxuan}/xhr/rcmd/itemDetail.json`
