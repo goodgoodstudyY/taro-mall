@@ -82,6 +82,7 @@ export default class List extends Component {
   render () {
     const { list } = this.props
     const { getPhone } = this.state
+
     return (
       <View className='cate-list'>
         {list.length > 0 && list.map(val => (

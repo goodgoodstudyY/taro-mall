@@ -68,6 +68,10 @@ export default function cart(state = INITIAL_STATE, action) {
       }
     }
     case CART_NUM: {
+      let count = state.count
+      if (count < 0) {
+        count = 0
+      }
       const num = action.payload.countCornerMark + state.count || 0
       if (!action.payload.notUpdateNum) {
         updateTabBar(num)

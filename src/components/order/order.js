@@ -28,9 +28,11 @@ export default class Tenant extends Component {
   }
 
   componentWillMount() {
+    let order = this.props.order
+    const time = order.updateTime.split('T')
+    order.updateTime = time[0].replace(/\.|\-/g, '/') + ' ' + time[1].slice(0, 8)
     this.setState({
-      // orderItem: bridgeOrderData(this.props.order)
-      orderItem: this.props.order
+      orderItem: order
     }, () => {
       if (this.state.orderItem.orderStatus == 2) {
         this.countDown()

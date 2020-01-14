@@ -68,9 +68,9 @@ export default class Index extends Component {
         this.props.dispatchOrderList({
           pageNumber: this.state.pageNumber,
           pageSize: this.state.pageSize,
-          // query: {
-          //   orderStatus: this.state.type == 100 ? '' : this.state.type
-          // }
+          query: {
+            orderStatus: this.state.type == 100 ? '' : this.state.type
+          }
         }).then( el => {
           let e = el.list
           resolve(e)

@@ -671,8 +671,11 @@ export default class Index extends Component {
         id: order_id
       }
     }).then(data => {
+      let order = data.list[0]
+      const time = order.updateTime.split('T')
+      order.updateTime = time[0].replace(/\.|\-/g, '/') + ' ' + time[1].slice(0, 8)
       this.setState({
-        order: data.list[0]
+        order
       }, () => {
         if (this.state.order.orderStatus == 2) {
           this.getTimes()

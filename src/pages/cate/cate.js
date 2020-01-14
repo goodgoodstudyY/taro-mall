@@ -273,7 +273,6 @@ class Cate extends Component {
   syncGoods() {
     const cart = this.props.cart.cartInfo
     const list = this.state.goodsList
-    if (cart.length > 0) {
       const idInCart = cart.map (i => i.id);
       const goodsInCart = list.filter (i => idInCart.includes (i.id));
       const goodsHasDeleted = list.filter (
@@ -301,7 +300,6 @@ class Cate extends Component {
       // this.setState({
       //   list: list
       // })
-    }
     return list
   }
 

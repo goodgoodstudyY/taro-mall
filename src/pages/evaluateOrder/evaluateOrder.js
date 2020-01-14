@@ -124,15 +124,13 @@ export default class Index extends Component {
         let realIndex = this.state.images.length - 1;
 
         let uploadTask = Taro.uploadFile({
-            url: `http://122.51.167.221:8000/mall/common/image/upload`,
+            url: `http://122.51.167.221:8000/mall/mgr/file/upload`,
             filePath: url,
             header: {
-              token: Taro.$globalData.token,
-              'Content-Type': 'multipart/form-data'
+              token: Taro.$globalData.token
             },
             formData: {
-              modules: 'order',
-              file: url
+              modules: 'order'
             },
             fileType: 'image',
             name: "file"
