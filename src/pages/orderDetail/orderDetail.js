@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Image, Map, CoverView, CoverImage } from '@tarojs/components'
+import { View, Text, Image, Map, CoverView, CoverImage, ScrollView } from '@tarojs/components'
 
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/order'
@@ -247,9 +247,9 @@ export default class Index extends Component {
   }
 
   checkProgress (e) {
-    e.stopPropagation
+    e.stopPropagation()
     this.setState({
-      openPopup: this.state.order.statusProcess.length > 0 ? true : false
+      openPopup: JSON.parse(this.props.packageInfo.packageInfo).data.length > 0 ? true : false
     })
   }
 
@@ -301,7 +301,8 @@ export default class Index extends Component {
       canPay,
       restTime
     } = this.state
-    // const canShowMap = ['22', '23', '24'].includes(order.type) || order.type == 60 && order.deliveryType == 2
+    const { packageInfo } = this.props
+    const expressInfo = packageInfo.packageInfo ? JSON.parse(packageInfo.packageInfo).data : []
     const canShowMap = false
     const typeText = {
       2: '待支付',
@@ -356,8 +357,8 @@ export default class Index extends Component {
             >
               <Text>订单{typeText[order.orderStatus]}</Text>
               {
-                order.statusProcess.length > 0 && (
-                  <View className='iconfont fs20 c1a ml10'>&#xe662;</View>
+                expressInfo.length > 0 && (
+                  <View className='iconfont fs28 cfff ml15'>&#xe662;</View>
                 )
               }
             </View>
@@ -623,12 +624,12 @@ export default class Index extends Component {
             <View className='mark' onTouchMove={this.calcelScroll} onClick={this.closeMark.bind(this)}>
               <View className='progress-list'>
                 <View className='progress-tit fcc fs34 c1a'>
-                  <Text>订单进度</Text>
+                  <Text>物流详情</Text>
                 </View>
-                <View className='fss-c w100 bcf pt50 pb30'>
+                <ScrollView className='fss-c w100 bgc-w pt50 pb30 scroll-package' scrollY >
                   <View className='ml80'>
                     {
-                      order.statusProcess.length > 0 && order.statusProcess.map((x, n) => { 
+                      expressInfo.length > 0 && expressInfo.map((x, n) => { 
                         return (
                           <View key={x.id} className='fss'>
                             <View className='fsc-c'>
@@ -636,24 +637,23 @@ export default class Index extends Component {
                                 <View className='in-circle'></View>
                               </View>
                               {
-                                ((n+1) < order.statusProcess.length) && (
+                                ((n+1) < expressInfo.length) && (
                                   <View className='circle-hor'></View>
                                 )
                               }
                             </View>
                             <View className='pop-right ml50'>
                               <View className={'fss-c' + (n > 0 ? ' mt-15' : '')}>
-                                <Text className='fs30 c222'>{x.status_text}</Text>
-                                <Text className='fs24 c79 mt14'>{x.time}</Text>
+                                <Text className='fs30 c222'>{x.context}</Text>
+                                <Text className='fs24 c79 mt14'>{x.ftime}</Text>
                               </View>
                             </View>
                           </View>
-                          
                         )
                       })
                     }
                   </View>
-                </View>
+                </ScrollView>
               </View>
             </View>
           )
@@ -679,9 +679,15 @@ export default class Index extends Component {
       }, () => {
         if (this.state.order.orderStatus == 2) {
           this.getTimes()
+        } else if (this.state.order.orderStatus == 3) {
+          this.getPackageInfo()
         }
       })
     })
+  }
+
+  getPackageInfo() {
+    this.props.dispatchGetPackageInfo({orderId: this.$router.params.order_id})
   }
 
   queryDeliveryOrderDetail() {

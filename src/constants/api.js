@@ -5,8 +5,6 @@
 /* eslint-disable */
 export const host = HOST
 export const hostM = HOST_M
-/* eslint-enable */
-const yanxuan = 'https://miniapp.you.163.com'
 
 // pic
 export const CDN = 'https://yanxuan.nosdn.127.net'
@@ -30,6 +28,7 @@ export const API_ORDER_LIST = `${host}/wx/order/list`
 export const API_ORDER_CONFIRM_GOODS = `${host}/wx/order/sendComplete`
 export const API_ORDER_CANCEL = `${host}/wx/order/cancel`
 export const API_ORDER_COMMENT = `${host}/wx/comment/addOrderGoodsComment`
+export const API_ORDER_PACKAGE = `${host}/wx/order/packageInfo`
 
 // address
 export const API_ADDRESS_LIST = `${host}/wx/customer/address/list`

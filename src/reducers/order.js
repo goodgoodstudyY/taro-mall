@@ -5,11 +5,13 @@ import {
   ORDER_PAY_CALLBACK,
   ORDER_LIST,
   ORDER_CONFIRM_GOODS,
-  ORDER_COMMENT
+  ORDER_COMMENT,
+  ORDER_PACKAGE
 } from '@constants/order'
 
 const INITIAL_STATE = {
   showPageError: false,
+  packageInfo: {}
 }
 
 export default function order(state = INITIAL_STATE, action) {
@@ -27,6 +29,11 @@ export default function order(state = INITIAL_STATE, action) {
     case ORDER_PAY_CALLBACK: {
       return {
         ...state
+      }
+    }
+    case ORDER_PACKAGE: {
+      return {
+        packageInfo: action.payload[0]
       }
     }
     default: {

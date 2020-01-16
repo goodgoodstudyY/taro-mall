@@ -6,7 +6,8 @@ import {
   ORDER_LIST,
   ORDER_CONFIRM_GOODS,
   ORDER_CANCEL,
-  ORDER_COMMENT
+  ORDER_COMMENT,
+  ORDER_PACKAGE
 } from '@constants/order'
 import {
   API_ORDER_PRICE,
@@ -16,7 +17,8 @@ import {
   API_ORDER_LIST,
   API_ORDER_CONFIRM_GOODS,
   API_ORDER_CANCEL,
-  API_ORDER_COMMENT
+  API_ORDER_COMMENT,
+  API_ORDER_PACKAGE
 } from '@constants/api'
 import { createAction } from '@utils/redux'
 
@@ -71,6 +73,13 @@ export const dispatchCancelOrder = payload => createAction({
 export const dispatchCommentOrder = payload => createAction({
   url: API_ORDER_COMMENT,
   type: ORDER_COMMENT,
+  method: 'POST',
+  payload
+})
+
+export const dispatchGetPackageInfo = payload => createAction({
+  url: API_ORDER_PACKAGE + '?orderId=' + payload.orderId,
+  type: ORDER_PACKAGE,
   method: 'POST',
   payload
 })
