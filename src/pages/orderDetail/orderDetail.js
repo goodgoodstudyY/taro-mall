@@ -623,17 +623,22 @@ export default class Index extends Component {
           openPopup && (
             <View className='mark' onTouchMove={this.calcelScroll} onClick={this.closeMark.bind(this)}>
               <View className='progress-list'>
-                <View className='progress-tit fcc fs34 c1a'>
+                <View className='progress-tit fsbc fs34 c1a'>
                   <Text>物流详情</Text>
+                  <View className='fs30 c222'>
+                    <Text>{packageInfo.packageCompany}：</Text>
+                    <Text>{packageInfo.packageId}</Text>
+                  </View>
                 </View>
                 <ScrollView className='fss-c w100 bgc-w pt50 pb30 scroll-package' scrollY >
-                  <View className='ml80'>
+                  <View className='ml40 mr20'>
                     {
                       expressInfo.length > 0 && expressInfo.map((x, n) => { 
                         return (
                           <View key={x.id} className='fss'>
                             <View className='fsc-c'>
-                              <View className={'circle fcc' + (n > 0 ? ' mt-15' : '')}>
+                              {/* <View className={'circle fcc' + (n > 0 ? ' mt-15' : '')}> */}
+                              <View className='circle fcc'>
                                 <View className='in-circle'></View>
                               </View>
                               {
@@ -642,8 +647,9 @@ export default class Index extends Component {
                                 )
                               }
                             </View>
-                            <View className='pop-right ml50'>
-                              <View className={'fss-c' + (n > 0 ? ' mt-15' : '')}>
+                            <View className='pop-right ml20'>
+                              {/* <View className={'fss-c' + (n > 0 ? ' mt-15' : '')}> */}
+                              <View className='fss-c'>
                                 <Text className='fs30 c222'>{x.context}</Text>
                                 <Text className='fs24 c79 mt14'>{x.ftime}</Text>
                               </View>
