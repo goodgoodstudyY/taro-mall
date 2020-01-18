@@ -139,7 +139,7 @@ class Cate extends Component {
             goodsDetail.descPic.length > 0 && (
               <View className='goods-detail mb100 bgc-w'>
                   <View className='goods-detail-title fs32 c1a'>商品详情</View>
-                  <View className='fs28 c666 ml24 lh40 mb20'>{goodsDetail.descriptionDetails}</View>
+                  <View className='fs28 c666 ml24 lh40 mb20'>{goodsDetail.descriptionDetails || ''}</View>
                   {
                     goodsDetail.descPic.map((i, n) => {
                         return (

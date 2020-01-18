@@ -205,7 +205,7 @@ export default class Index extends Component {
   }
 
   submit() {
-    this.state.map(x => {
+    this.state.comment.map(x => {
       x.commentType =this.state.commentType
     })
     if (this.state.comment.filter(x => !x.commentLevel).length > 0) {
