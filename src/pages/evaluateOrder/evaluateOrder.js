@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Image, Text, Textarea } from '@tarojs/components'
+import { View, Image, Text, Textarea, Progress, Radio, Checkbox } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import * as actions from '@actions/order'
 import { crop } from '../../utils/util'
@@ -18,7 +18,8 @@ export default class Index extends Component {
     super(...arguments);
     this.state = {
       comment: [],
-      images: []
+      images: [],
+      commentType: 2
     }
 }
 
@@ -197,8 +198,16 @@ export default class Index extends Component {
     })
   }
 
+  handleCommit(val) {
+    this.setState({
+      commentType: val == 1 ? 2 : 1
+    })
+  }
+
   submit() {
-    console.log(this.state.comment)
+    this.state.map(x => {
+      x.commentType =this.state.commentType
+    })
     if (this.state.comment.filter(x => !x.commentLevel).length > 0) {
       Taro.showModal({
         title: '提示',
@@ -223,7 +232,7 @@ export default class Index extends Component {
   }
 
   render() {
-    const { order, images, editMode } = this.state
+    const { order, images, editMode, comment, commentType } = this.state
     let canUpload = this.state.images.length < 3;
 
     return (
@@ -246,7 +255,7 @@ export default class Index extends Component {
                 </View>
                 <View className='content'>
                   <Textarea
-                    value={comment[i].commentContent}
+                    value={comment[i].commentContent || '商品非常好 很满意'}
                     placeholder='商品满足你的期待吗？说说你的心得，分享给想买的他们吧'
                     onInput={this.handleSetContent.bind(this, i)}
                     autoHeight
@@ -287,7 +296,8 @@ export default class Index extends Component {
             )
           })
         }
-        <View className='fixed-button fec'>
+        <View className='fixed-button fsbc'>
+          <Checkbox onClick={this.handleCommit.bind(this, commentType)} checked={commentType == 2}>匿名评论</Checkbox>
           <View className='submit fs34' onClick={this.submit}>确认提交</View>
         </View>
       </View>

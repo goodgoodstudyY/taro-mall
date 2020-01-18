@@ -124,11 +124,12 @@ page {
   height: 120px;
   width: 100%;
   background: #fff;
+  padding: 0 30px;
+  box-sizing: border-box;
 }
 .submit {
   width: 200px;
   height: 75px;
-  margin-right: 30px;
   background: #ab2b2b;
   color: #fff;
   line-height: 75px;
