@@ -15,13 +15,15 @@ export default class InputNumber extends Component {
     onChange: () => {}
   }
 
-  handleMinus = () => {
+  handleMinus = (e) => {
+    e.stopPropagation()
     if (this.props.num > 0) {
       this.props.onChange(this.props.num - 1)
     }
   }
 
-  handlePlus = () => {
+  handlePlus = (e) => {
+    e.stopPropagation()
     this.props.onChange(this.props.num + 1)
   }
 
@@ -34,7 +36,7 @@ export default class InputNumber extends Component {
           className={classNames('comp-input-number__minus',
             isMinusDisabled && 'comp-input-number__minus--disabled'
           )}
-          onClick={this.handleMinus}
+          onClick={this.handleMinus.bind(this)}
         >
           <Image
             className='comp-input-number__minus-img'
@@ -49,7 +51,7 @@ export default class InputNumber extends Component {
         </View>
         <View
           className='comp-input-number__plus'
-          onClick={this.handlePlus}
+          onClick={this.handlePlus.bind(this)}
         >
           <Image
             className='comp-input-number__plus-img'

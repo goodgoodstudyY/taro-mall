@@ -58,7 +58,8 @@ export default class Spec extends Component {
   addToCart() {
     const item = {
       ...this.state.goodsInfo,
-      num: this.state.num
+      num: this.state.num,
+      checked: true
     }
     this.props.onAddToCart(item)
   }

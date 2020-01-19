@@ -254,7 +254,8 @@ class Cate extends Component {
   addToCart(item) {
     item = {
       ...item,
-      num: 1
+      num: 1,
+      checked: true
     }
     this.props.dispatchAdd(item)
     this.props.dispatchCartNum({

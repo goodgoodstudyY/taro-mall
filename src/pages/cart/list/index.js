@@ -33,7 +33,8 @@ export default class List extends Component {
     this.props.onUpdate(payload)
   }
 
-  handleUpdateCheck = (item) => {
+  handleUpdateCheck = (item, e) => {
+    e.stopPropagation()
     // const payload = {
     //   skuList: [{ ...this.getBaseItem(item), checked: !item.checked }]
     // }
@@ -56,6 +57,7 @@ export default class List extends Component {
           <View
             key={item.id}
             className='cart-list__item'
+            onClick={this.handleUpdateCheck.bind(this, item)}
           >
             <CheckboxItem
               checked={item.checked}
