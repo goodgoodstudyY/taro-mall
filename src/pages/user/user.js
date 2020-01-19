@@ -104,7 +104,7 @@ class User extends Component {
                   layout='order'
                   name='已完成'
                   // floatNum='1'
-                  onClick={this.goOrderList.bind(this, 6)}
+                  onClick={this.goOrderList.bind(this, 5)}
                   renderIcon={<View className='order-icon iconfont'>&#xe60f;</View>}
                 />
                 {/* <PersonalBlock
