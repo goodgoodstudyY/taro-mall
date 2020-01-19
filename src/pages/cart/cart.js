@@ -73,10 +73,17 @@ class Index extends Component {
       }
     }).then(data => {
       if (data.total > 0) {
-        Taro.showToast({
-          title: '您还存在待支付订单哦',
-          icon: 'none',
-          duration: 800
+        Taro.showModal({
+          title: '提示',
+          content: '您还存在待支付订单哦',
+          cancelText: '我知道了',
+          confirmText: '去支付'
+        }).then(res => {
+          if (res.confirm) {
+            Taro.reLaunch({
+              url: '/pages/order/order?type=2'
+            })
+          }
         })
       }
     })
