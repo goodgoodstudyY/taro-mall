@@ -7,6 +7,14 @@ export function crop (url, w, h) {
 }
 
 export function formatTime(date, sep = '/') {
+  if (!date.getTime) {
+    const time = date.split('T')
+    if (time.length > 1) {
+      date = time[0].replace(/\.|\-/g, '/') + ' ' + time[1].slice(0, 8)
+    }
+    date = new Date(date)
+    date = new Date(date.getTime() + 8 * 60 * 60 * 1000)
+  }
   var year = date.getFullYear()
   var month = date.getMonth() + 1
   var day = date.getDate()
@@ -17,13 +25,13 @@ export function formatTime(date, sep = '/') {
 }
 
 export function OnlyTime(date, sep = ':') {
-var hour = parseInt(date / 3600000)
-date = date % 3600000
-var minute = parseInt(date / 60000)
-date = date % 60000
-var second = parseInt(date / 1000)
+  var hour = parseInt(date / 3600000)
+  date = date % 3600000
+  var minute = parseInt(date / 60000)
+  date = date % 60000
+  var second = parseInt(date / 1000)
 
-return [hour, minute, second].map(formatNumber).join(sep)
+  return [hour, minute, second].map(formatNumber).join(sep)
 }
 
 export function formatNumber(n) {

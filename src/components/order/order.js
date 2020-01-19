@@ -46,7 +46,7 @@ export default class Tenant extends Component {
 
   countDown () {
     const count = () => {
-      const restTime = new Date(this.state.orderItem.updateTime).getTime() + 60 * 24 * 60 * 1000 - Date.now()
+      const restTime = new Date(this.state.orderItem.updateTime).getTime() + 60 * 32 * 60 * 1000 - Date.now()
       this.setState({
         restTime: restTime > 0 ? OnlyTime(restTime) : ''
       })
@@ -109,7 +109,7 @@ export default class Tenant extends Component {
       <View className='card-component bgc-w'>
         <View className='fsbc order-top' onClick={this.goOrderDetail.bind(this, orderItem.id)}>
           <View className='fs28 c000'>
-            <Text>创建时间：{formatTime(new Date(orderItem.updateTime))}</Text>
+            <Text>创建时间：{orderItem.updateTime ? formatTime(orderItem.updateTime) : ''}</Text>
           </View>
           <View className='fs28 cef bold'>
             <Text>{typeText[orderItem.orderStatus]}</Text>

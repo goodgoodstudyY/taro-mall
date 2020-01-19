@@ -81,6 +81,12 @@ class Cate extends Component {
     })
   }
 
+  goHome() {
+    Taro.reLaunch({
+      url: '/pages/home/home'
+    })
+  }
+
   onShareAppMessage() {
     const {
       id,
@@ -181,7 +187,11 @@ class Cate extends Component {
           )
           : <View></View>
         }
-        <View className='goods-buttons-layout fsc'>
+        <View className='goods-buttons-layout fsbc'>
+          <View className='fsc-c ml20' onClick={this.goHome}>
+            <Text className='iconfont fs46'>&#xe609;</Text>
+            <Text className='fs20'>首页</Text>
+          </View>
           <View className='fsc'>
             <View className='goods-button-1 c-red fcc fs32' onClick={this.handleSubmit.bind(this, 'cart')}>加入购物车</View>
             <View className='goods-button-2 cfff fcc fs32' onClick={this.handleSubmit.bind(this)}>立即购买</View>

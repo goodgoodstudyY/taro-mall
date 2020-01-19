@@ -43,9 +43,15 @@ export default class goodsPayment extends Component {
                     addressInfo = x
                 }
             })
+            let goodsInfo = []
+            if (this.$router.params.goodsInfo) {
+                goodsInfo = [].concat(JSON.parse(this.$router.params.goodsInfo))
+            } else {
+                goodsInfo = this.props.cartInfo.filter(x => !!x.checked)
+            }
             this.setState({
                 addressInfo: addressInfo,
-                handleGoodsInfo: this.props.cartInfo.filter(x => !!x.checked)
+                handleGoodsInfo: goodsInfo
             }, () => {
                 this.calcTotalPrice()
             })

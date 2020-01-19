@@ -63,6 +63,17 @@ export default class Spec extends Component {
     this.props.onAddToCart(item)
   }
 
+  createOrder() {
+    const { num } = this.state;
+    const data = {
+      ...this.state.goodsInfo,
+      num
+    }
+    Taro.navigateTo({
+      url: '/pages/goodsPayment/goodsPayment?goodsInfo=' + encodeURIComponent(JSON.stringify(data))
+  });
+}
+
   render() {
     const { num, goodsInfo, mode, show } = this.state;
 

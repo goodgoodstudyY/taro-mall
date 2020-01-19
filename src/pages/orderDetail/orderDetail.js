@@ -482,7 +482,7 @@ export default class Index extends Component {
                 <Text>订单创建时间</Text>
               </View>
               <View className='fs28 c1a'>
-                <Text>{formatTime(new Date(this.state.order.updateTime))}</Text>
+                <Text>{this.state.order.updateTime ? formatTime(this.state.order.updateTime) : ''}</Text>
               </View>
             </View>
             
@@ -678,8 +678,6 @@ export default class Index extends Component {
       }
     }).then(data => {
       let order = data.list[0]
-      const time = order.updateTime.split('T')
-      order.updateTime = time[0].replace(/\.|\-/g, '/') + ' ' + time[1].slice(0, 8)
       this.setState({
         order
       }, () => {
